@@ -1,3 +1,4 @@
+package Allsnake;
 
 public class Buffer {
 //MovementList used to stord the palyer's move.Thread will take it and update the snake.
