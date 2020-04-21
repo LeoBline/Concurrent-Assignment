@@ -16,7 +16,7 @@ public class ServerDB {
                 .make();         
        private ConcurrentNavigableMap<String, String> Playermap = db.getTreeMap("playerinformation");  
  
-    public String Login(String id,String password,ConcurrentNavigableMap<String, String> Playermap) {
+    public synchronized String Login(String id,String password,ConcurrentNavigableMap<String, String> Playermap) {
     	if(Playermap.containsKey(id)) {
     		if(Playermap.get(id) == password) {
     			return id;
@@ -29,10 +29,10 @@ public class ServerDB {
     		return "";
     	}
     }
-    public ConcurrentNavigableMap<String, String> getMap(){
+    public synchronized ConcurrentNavigableMap<String, String> getMap(){
     	return Playermap;
     }
-    public DB getDB(){
+    public synchronized DB getDB(){
     	return db;
     }
     public void Updata(ConcurrentNavigableMap<String, String> Playermap,DB db) {
@@ -42,7 +42,7 @@ public class ServerDB {
 		}
     	db.commit();
     }
-    public void end(DB db) {
+    public synchronized void end(DB db) {
     	db.close();
     }
 }

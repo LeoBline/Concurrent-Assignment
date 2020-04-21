@@ -71,8 +71,10 @@ public class Server implements KeyListener, WindowListener {
 	}
 
 	public void init() {
+		//connect db
 		ServerDB serverdb = new ServerDB();
 		serverdb.Updata(serverdb.getMap(), serverdb.getDB());
+		//login
 		if (serverdb.Login("001", "123456", serverdb.getMap()) != null) {
 			System.out.println("success login");
 		}
