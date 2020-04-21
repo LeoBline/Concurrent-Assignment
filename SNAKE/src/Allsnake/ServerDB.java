@@ -1,6 +1,4 @@
 package Allsnake;
-
-
 import org.mapdb.*; 
 import java.io.File; 
 import java.io.Serializable; 
