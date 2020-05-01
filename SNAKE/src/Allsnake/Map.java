@@ -5,6 +5,7 @@ public class Map {
 	
 	private static Map map = null;
 	private int[][] grid = null;
+	private int[] Node = null;
 	private Map(){
 		
 	}
@@ -15,7 +16,9 @@ public class Map {
 		}
 		return map;
 	}
-	
+	public static MapNode getMapNode(){
+
+	}
 	public void setMapInfo(int index1, int index2, int num) {
 		grid[index1][index2] = num;
 	}

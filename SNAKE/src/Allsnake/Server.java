@@ -58,7 +58,7 @@ public class Server implements KeyListener, WindowListener {
 		frame = new JFrame();
 		canvas = new Canvas();
 		map.setMap(new int[gameSize][gameSize]);//init location on the map
-		Snake snake = new Snake(int[gameSize * gameSize][2]);//TODO init new snake, here only have one snake now
+		Snake snake1 = new Snake(new int[gameSize * gameSize][2]);//TODO init new snake, here only have one snake now
 	}
 
 	public static Server getSever() {
@@ -93,7 +93,7 @@ public class Server implements KeyListener, WindowListener {
 		// Initialise tabs
 		for (int i = 0; i < gameSize; i++) {
 			for (int j = 0; j < gameSize; j++) {
-				grid[i][j] = EMPTY;
+				map.setMapInfo(i, j, Server.EMPTY);
 			}
 		}
 		for (int i = 0; i < gameSize * gameSize; i++) {
