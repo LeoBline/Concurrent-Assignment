@@ -18,24 +18,21 @@ import javax.swing.JFrame;
 
 
 public class Server implements KeyListener, WindowListener {
-	// KEYS MAP
-	public final static int UP = 0;
-	public final static int DOWN = 1;
-	public final static int LEFT = 2;
-	public final static int RIGHT = 3;
+	//make Server Class singleton
+	private static Server server = null;
+
 	// GRID CONTENT
 	public final static int EMPTY = 0;
 	public final static int FOOD_BONUS = 1;
 	public final static int FOOD_MALUS = 2;
 	public final static int BIG_FOOD_BONUS = 3;
 	public final static int SNAKE = 4;
-	private int[][] grid = null;
-	private int[][] snake = null;//xposition[i][0], Yposition[i][1]
-	private int direction = -1;
-	private int next_direction = -1;
+
+	Map map =  Map.getMap();
+
 	private int height = 600;
 	private int width = 600;
-	private int gameSize = 40;
+	public static int gameSize = 40;
 	private long speed = 70;
 	private JFrame frame = null;
 	private Canvas canvas = null;
@@ -44,26 +41,32 @@ public class Server implements KeyListener, WindowListener {
 	//to see if the game is over, ture: game is over, false: game is not over
 	private boolean game_over = false;
 	private boolean paused = false;
-	private int score = 0;
-	private int grow = 0;
+
 	private int seconde, minute, milliseconde = 0; // Clock values
 	private long cycleTime = 0;
 	private long sleepTime = 0;
 	private int bonusTime = 0;
 	private int malusTime = 0;
+
 	public static void main(String[] args) {
 		Server game = new Server();
 		game.init();
 		game.mainLoop();
 	}
 
-	public Server() {
+	private Server() {
 		frame = new JFrame();
 		canvas = new Canvas();
-		grid = new int[gameSize][gameSize];//init location on the map
-		snake = new int[gameSize * gameSize][2];//TODO init new snake, here only have one snake now
+		map.setMap(new int[gameSize][gameSize]);//init location on the map
+		Snake snake = new Snake(int[gameSize * gameSize][2]);//TODO init new snake, here only have one snake now
 	}
 
+	public static Server getSever() {
+		if(server == null) {
+			server = new Server();
+		}
+		return server;
+	}
 	private void init() {
 		frame.setSize(width + 7, height + 27);
 		frame.setResizable(false);
@@ -203,7 +206,7 @@ public class Server implements KeyListener, WindowListener {
 		}
 		return temps;
 	}
-	
+
 	private void moveSnake() {
 		if (direction < 0) {
 			return;
@@ -316,7 +319,7 @@ public class Server implements KeyListener, WindowListener {
 		}
 	}
 
-	private void placeBonus(int bonus_type) {
+	public void placeBonus(int bonus_type) {
 		int x = (int) (Math.random() * 1000) % gameSize;
 		int y = (int) (Math.random() * 1000) % gameSize;
 		if (grid[x][y] == EMPTY) {
@@ -325,7 +328,7 @@ public class Server implements KeyListener, WindowListener {
 			placeBonus(bonus_type);
 		}
 	}
-	private void placeMalus(int malus_type) {
+	public void placeMalus(int malus_type) {
 		int x = (int) (Math.random() * 1000) % gameSize;
 		int y = (int) (Math.random() * 1000) % gameSize;
 		if (grid[x][y] == EMPTY) {
@@ -334,12 +337,13 @@ public class Server implements KeyListener, WindowListener {
 			placeMalus(malus_type);
 		}
 	}
-	private void gameOver() {
+	
+	public void gameOver() {
 		game_over = true;
 	}
 
 	//TODO IMPLEMENTED FUNCTIONS ----------right now only for one snake---------------------------
-	
+
 	public void keyPressed(KeyEvent ke) {
 		int code = ke.getKeyCode();
 		Dimension dim;
@@ -390,7 +394,56 @@ public class Server implements KeyListener, WindowListener {
 			break;
 		}
 	}
+	
+	//-----------setter-----getter-------------------------------------------------------------
+	
+	public int getSeconde() {
+		return seconde;
+	}
 
+	public void setSeconde(int seconde) {
+		this.seconde = seconde;
+	}
+
+	public int getMinute() {
+		return minute;
+	}
+
+	public void setMinute(int minute) {
+		this.minute = minute;
+	}
+
+	public int getMilliseconde() {
+		return milliseconde;
+	}
+
+	public void setMilliseconde(int milliseconde) {
+		this.milliseconde = milliseconde;
+	}
+
+	public long getCycleTime() {
+		return cycleTime;
+	}
+
+	public void setCycleTime(long cycleTime) {
+		this.cycleTime = cycleTime;
+	}
+
+	public int getBonusTime() {
+		return bonusTime;
+	}
+
+	public void setBonusTime(int bonusTime) {
+		this.bonusTime = bonusTime;
+	}
+
+	public int getMalusTime() {
+		return malusTime;
+	}
+
+	public void setMalusTime(int malusTime) {
+		this.malusTime = malusTime;
+	}
 
 	//--------------------------------UNNUSED IMPLEMENTED FUNCTIONS--------------------------------------------
 	@Override
