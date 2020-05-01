@@ -1,25 +1,27 @@
 package Allsnake;
-import UIpackage.PlayGroundPanel;
 import javax.swing.JFrame;
 
-public class Server {
+import UIpackage.LoginUI;
+import javafx.application.*;
+import javafx.scene.Scene;
+import javafx.scene.layout.BorderPane;
+import javafx.stage.Screen;
+import javafx.stage.Stage;
 
-	//window for the game
-	static JFrame frame = new JFrame();
-	//panel on the window
-	static PlayGroundPanel playGrand = new PlayGroundPanel();
+public class Server extends Application{
+
 	public static void main(String[] args) {
-		initmap();
-
-
+		launch(args);
 	}
-
-	private static  void initmap() {
-		frame.setBounds(20, 0, 1000, 820);
-		frame.setResizable(false);//cannot adjust size of screen
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);//set close button for the window
-
-		frame.add(playGrand);
-		frame.setVisible(true);
+	
+	public void start(Stage primaryStage) throws Exception {
+		BorderPane root = new BorderPane();
+		Scene scene = new Scene(root, 1800, 1000);
+		primaryStage.setScene(scene);
+		
+		LoginUI loginPage = new LoginUI();
+		primaryStage.show();
 	}
+	
+	
 }
