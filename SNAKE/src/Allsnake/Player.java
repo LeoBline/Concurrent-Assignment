@@ -1,14 +1,25 @@
 package Allsnake;
 
+/**
+ * The Player Class
+ *
+ */
 public class Player implements Runnable{
     private String ID;
-    private int Score;
+    private int myScore;
+    private Snake mySnake;
+    private Buffer playerBuffer;
 
     public void run() {
-
+        playerBuffer.take();
     }
 
-    public void InputMove(char move){
+    /**
+     * Move the Snake on the map from what player press on the keyboard
+     *
+     * @param move The 'move' that get from player
+     */
+    public void getPlayerMove(char move){
 
     }
 
@@ -18,11 +29,11 @@ public class Player implements Runnable{
 
     //Getter and setter
     public int getScore() {
-        return Score;
+        return myScore;
     }
 
     public void setScore(int score) {
-        Score = score;
+        myScore = score;
     }
 
     public String getID() {
@@ -32,9 +43,6 @@ public class Player implements Runnable{
     public void setID(String ID) {
         this.ID = ID;
     }
-
-
-
 
 
 }

@@ -12,7 +12,7 @@ public Buffer() {
 		Inptr = 0;
 	}
 //we use ' ' present null.
-public char Take() {
+public synchronized char take() {
 	if(Inptr != 0) {
 	char a =  MovementList[Inptr];
 	MovementList[Inptr] = ' ';
@@ -23,7 +23,7 @@ public char Take() {
 		return ' ';
 	}
 }
-public void append(char a) {
+public synchronized void append(char a) {
 	if(Inptr < 40) {
 	Inptr = Inptr + 1;
 	MovementList[Inptr] = a;
