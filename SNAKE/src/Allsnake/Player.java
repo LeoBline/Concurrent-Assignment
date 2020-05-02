@@ -11,7 +11,7 @@ public class Player implements Runnable{
     private Buffer playerBuffer;
 
     public void run() {
-        playerBuffer.take();
+
     }
 
     /**
@@ -20,8 +20,10 @@ public class Player implements Runnable{
      * @param move The 'move' that get from player
      */
     public void getPlayerMove(char move){
-
+        playerBuffer.append(move);
     }
+
+
 
     public void InitSnake(){
 
