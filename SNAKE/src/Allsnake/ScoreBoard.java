@@ -47,7 +47,7 @@ private static final long serialVersionUID = 1L;
         // Form size
         this.setSize(400, 300);
         // Screen display initial position
-        this.setLocation(300, 300);
+        this.setLocation(200, 200);
         // display
         this.setVisible(true);
         // Close the JFrame after exiting the form
