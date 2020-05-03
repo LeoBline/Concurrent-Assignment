@@ -15,10 +15,12 @@ import java.util.logging.Logger;
 
 import javax.swing.JFrame;
 
+import sun.security.jgss.LoginConfigImpl;
+
 
 public class Server implements KeyListener, WindowListener {
 	//make Server Class singleton
-	private static Server server = new Server();
+	private static Server server;
 
 	//Server class will use map singleton
 	Map map =  Map.getMap();
@@ -97,6 +99,17 @@ public class Server implements KeyListener, WindowListener {
 		map.setMap(new int[gameSize][gameSize]);//init location on the map
 		snake1 = new Snake(new int[gameSize * gameSize][2]);//TODO init new snake, here only have one snake now
 		//		snake2 = new Snake(new int[gameSize * gameSize][2]);
+
+		this.Login();
+	}
+	
+	private void Login() {
+		ServerDB serverdb = new ServerDB();
+		serverdb.Updata(serverdb.getMap(), serverdb.getDB());
+		//login
+		if (serverdb.Login("001", "123456", serverdb.getMap()) != null) {
+			System.out.println("success login");
+		}
 	}
 
 	public static Server getSever() {
