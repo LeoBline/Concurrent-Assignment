@@ -111,41 +111,34 @@ public class Server implements KeyListener, WindowListener {
 	
 	// TODO graphic 
 	private void init() {
-//		//draw background of the game
-//		frame.setSize(width + 7, height + 27 + 50);
-//		frame.setResizable(false);
-//		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//		frame.setLocationByPlatform(true);
-//		canvas.setSize(width + 7, height + 27 + 50);
-//		frame.add(canvas);
-//		canvas.addKeyListener(this);
-//		frame.addWindowListener(this);
-//		frame.dispose();
-//		frame.validate();
-//		frame.setTitle("Snake");
-//		frame.setVisible(true);
-//		canvas.
-//		canvas.setIgnoreRepaint(true);
-//		canvas.setBackground(Color.green);
-//		
-//		//strategy is a BufferStategy object in AWT, it is use for draw dynamic parts on canvas
-//		canvas.createBufferStrategy(2);
-//		strategy = canvas.getBufferStrategy();
-//		graph = strategy.getDrawGraphics();
-//
-//		//two method repersent the game
-//		initGame();
-//		renderGame();
-		frame.setSize(width + 20, height + 150);
+		//draw background of the game
+		frame.setSize(width + 7, height + 300);
 		frame.setResizable(false);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setLocationByPlatform(true);
-		
 		canvas.setSize(width + 7, height + 27);
 		canvas.setLocation(0, 50);
+		frame.add(canvas);
 		frame.add(gamePanel);
+		canvas.addKeyListener(this);
+		frame.addWindowListener(this);
+		frame.dispose();
+		frame.validate();
+		frame.setTitle("Snake");
+		frame.setVisible(true);
+		canvas.setIgnoreRepaint(true);
+		canvas.setBackground(Color.WHITE);
 		
 		frame.setVisible(true);
+		
+		//strategy is a BufferStategy object in AWT, it is use for draw dynamic parts on canvas
+		canvas.createBufferStrategy(2);
+		strategy = canvas.getBufferStrategy();
+		graph = strategy.getDrawGraphics();
+		
+		//two method repersent the game
+		initGame();
+		renderGame();
 	}
 
 	private void initGame() {
@@ -175,72 +168,69 @@ public class Server implements KeyListener, WindowListener {
 	 * draw all element on the game window
 	 */
 	public void renderGame() {
-//		int gridUnit = height / gameSize;
-//		canvas.paint(graph);
-//		do {
-//			do {
-//				graph = strategy.getDrawGraphics();
-//				// Draw Background
-//				graph.setColor(Color.WHITE);
-//				graph.fillRect(0, 0, width, height);
-//				// Add Login Button
-//				frame.getContentPane().add(loginButton);
-//
-//				// Draw snake, bonus ...
-//				int gridCase = EMPTY;
-//				for (int i = 0; i < gameSize; i++) {
-//					for (int j = 0; j < gameSize; j++) {
-//						gridCase = map.getMapInfo(i, j);
-//						switch (gridCase) {
-//						case SNAKE:
-//							graph.setColor(Color.BLUE);
-//							graph.fillOval(i * gridUnit, j * gridUnit, gridUnit, gridUnit);
-//							break;
-//						case FOOD_BONUS:
-//							graph.setColor(Color.darkGray);
-//							graph.fillOval(i * gridUnit + gridUnit / 4, j * gridUnit +
-//									gridUnit / 4, gridUnit / 2,
-//									gridUnit / 2);
-//							break;
-//						case FOOD_MALUS:
-//							graph.setColor(Color.RED);
-//							graph.fillOval(i * gridUnit + gridUnit / 4, j * gridUnit +
-//									gridUnit / 4, gridUnit / 2,
-//									gridUnit / 2);
-//							break;
-//						case BIG_FOOD_BONUS:
-//							graph.setColor(Color.GREEN);
-//							graph.fillOval(i * gridUnit + gridUnit / 4, j * gridUnit +
-//									gridUnit / 4, gridUnit / 2,
-//									gridUnit / 2);
-//							break;
-//						default:
-//							break;
-//						}
-//					}
-//				}
-//				graph.setFont(new Font(Font.SANS_SERIF, Font.BOLD, height / 40));
-//				if (game_over) {
-//					graph.setColor(Color.RED);
-//					graph.drawString("GAME OVER", height / 2 - 30, height / 2);
-//					graph.drawString("YOUR SCORE : " + snake1.getScore(), height / 2 - 40, height / 2 +
-//							50);
-//					graph.drawString("YOUR TIME : " + getTime(), height / 2 - 42, height / 2
-//							+ 100);
-//				} else if (paused) {
-//					graph.setColor(Color.RED);
-//					graph.drawString("PAUSED", height / 2 - 30, height / 2);
-//				}
-//				graph.setColor(Color.BLACK);
-//				graph.drawString("SCORE = " + snake1.getScore(), 10, 20);
-//				graph.drawString("TIME = " + getTime(), 100, 20); // Clock
-//				graph.dispose();
-//			} while (strategy.contentsRestored());
-//
-//			// Draw image from buffer by BufferStrategy object in AWT
-//			strategy.show();
-//			Toolkit.getDefaultToolkit().sync();
-//		} while (strategy.contentsLost());
+		int gridUnit = height / gameSize;
+		canvas.paint(graph);
+		do {
+			do {
+				graph = strategy.getDrawGraphics();
+				// Draw Background
+				graph.setColor(Color.WHITE);
+				graph.fillRect(0, 0, width, height);
+				// Draw snake, bonus ...
+				int gridCase = EMPTY;
+				for (int i = 0; i < gameSize; i++) {
+					for (int j = 0; j < gameSize; j++) {
+						gridCase = map.getMapInfo(i, j);
+						switch (gridCase) {
+						case SNAKE:
+							graph.setColor(Color.BLUE);
+							graph.fillOval(i * gridUnit, j * gridUnit, gridUnit, gridUnit);
+							break;
+						case FOOD_BONUS:
+							graph.setColor(Color.darkGray);
+							graph.fillOval(i * gridUnit + gridUnit / 4, j * gridUnit +
+									gridUnit / 4, gridUnit / 2,
+									gridUnit / 2);
+							break;
+						case FOOD_MALUS:
+							graph.setColor(Color.RED);
+							graph.fillOval(i * gridUnit + gridUnit / 4, j * gridUnit +
+									gridUnit / 4, gridUnit / 2,
+									gridUnit / 2);
+							break;
+						case BIG_FOOD_BONUS:
+							graph.setColor(Color.GREEN);
+							graph.fillOval(i * gridUnit + gridUnit / 4, j * gridUnit +
+									gridUnit / 4, gridUnit / 2,
+									gridUnit / 2);
+							break;
+						default:
+							break;
+						}
+					}
+				}
+				graph.setFont(new Font(Font.SANS_SERIF, Font.BOLD, height / 40));
+				if (game_over) {
+					graph.setColor(Color.RED);
+					graph.drawString("GAME OVER", height / 2 - 30, height / 2);
+					graph.drawString("YOUR SCORE : " + snake1.getScore(), height / 2 - 40, height / 2 +
+							50);
+					graph.drawString("YOUR TIME : " + getTime(), height / 2 - 42, height / 2
+							+ 100);
+				} else if (paused) {
+					graph.setColor(Color.RED);
+					graph.drawString("PAUSED", height / 2 - 30, height / 2);
+				}
+				graph.setColor(Color.BLACK);
+				graph.drawString("SCORE = " + snake1.getScore(), 10, 20);
+				graph.drawString("TIME = " + getTime(), 100, 20); // Clock
+				graph.dispose();
+			} while (strategy.contentsRestored());
+
+			// Draw image from buffer by BufferStrategy object in AWT
+			strategy.show();
+			Toolkit.getDefaultToolkit().sync();
+		} while (strategy.contentsLost());
 	}
 
 

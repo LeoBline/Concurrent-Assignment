@@ -20,10 +20,10 @@ public class GamePanel extends JPanel{
 	
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-//		this.setBackground(Color.green);
-//		g.fillRect(10, 50, server.getWidth(), server.getHeight());
-		
-		loginButton.setLocation(500, 500);
+		this.setBackground(Color.green);
+		g.setColor(Color.blue);
+		g.fillRect(0, 50, server.getWidth() + 7, server.getHeight() + 100);
+
 		this.add(loginButton);
 		
 	}
