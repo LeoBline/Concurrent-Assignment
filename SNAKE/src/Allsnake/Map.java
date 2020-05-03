@@ -3,17 +3,14 @@ package Allsnake;
 public class Map {
 //make Map class a singleton patten
 	
-	private static Map map = null;
+	private static Map map = new Map();
 	private int[][] grid = null;
 	
 	private Map(){
 		
 	}
 	
-	public static Map getMap() {
-		if(map == null) {
-			map = new Map();
-		}
+	public static  Map getMap() {
 		return map;
 	}
 	

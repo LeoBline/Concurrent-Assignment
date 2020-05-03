@@ -146,25 +146,25 @@ public class Snake {
 		}
 	}
 
-	public void mainLoop() {
-		while (!game_over) {
-			server.setCycleTime(System.currentTimeMillis());
-			if (!server.paused) {
-				direction = next_direction;
-				moveSnake();
-			}
-			server.renderGame();
-			server.setCycleTime(System.currentTimeMillis() - server.getCycleTime());
-			server.setSleepTime(server.speed - server.getCycleTime());
-			if (server.getSleepTime() < 0)
-				server.setSleepTime(0);
-			try {
-				Thread.sleep(server.getSleepTime());
-			} catch (InterruptedException ex) {
-				Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
-			}
-		}
-	}
+//	public void mainLoop() {
+//		while (!game_over) {
+//			server.setCycleTime(System.currentTimeMillis());
+//			if (!server.paused) {
+//				direction = next_direction;
+//				moveSnake();
+//			}
+//			server.renderGame();
+//			server.setCycleTime(System.currentTimeMillis() - server.getCycleTime());
+//			server.setSleepTime(server.speed - server.getCycleTime());
+//			if (server.getSleepTime() < 0)
+//				server.setSleepTime(0);
+//			try {
+//				Thread.sleep(server.getSleepTime());
+//			} catch (InterruptedException ex) {
+//				Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+//			}
+//		}
+//	}
 	/**
 	 * gameOver means this snake is dead
 	 */

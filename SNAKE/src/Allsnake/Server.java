@@ -3,7 +3,6 @@ import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
@@ -11,12 +10,15 @@ import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.awt.image.BufferStrategy;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import javax.swing.JFrame;
 
 
 public class Server implements KeyListener, WindowListener {
 	//make Server Class singleton
-	private static Server server = null;
+	private static Server server = new Server();
 
 	//Server class will use map singleton
 	Map map =  Map.getMap();
@@ -40,8 +42,8 @@ public class Server implements KeyListener, WindowListener {
 	private int width = 600;//width of window
 	public static int gameSize = 40; //40*40 nodes on the game window
 	public long speed = 70;
-	private JFrame frame = null;
-	private Canvas canvas = null;
+	private JFrame frame = new JFrame();
+	private Canvas canvas = new Canvas();
 	private Graphics graph = null;
 	private BufferStrategy strategy = null;
 
@@ -70,7 +72,23 @@ public class Server implements KeyListener, WindowListener {
 	}
 
 	private void mainLoop() {
-		snake1.mainLoop();		
+		while (!game_over) {
+			server.setCycleTime(System.currentTimeMillis());
+			if (!server.paused) {
+				snake1.setDirection(snake1.getNext_direction());
+				snake1.moveSnake();
+			}
+			server.renderGame();
+			server.setCycleTime(System.currentTimeMillis() - server.getCycleTime());
+			server.setSleepTime(server.speed - server.getCycleTime());
+			if (server.getSleepTime() < 0)
+				server.setSleepTime(0);
+			try {
+				Thread.sleep(server.getSleepTime());
+			} catch (InterruptedException ex) {
+				Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+			}
+		}
 	}
 
 	private Server() {
@@ -82,9 +100,6 @@ public class Server implements KeyListener, WindowListener {
 	}
 
 	public static Server getSever() {
-		if(server == null) {
-			server = new Server();
-		}
 		return server;
 	}
 	private void init() {
