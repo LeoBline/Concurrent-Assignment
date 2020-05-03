@@ -5,6 +5,7 @@ public class Map {
 	
 	private static Map map = null;
 	private int[][] grid = null;
+	
 	private Map(){
 		
 	}

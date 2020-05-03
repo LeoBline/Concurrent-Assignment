@@ -11,15 +11,15 @@ import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.awt.image.BufferStrategy;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import javax.swing.JFrame;
 
 
 public class Server implements KeyListener, WindowListener {
 	//make Server Class singleton
 	private static Server server = null;
+
+	//Server class will use map singleton
+	Map map =  Map.getMap();
 
 	// GRID CONTENT
 	public final static int EMPTY = 0;
@@ -28,19 +28,26 @@ public class Server implements KeyListener, WindowListener {
 	public final static int BIG_FOOD_BONUS = 3;
 	public final static int SNAKE = 4;
 
-	Map map =  Map.getMap();
+	// direction numbers
+	public final static int UP = 0;
+	public final static int DOWN = 1;
+	public final static int LEFT = 2;
+	public final static int RIGHT = 3;
 
-	private int height = 600;
-	private int width = 600;
-	public static int gameSize = 40;
-	private long speed = 70;
+
+
+	private int height = 600;//height of window
+	private int width = 600;//width of window
+	public static int gameSize = 40; //40*40 nodes on the game window
+	public long speed = 70;
 	private JFrame frame = null;
 	private Canvas canvas = null;
 	private Graphics graph = null;
 	private BufferStrategy strategy = null;
+
 	//to see if the game is over, ture: game is over, false: game is not over
 	private boolean game_over = false;
-	private boolean paused = false;
+	boolean paused = false;
 
 	private int seconde, minute, milliseconde = 0; // Clock values
 	private long cycleTime = 0;
@@ -48,17 +55,30 @@ public class Server implements KeyListener, WindowListener {
 	private int bonusTime = 0;
 	private int malusTime = 0;
 
+	//snakes
+	Snake snake1 = null;
+	Snake snake2 = null;
+
 	public static void main(String[] args) {
-		Server game = new Server();
-		game.init();
-		game.mainLoop();
+		try {
+			server = new Server();
+		}catch(Exception e) {
+			e.getStackTrace();
+		}
+		server.init();
+		server.mainLoop();
+	}
+
+	private void mainLoop() {
+		snake1.mainLoop();		
 	}
 
 	private Server() {
 		frame = new JFrame();
 		canvas = new Canvas();
 		map.setMap(new int[gameSize][gameSize]);//init location on the map
-		Snake snake1 = new Snake(new int[gameSize * gameSize][2]);//TODO init new snake, here only have one snake now
+		snake1 = new Snake(new int[gameSize * gameSize][2]);//TODO init new snake, here only have one snake now
+		//		snake2 = new Snake(new int[gameSize * gameSize][2]);
 	}
 
 	public static Server getSever() {
@@ -68,6 +88,7 @@ public class Server implements KeyListener, WindowListener {
 		return server;
 	}
 	private void init() {
+		//draw background of the game
 		frame.setSize(width + 7, height + 27);
 		frame.setResizable(false);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -82,9 +103,12 @@ public class Server implements KeyListener, WindowListener {
 		frame.setVisible(true);
 		canvas.setIgnoreRepaint(true);
 		canvas.setBackground(Color.WHITE);
+		//strategy is a BufferStategy object in AWT, it is use for draw dynamic parts on canvas
 		canvas.createBufferStrategy(2);
 		strategy = canvas.getBufferStrategy();
 		graph = strategy.getDrawGraphics();
+
+		//two method repersent the game
 		initGame();
 		renderGame();
 	}
@@ -96,17 +120,26 @@ public class Server implements KeyListener, WindowListener {
 				map.setMapInfo(i, j, Server.EMPTY);
 			}
 		}
+		//initial snake body position
 		for (int i = 0; i < gameSize * gameSize; i++) {
-			snake[i][0] = -1;
-			snake[i][1] = -1;
+			snake1.setSnakeInfo(i, 0, -1);
+			snake1.setSnakeInfo(i, 1, -1);
 		}
-		snake[0][0] = gameSize / 2;
-		snake[0][1] = gameSize / 2;
-		grid[gameSize / 2][gameSize / 2] = SNAKE;
+		//initial snake head position
+		snake1.setSnakeInfo(0, 0, gameSize / 2);
+		snake1.setSnakeInfo(0, 1, gameSize / 2);
+
+		//set snake head first exist in the middle of the map
+		map.setMapInfo(gameSize / 2, gameSize / 2, SNAKE);
+
+		//place a random food
 		placeBonus(FOOD_BONUS);
 	}
 
-	private void renderGame() {
+	/**
+	 * draw all element on the game window
+	 */
+	public void renderGame() {
 		int gridUnit = height / gameSize;
 		canvas.paint(graph);
 		do {
@@ -119,7 +152,7 @@ public class Server implements KeyListener, WindowListener {
 				int gridCase = EMPTY;
 				for (int i = 0; i < gameSize; i++) {
 					for (int j = 0; j < gameSize; j++) {
-						gridCase = grid[i][j];
+						gridCase = map.getMapInfo(i, j);
 						switch (gridCase) {
 						case SNAKE:
 							graph.setColor(Color.BLUE);
@@ -152,7 +185,7 @@ public class Server implements KeyListener, WindowListener {
 				if (game_over) {
 					graph.setColor(Color.RED);
 					graph.drawString("GAME OVER", height / 2 - 30, height / 2);
-					graph.drawString("YOUR SCORE : " + score, height / 2 - 40, height / 2 +
+					graph.drawString("YOUR SCORE : " + snake1.getScore(), height / 2 - 40, height / 2 +
 							50);
 					graph.drawString("YOUR TIME : " + getTime(), height / 2 - 42, height / 2
 							+ 100);
@@ -161,39 +194,22 @@ public class Server implements KeyListener, WindowListener {
 					graph.drawString("PAUSED", height / 2 - 30, height / 2);
 				}
 				graph.setColor(Color.BLACK);
-				graph.drawString("SCORE = " + score, 10, 20);
+				graph.drawString("SCORE = " + snake1.getScore(), 10, 20);
 				graph.drawString("TIME = " + getTime(), 100, 20); // Clock
 				graph.dispose();
 			} while (strategy.contentsRestored());
-			// Draw image from buffer
+
+			// Draw image from buffer by BufferStrategy object in AWT
 			strategy.show();
 			Toolkit.getDefaultToolkit().sync();
 		} while (strategy.contentsLost());
 	}
 
-	private void mainLoop() {
-		while (!game_over) {
-			cycleTime = System.currentTimeMillis();
-			if (!paused) {
-				direction = next_direction;
-				moveSnake();
-			}
-			renderGame();
-			cycleTime = System.currentTimeMillis() - cycleTime;
-			sleepTime = speed - cycleTime;
-			if (sleepTime < 0)
-				sleepTime = 0;
-			try {
-				Thread.sleep(sleepTime);
-			} catch (InterruptedException ex) {
-				Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
-			}
-		}
-	}
+
 
 	private String getTime() {
 		String temps = new String(minute + ":" + seconde);
-		if (direction < 0 || paused)
+		if (snake1.getDirection() < 0 || paused)
 			return temps;
 		milliseconde++;
 		if (milliseconde == 14) {
@@ -207,123 +223,13 @@ public class Server implements KeyListener, WindowListener {
 		return temps;
 	}
 
-	private void moveSnake() {
-		if (direction < 0) {
-			return;
-		}
-		int ymove = 0;
-		int xmove = 0;
-		switch (direction) {
-		case UP:
-			xmove = 0;
-			ymove = -1;
-			break;
-		case DOWN:
-			xmove = 0;
-			ymove = 1;
-			break;
-		case RIGHT:
-			xmove = 1;
-			ymove = 0;
-			break;
-		case LEFT:
-			xmove = -1;
-			ymove = 0;
-			break;
-		default:
-			xmove = 0;
-			ymove = 0;
-			break;
-		}
-		int tempx = snake[0][0];
-		int tempy = snake[0][1];
-		int fut_x = snake[0][0] + xmove;
-		int fut_y = snake[0][1] + ymove;
-		if (fut_x < 0)
-			fut_x = gameSize - 1;
-		if (fut_y < 0)
-			fut_y = gameSize - 1;
-		if (fut_x >= gameSize)
-			fut_x = 0;
-		if (fut_y >= gameSize)
-			fut_y = 0;
-		if (grid[fut_x][fut_y] == FOOD_BONUS) {
-			grow++;
-			score++;
-			placeBonus(FOOD_BONUS);
-		}
-		if (grid[fut_x][fut_y] == FOOD_MALUS) {
-			grow += 2;
-			score--;
-		} else if (grid[fut_x][fut_y] == BIG_FOOD_BONUS) {
-			grow += 3;
-			score += 3;
-		}
-		snake[0][0] = fut_x;
-		snake[0][1] = fut_y;
-		if ((grid[snake[0][0]][snake[0][1]] == SNAKE)) {
-			gameOver();
-			return;
-		}
-		grid[tempx][tempy] = EMPTY;
-		int snakex, snakey, i;
-		for (i = 1; i < gameSize * gameSize; i++) {
-			if ((snake[i][0] < 0) || (snake[i][1] < 0)) {
-				break;
-			}
-			grid[snake[i][0]][snake[i][1]] = EMPTY;
-			snakex = snake[i][0];
-			snakey = snake[i][1];
-			snake[i][0] = tempx;
-			snake[i][1] = tempy;
-			tempx = snakex;
-			tempy = snakey;
-		}
-		for (i = 0; i < gameSize * gameSize; i++) {
-			if ((snake[i][0] < 0) || (snake[i][1] < 0)) {
-				break;
-			}
-			grid[snake[i][0]][snake[i][1]] = SNAKE;
-		}
-		bonusTime--;
-		if (bonusTime == 0) {
-			for (i = 0; i < gameSize; i++) {
-				for (int j = 0; j < gameSize; j++) {
-					if (grid[i][j] == BIG_FOOD_BONUS)
-						grid[i][j] = EMPTY;
-				}
-			}
-		}
-		malusTime--;
-		if (malusTime == 0) {
-			for (i = 0; i < gameSize; i++) {
-				for (int j = 0; j < gameSize; j++) {
-					if (grid[i][j] == FOOD_MALUS)
-						grid[i][j] = EMPTY;
-				}
-			}
-		}
-		if (grow > 0) {
-			snake[i][0] = tempx;
-			snake[i][1] = tempy;
-			grid[snake[i][0]][snake[i][1]] = SNAKE;
-			if (score % 10 == 0) {
-				placeBonus(BIG_FOOD_BONUS);
-				bonusTime = 100;
-			}
-			if (score % 5 == 0) {
-				placeMalus(FOOD_MALUS);
-				malusTime = 100;
-			}
-			grow--;
-		}
-	}
 
+	//--------------------------------- place food-----------------------------------------------------------
 	public void placeBonus(int bonus_type) {
 		int x = (int) (Math.random() * 1000) % gameSize;
 		int y = (int) (Math.random() * 1000) % gameSize;
-		if (grid[x][y] == EMPTY) {
-			grid[x][y] = bonus_type;
+		if (map.getMapInfo(x, y) == EMPTY) {
+			map.setMapInfo(x, y, bonus_type);
 		} else {
 			placeBonus(bonus_type);
 		}
@@ -331,16 +237,13 @@ public class Server implements KeyListener, WindowListener {
 	public void placeMalus(int malus_type) {
 		int x = (int) (Math.random() * 1000) % gameSize;
 		int y = (int) (Math.random() * 1000) % gameSize;
-		if (grid[x][y] == EMPTY) {
-			grid[x][y] = malus_type;
+		if (map.getMapInfo(x, y) == EMPTY) {
+			map.setMapInfo(x, y, malus_type);
 		} else {
 			placeMalus(malus_type);
 		}
 	}
-	
-	public void gameOver() {
-		game_over = true;
-	}
+
 
 	//TODO IMPLEMENTED FUNCTIONS ----------right now only for one snake---------------------------
 
@@ -348,26 +251,49 @@ public class Server implements KeyListener, WindowListener {
 		int code = ke.getKeyCode();
 		Dimension dim;
 		switch (code) {
+		//------------------------keyboard press control snake1-----------------------------------
 		case KeyEvent.VK_UP:
-			if (direction != DOWN) {
-				next_direction = UP;
+			if (snake1.getDirection() != DOWN) {
+				snake1.setNext_direction(UP);
 			}
 			break;
 		case KeyEvent.VK_DOWN:
-			if (direction != UP) {
-				next_direction = DOWN;
+			if (snake1.getDirection() != UP) {
+				snake1.setNext_direction(DOWN);
 			}
 			break;
 		case KeyEvent.VK_LEFT:
-			if (direction != RIGHT) {
-				next_direction = LEFT;
+			if (snake1.getDirection() != RIGHT) {
+				snake1.setNext_direction(LEFT);
 			}
 			break;
 		case KeyEvent.VK_RIGHT:
-			if (direction != LEFT) {
-				next_direction = RIGHT;
+			if (snake1.getDirection() != LEFT) {
+				snake1.setNext_direction(RIGHT);
 			}
 			break;
+			//-----------------------keyboard press control snake2--------------------------------------------------
+		case KeyEvent.VK_W:
+			if (snake2.getDirection() != DOWN) {
+				snake2.setNext_direction(UP);
+			}
+			break;
+		case KeyEvent.VK_S:
+			if (snake2.getDirection() != UP) {
+				snake2.setNext_direction(DOWN);
+			}
+			break;
+		case KeyEvent.VK_A:
+			if (snake2.getDirection() != RIGHT) {
+				snake2.setNext_direction(LEFT);
+			}
+			break;
+		case KeyEvent.VK_D:
+			if (snake1.getDirection() != LEFT) {
+				snake1.setNext_direction(RIGHT);
+			}
+			break;
+			//------------------other keyboard press----------------------------------------------------------
 		case KeyEvent.VK_F11:
 			dim = Toolkit.getDefaultToolkit().getScreenSize();
 			if ((height != dim.height - 50) || (width != dim.height - 50)) {
@@ -394,9 +320,9 @@ public class Server implements KeyListener, WindowListener {
 			break;
 		}
 	}
-	
+
 	//-----------setter-----getter-------------------------------------------------------------
-	
+
 	public int getSeconde() {
 		return seconde;
 	}
@@ -443,6 +369,14 @@ public class Server implements KeyListener, WindowListener {
 
 	public void setMalusTime(int malusTime) {
 		this.malusTime = malusTime;
+	}
+
+	public long getSleepTime() {
+		return sleepTime;
+	}
+
+	public void setSleepTime(long sleepTime) {
+		this.sleepTime = sleepTime;
 	}
 
 	//--------------------------------UNNUSED IMPLEMENTED FUNCTIONS--------------------------------------------
