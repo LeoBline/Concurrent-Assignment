@@ -10,6 +10,8 @@ import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.awt.image.BufferStrategy;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -20,7 +22,7 @@ import sun.security.jgss.LoginConfigImpl;
 
 public class Server implements KeyListener, WindowListener {
 	//make Server Class singleton
-	private static Server server;
+	private static Server server = new Server();
 
 	//Server class will use map singleton
 	Map map =  Map.getMap();
@@ -69,6 +71,8 @@ public class Server implements KeyListener, WindowListener {
 		}catch(Exception e) {
 			e.getStackTrace();
 		}
+		ExecutorService executorService= Executors.newFixedThreadPool(4);
+
 		server.init();
 		server.mainLoop();
 	}
@@ -78,7 +82,7 @@ public class Server implements KeyListener, WindowListener {
 			server.setCycleTime(System.currentTimeMillis());
 			if (!server.paused) {
 				snake1.setDirection(snake1.getNext_direction());
-				snake1.moveSnake();
+				game_over = snake1.moveSnake();
 			}
 			server.renderGame();
 			server.setCycleTime(System.currentTimeMillis() - server.getCycleTime());
@@ -100,9 +104,9 @@ public class Server implements KeyListener, WindowListener {
 		snake1 = new Snake(new int[gameSize * gameSize][2]);//TODO init new snake, here only have one snake now
 		//		snake2 = new Snake(new int[gameSize * gameSize][2]);
 
-		this.Login();
 	}
 	
+
 	private void Login() {
 		ServerDB serverdb = new ServerDB();
 		serverdb.Updata(serverdb.getMap(), serverdb.getDB());

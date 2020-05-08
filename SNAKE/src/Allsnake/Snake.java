@@ -28,9 +28,9 @@ public class Snake {
 		snake = array;//init new snake body
 	}
 
-	public void moveSnake() {
+	public boolean moveSnake() {
 		if (direction < 0) {
-			return;
+			return game_over;
 		}
 		int ymove = 0;
 		int xmove = 0;
@@ -88,7 +88,7 @@ public class Snake {
 		//when snake head hit a snake's part, game is over
 		if (map.getMapInfo(snake[0][0], snake[0][1]) == Server.SNAKE) {
 			gameOver();
-			return;
+			return game_over;
 		}
 		
 		map.setMapInfo(tempx, tempy, Server.EMPTY);
@@ -110,7 +110,7 @@ public class Snake {
 			if ((snake[i][0] < 0) || (snake[i][1] < 0)) {
 				break;
 			}
-			map.setMapInfo(snake[i][0], snake[i][1], Server.SNAKE);
+  			map.setMapInfo(snake[i][0], snake[i][1], Server.SNAKE);
 		}
 		server.setBonusTime(server.getBonusTime() - 1);
 		if (server.getBonusTime() == 0) {
@@ -144,6 +144,7 @@ public class Snake {
 			}
 			grow--;
 		}
+		return game_over;
 	}
 
 //	public void mainLoop() {
