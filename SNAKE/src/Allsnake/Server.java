@@ -64,7 +64,6 @@ public class Server implements KeyListener, WindowListener {
 	//snakes
 	Snake snake1 = null;
 	Snake snake2 = null;
-	PlayerlistRun playerlistRun;
 
 	public static void main(String[] args) {
 		try {
