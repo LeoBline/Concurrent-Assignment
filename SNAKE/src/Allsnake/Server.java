@@ -20,7 +20,7 @@ import javax.swing.JFrame;
 import sun.security.jgss.LoginConfigImpl;
 
 
-public class Server implements KeyListener, WindowListener {
+public class Server implements Runnable, KeyListener, WindowListener {
 	//make Server Class singleton
 	private static Server server = new Server();
 
@@ -65,17 +65,23 @@ public class Server implements KeyListener, WindowListener {
 	Snake snake1 = null;
 	Snake snake2 = null;
 
-	public static void main(String[] args) {
-		try {
-			server = new Server();
-		}catch(Exception e) {
-			e.getStackTrace();
-		}
-		ExecutorService executorService= Executors.newFixedThreadPool(4);
-
-		server.init();
-		server.mainLoop();
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+		this.mainLoop();
 	}
+
+//	public static void main(String[] args) {
+//		try {
+//			server = new Server();
+//		}catch(Exception e) {
+//			e.getStackTrace();
+//		}
+//		ExecutorService executorService= Executors.newFixedThreadPool(4);
+//
+//		server.init();
+//		server.mainLoop();
+//	}
 
 	private void mainLoop() {
 		while (!game_over) {
@@ -97,12 +103,15 @@ public class Server implements KeyListener, WindowListener {
 		}
 	}
 
-	private Server() {
+	public Server() {
+		super();
 		frame = new JFrame();
 		canvas = new Canvas();
 		map.setMap(new int[gameSize][gameSize]);//init location on the map
 		snake1 = new Snake(new int[gameSize * gameSize][2]);//TODO init new snake, here only have one snake now
 		//		snake2 = new Snake(new int[gameSize * gameSize][2]);
+		this.init();
+		Login();
 		
 
 	}
@@ -121,7 +130,7 @@ public class Server implements KeyListener, WindowListener {
 	}
 	private void init() {
 		//draw background of the game
-		frame.setSize(width + 7, height + 27);
+		frame.setSize(width + 200, height + 800);
 		frame.setResizable(false);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setLocationByPlatform(true);
