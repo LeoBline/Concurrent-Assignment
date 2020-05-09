@@ -16,7 +16,7 @@ public class ServerDB {
  
     public synchronized String Login(String id,String password,ConcurrentNavigableMap<String, String> Playermap) {
     	if(Playermap.containsKey(id)) {
-    		if(Playermap.get(id) == password) {
+    		if(Playermap.get(id).equals(password)) {
     			return id;
     		}else
     		{

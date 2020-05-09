@@ -24,12 +24,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 /**
 * @author Peuch
 */
-public class ServerUIControl extends Thread implements  KeyListener, WindowListener {
+public class ServerUIControl  implements Runnable, KeyListener, WindowListener {
 	// KEYS MAP
 	public final static int UP = 0;
 	public final static int DOWN = 1;
@@ -68,24 +70,18 @@ public class ServerUIControl extends Thread implements  KeyListener, WindowListe
 	JButton loginButton = new JButton("Login");
 	JTextField idField = new JTextField();
 	JTextField passwordField = new JTextField();
-		
+	ServerDB serverdb;
 	
 	
 
 	/**
 	 * @param args the command line arguments
 	 */
-//	public static void main(String[] args) {
-//		Server game = new Server();
-//		game.init();
-//		game.mainLoop();
-//	}
 
-	@Override
-	public void run() {
-		// TODO Auto-generated method stub
-		this.mainLoop();
-	}
+public void run() {
+	// TODO Auto-generated method stub
+	this.mainLoop();
+}
 	public ServerUIControl() {
 		super();
 		frame = new Frame();
@@ -94,14 +90,18 @@ public class ServerUIControl extends Thread implements  KeyListener, WindowListe
 		snake = new int[gameSize * gameSize][2];
 		this.init();
 		this.renderGame();
-		this.mainLoop();
+		serverdb = new ServerDB();
+		serverdb.Updata(serverdb.getMap(), serverdb.getDB());
+//		this.mainLoop();
 	}
 	
-	private void Login() {
-		ServerDB serverdb = new ServerDB();
-		serverdb.Updata(serverdb.getMap(), serverdb.getDB());
-		if (serverdb.Login("001", "123456", serverdb.getMap()) != null) {
+	private synchronized void Login(String id,String password) {
+
+		if (serverdb.Login(id, password, serverdb.getMap()) != "") {
 			System.out.println("success login");
+			JOptionPane.showMessageDialog(null, "Success Login","", JOptionPane.INFORMATION_MESSAGE);
+		}else {
+			JOptionPane.showMessageDialog(null, "Fail Login","", JOptionPane.INFORMATION_MESSAGE);
 		}
 	}
 
@@ -124,8 +124,8 @@ public class ServerUIControl extends Thread implements  KeyListener, WindowListe
 			@Override
 			public void mouseClicked(MouseEvent e) {
 			// TODO Auto-generated method stub
-			Login();
-			System.out.println("Mouse Pressed");
+			Login(idField.getText(),passwordField.getText());
+			System.out.println(idField.getText());
 			}
 			});
 //		idField.setBackground(Color.yellow);

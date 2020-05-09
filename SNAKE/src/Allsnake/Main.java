@@ -19,8 +19,8 @@ public class Main {
 		// TODO Auto-generated method stub
 		ExecutorService executorService= Executors.newFixedThreadPool(4);
 		ServerUIControl server= new ServerUIControl();
-//		Thread aThread = new Thread(server);
-//		aThread.start();
+		Thread aThread = new Thread(server);
+		aThread.start();
 		
 	}
 
