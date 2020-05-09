@@ -64,6 +64,7 @@ public class Server implements KeyListener, WindowListener {
 	//snakes
 	Snake snake1 = null;
 	Snake snake2 = null;
+	PlayerlistRun playerlistRun;
 
 	public static void main(String[] args) {
 		try {
@@ -103,6 +104,7 @@ public class Server implements KeyListener, WindowListener {
 		map.setMap(new int[gameSize][gameSize]);//init location on the map
 		snake1 = new Snake(new int[gameSize * gameSize][2]);//TODO init new snake, here only have one snake now
 		//		snake2 = new Snake(new int[gameSize * gameSize][2]);
+		
 
 	}
 	
@@ -110,7 +112,6 @@ public class Server implements KeyListener, WindowListener {
 	private void Login() {
 		ServerDB serverdb = new ServerDB();
 		serverdb.Updata(serverdb.getMap(), serverdb.getDB());
-		//login
 		if (serverdb.Login("001", "123456", serverdb.getMap()) != null) {
 			System.out.println("success login");
 		}

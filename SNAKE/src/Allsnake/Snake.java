@@ -21,14 +21,14 @@ public class Snake {
 
 	private boolean game_over = false;//to show if the snake is dead
 	private int score = 0;
-	private int grow = 0;//length of the snake
+	private int Length = 0;//length of the snake
 
 
 	public Snake(int[][] array) {
 		snake = array;//init new snake body
 	}
 
-	public boolean moveSnake() {
+	public synchronized boolean moveSnake() {
 		if (direction < 0) {
 			return game_over;
 		}
@@ -71,15 +71,15 @@ public class Snake {
 			fut_y = 0;
 		//caculate length after each moving
 		if (map.getMapInfo(fut_x, fut_y) == Server.FOOD_BONUS) {
-			grow++;
+			Length++;
 			score++;
 			server.placeBonus(Server.FOOD_BONUS);
 		}
 		if (map.getMapInfo(fut_x, fut_y) == Server.FOOD_MALUS) {
-			grow += 2;
+			Length += 2;
 			score--;
 		} else if (map.getMapInfo(fut_x, fut_y) == Server.BIG_FOOD_BONUS) {
-			grow += 3;
+			Length += 3;
 			score += 3;
 		}
 		//move snake head
@@ -130,7 +130,7 @@ public class Snake {
 				}
 			}
 		}
-		if (grow > 0) {
+		if (Length > 0) {
 			snake[i][0] = tempx;
 			snake[i][1] = tempy;
 			map.setMapInfo(snake[i][0], snake[i][1], Server.SNAKE);
@@ -142,7 +142,7 @@ public class Snake {
 				server.placeMalus(Server.FOOD_MALUS);
 				server.setMalusTime(100);
 			}
-			grow--;
+			Length--;
 		}
 		return game_over;
 	}

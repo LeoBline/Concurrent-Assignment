@@ -4,15 +4,13 @@ package Allsnake;
  * The Player Class
  *
  */
-public class Player implements Runnable{
+public class Player {
     private String ID;
     private int myScore;
     private Snake mySnake;
     private Buffer playerBuffer;
 
-    public void run() {
 
-    }
 
     /**
      * Move the Snake on the map from what player press on the keyboard
@@ -26,6 +24,7 @@ public class Player implements Runnable{
 
 
     public void InitSnake(){
+    	mySnake = new Snake(array)
 
     }
 
