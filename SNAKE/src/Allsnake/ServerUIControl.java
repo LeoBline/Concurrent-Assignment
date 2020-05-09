@@ -28,6 +28,8 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
+import com.sun.prism.Image;
+
 /**
 * @author Peuch
 */
@@ -44,7 +46,7 @@ public class ServerUIControl  implements Runnable, KeyListener, WindowListener {
 	public final static int BIG_FOOD_BONUS = 3;
 	public final static int SNAKE = 4;
 	private int[][] grid = null;
-	private int[][] snake = null;
+	private Snake snake = null;
 	private int direction = -1;
 	private int next_direction = -1;
 	private int height = 720;
@@ -71,6 +73,7 @@ public class ServerUIControl  implements Runnable, KeyListener, WindowListener {
 	JTextField idField = new JTextField();
 	JTextField passwordField = new JTextField();
 	ServerDB serverdb;
+	Player[] playerlist = new Player[0];
 	
 	
 
@@ -87,32 +90,38 @@ public void run() {
 		frame = new Frame();
 		canvas = new Canvas();
 		grid = new int[gameSize][gameSize];
-		snake = new int[gameSize * gameSize][2];
+//		this.addplayer(new Player("001", gameSize));
+//		snake = playerlist[0].getSnake();
 		this.init();
-		this.renderGame();
+		
 		serverdb = new ServerDB();
 		serverdb.Updata(serverdb.getMap(), serverdb.getDB());
+		this.renderGame();
 //		this.mainLoop();
 	}
 	
 	private synchronized void Login(String id,String password) {
-
+//Verify the password of the filled database account.
 		if (serverdb.Login(id, password, serverdb.getMap()) != "") {
 			System.out.println("success login");
 			JOptionPane.showMessageDialog(null, "Success Login","", JOptionPane.INFORMATION_MESSAGE);
+			this.addplayer(new Player("001", gameSize));
+			snake = playerlist[0].getSnake();
+			for (int i = 0; i < gameSize * gameSize; i++) {
+				snake.setSnakeInfo(i, 0, -1);
+				snake.setSnakeInfo(i, 1, -1);
+
+			}
+			snake.setSnakeInfo(0, 0, gameSize / 2);
+	        snake.setSnakeInfo(0, 1, gameSize / 2);
+			grid[gameSize / 2][gameSize / 2] = SNAKE;
 		}else {
 			JOptionPane.showMessageDialog(null, "Fail Login","", JOptionPane.INFORMATION_MESSAGE);
 		}
 	}
 
 	public void init() {
-		//connect db
-//		ServerDB serverdb = new ServerDB();
-//		serverdb.Updata(serverdb.getMap(), serverdb.getDB());
-//		//login
-//		if (serverdb.Login("001", "123456", serverdb.getMap()) != null) {
-//			System.out.println("success login");
-//		}
+//
 		frame.setSize(width + 310, height + 300);
 		frame.setResizable(false);
 		frame.setLocationByPlatform(true);
@@ -128,7 +137,7 @@ public void run() {
 			System.out.println(idField.getText());
 			}
 			});
-//		idField.setBackground(Color.yellow);
+//		Add label and text box and login button.
 		frame.add(idField);
 		frame.add(passwordField);
 		frame.add(loginButton);
@@ -153,7 +162,7 @@ public void run() {
 			cycleTime = System.currentTimeMillis();
 			if (!paused) {
 				direction = next_direction;
-				moveSnake();
+				moveSnake(); 
 			}
 			renderGame();
 			cycleTime = System.currentTimeMillis() - cycleTime;
@@ -175,13 +184,6 @@ public void run() {
 				grid[i][j] = EMPTY;
 			}
 		}
-		for (int i = 0; i < gameSize * gameSize; i++) {
-			snake[i][0] = -1;
-			snake[i][1] = -1;
-		}
-		snake[0][0] = gameSize / 2;
-		snake[0][1] = gameSize / 2;
-		grid[gameSize / 2][gameSize / 2] = SNAKE;
 		placeBonus(FOOD_BONUS);
 	}
 
@@ -193,8 +195,9 @@ public void run() {
 				graph = strategy.getDrawGraphics();
 				// Draw Background
 				graph.setColor(Color.black);
-//				graph.fillRect(x, y, gridUnit, gridUnit);
+//				Draw a border line
 				graph.drawRect(backgroundright-1, backgroundDown-1, width+1 ,height+1);
+				graph.drawRect(10, backgroundDown-1+ height/3+7, backgroundright-15 ,height+1);
 
 				graph.drawRect(10, backgroundDown-1, backgroundright-15 ,height/3);
 				graph.setColor(Color.WHITE);
@@ -245,6 +248,16 @@ public void run() {
 				graph.drawString("Login", backgroundright/2-20, 20+backgroundDown);
 				graph.drawString("ID :", 25, 20+backgroundDown+30);
 				graph.drawString("Password :", 25, 20+backgroundDown+100);
+				graph.drawString("Scoreboard", backgroundright/2-60, 20+backgroundDown+ height/3+7);
+//				graph.drawString("SCORE = " + score, 150, 20+backgroundDown+ height/3+7+30);
+				for(int i=0 ;i<playerlist.length;i++) {
+					graph.drawString(playerlist[i].getID(), 25, 20+backgroundDown+ height/3+7+(i+1)*30);
+					String scoreString = ""+score;
+					graph.setColor(Color.white);
+					graph.fillRect(200, 20+backgroundDown+ height/3+15+(i)*30,30,30);
+					graph.setColor(Color.BLACK);
+					graph.drawString("" + score, 200, 20+backgroundDown+ height/3+7+(i+1)*30);
+				}
 				graph.dispose();
 			} while (strategy.contentsRestored());
 			// Draw image from buffer
@@ -297,10 +310,10 @@ public void run() {
 			ymove = 0;
 			break;
 		}
-		int tempx = snake[0][0];
-		int tempy = snake[0][1];
-		int fut_x = snake[0][0] + xmove;
-		int fut_y = snake[0][1] + ymove;
+		int tempx = snake.getSnakeInfo(0, 0);
+		int tempy = snake.getSnakeInfo(0, 1);
+		int fut_x = snake.getSnakeInfo(0, 0) + xmove;
+		int fut_y = snake.getSnakeInfo(0, 1) + ymove;
 		if (fut_x < 0)
 			fut_x = gameSize - 1;
 		if (fut_y < 0)
@@ -321,31 +334,31 @@ public void run() {
 			grow += 3;
 			score += 3;
 		}
-		snake[0][0] = fut_x;
-		snake[0][1] = fut_y;
-		if ((grid[snake[0][0]][snake[0][1]] == SNAKE)) {
+		snake.setSnakeInfo(0, 0, fut_x);
+		snake.setSnakeInfo(0, 1, fut_y);
+		if ((grid[snake.getSnakeInfo(0, 0)][snake.getSnakeInfo(0, 1)] == SNAKE)) {
 			gameOver();
 			return;
 		}
 		grid[tempx][tempy] = EMPTY;
 		int snakex, snakey, i;
 		for (i = 1; i < gameSize * gameSize; i++) {
-			if ((snake[i][0] < 0) || (snake[i][1] < 0)) {
+			if ((snake.getSnakeInfo(i, 0) < 0) || (snake.getSnakeInfo(i, 0) < 0)) {
 				break;
 			}
-			grid[snake[i][0]][snake[i][1]] = EMPTY;
-			snakex = snake[i][0];
-			snakey = snake[i][1];
-			snake[i][0] = tempx;
-			snake[i][1] = tempy;
+			grid[snake.getSnakeInfo(i, 0)][snake.getSnakeInfo(i, 1)] = EMPTY;
+			snakex = snake.getSnakeInfo(i, 0);
+			snakey = snake.getSnakeInfo(i, 1);
+			snake.setSnakeInfo(i, 0, tempx);
+			snake.setSnakeInfo(i, 1, tempy);
 			tempx = snakex;
 			tempy = snakey;
 		}
 		for (i = 0; i < gameSize * gameSize; i++) {
-			if ((snake[i][0] < 0) || (snake[i][1] < 0)) {
+			if ((snake.getSnakeInfo(i, 0) < 0) || (snake.getSnakeInfo(i, 1) < 0)) {
 				break;
 			}
-			grid[snake[i][0]][snake[i][1]] = SNAKE;
+			grid[snake.getSnakeInfo(i, 0)][snake.getSnakeInfo(i, 1)] = SNAKE;
 		}
 		bonusTime--;
 		if (bonusTime == 0) {
@@ -366,9 +379,9 @@ public void run() {
 			}
 		}
 		if (grow > 0) {
-			snake[i][0] = tempx;
-			snake[i][1] = tempy;
-			grid[snake[i][0]][snake[i][1]] = SNAKE;
+			snake.setSnakeInfo(i, 0, tempx);
+			snake.setSnakeInfo(i, 1, tempx);
+			grid[snake.getSnakeInfo(i, 0)][snake.getSnakeInfo(i, 1)] = SNAKE;
 			if (score % 10 == 0) {
 				placeBonus(BIG_FOOD_BONUS);
 				bonusTime = 100;
@@ -404,12 +417,24 @@ public void run() {
 	private void gameOver() {
 		game_over = true;
 	}
+	public void addplayer(Player a) {
+		
+		Player[] newplayerlistPlayers = new Player[playerlist.length+1];
+		for(int i =0 ; i<playerlist.length;i++) {
+			newplayerlistPlayers[i] = playerlist[i];
+			
+		}
+		newplayerlistPlayers[playerlist.length] = a;
+		playerlist = newplayerlistPlayers;
+	}
 
 	// IMPLEMENTED FUNCTIONS
 	public void keyPressed(KeyEvent ke) {
 		int code = ke.getKeyCode();
 		Dimension dim;
+		if(snake!=null) {
 		switch (code) {
+		
 		case KeyEvent.VK_UP:
 			if (direction != DOWN) {
 				next_direction = UP;
@@ -454,6 +479,7 @@ public void run() {
 		default:
 			// Unsupported key
 			break;
+		}
 		}
 	}
 

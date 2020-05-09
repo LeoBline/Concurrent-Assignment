@@ -40,6 +40,9 @@ public class Player {
     	myScore = mySnake.getScore();
         return myScore;
     }
+    public synchronized Snake getSnake() {
+    	return mySnake;
+    }
 
 //    public void setScore(int score) {
 //        myScore = score;
