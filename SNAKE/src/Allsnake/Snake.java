@@ -289,7 +289,9 @@ public class Snake {
 	 */
 	public void gameOver() {
 		game_over = true;
+		
 	}
+
 	public void placeBonus(int bonus_type) {
 		int x = (int) (Math.random() * 1000) % gameSize;
 		int y = (int) (Math.random() * 1000) % gameSize;
