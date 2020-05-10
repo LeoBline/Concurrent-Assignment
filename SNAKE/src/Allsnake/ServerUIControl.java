@@ -257,7 +257,7 @@ public class ServerUIControl implements KeyListener, WindowListener {
 					}
 				}
 				graph.setFont(new Font(Font.SANS_SERIF, Font.BOLD, height / 40));
-				if (game_over) {
+				if (playerlist[0].getsnake) {
 					graph.setColor(Color.RED);
 					graph.drawString("GAME OVER", height / 2 - 30, height / 2);
 					graph.drawString("YOUR SCORE : " + score, height / 2 - 40, height / 2 + 50);
