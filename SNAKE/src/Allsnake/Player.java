@@ -1,40 +1,60 @@
 package Allsnake;
 
-public class Player implements Runnable{
+/**
+ * The Player Class
+ *
+ */
+public class Player {
     private String ID;
-    private int Score;
+    private int myScore;
+    private Snake mySnake;
+    private Buffer playerBuffer = new Buffer();
+    private static int game_size;
 
-    public void run() {
 
+
+    /**
+     * Move the Snake on the map from what player press on the keyboard
+     *
+     * @param move The 'move' that get from player
+     */
+    public void getPlayerMove(char move){
+        playerBuffer.append(move);
     }
 
-    public void InputMove(char move){
+    public  Player(String id,int gamesize) {
+    	this.ID = id;
+		game_size=gamesize;
+		mySnake = new Snake(new int[game_size * game_size][2]);
+	}
 
-    }
 
     public void InitSnake(){
+    	mySnake = new Snake(new int[game_size * game_size][2]);
+    	playerBuffer = new Buffer();
 
     }
 
     //Getter and setter
     public int getScore() {
-        return Score;
+    	myScore = mySnake.getScore();
+        return myScore;
+    }
+    public synchronized Snake getSnake() {
+    	return mySnake;
     }
 
-    public void setScore(int score) {
-        Score = score;
-    }
+//    public void setScore(int score) {
+//        myScore = score;
+//    }
 
     public String getID() {
         return ID;
     }
 
-    public void setID(String ID) {
-        this.ID = ID;
-    }
-
-
-
+//    public void setID(String ID) {
+//        this.ID = ID;
+//    }
 
 
 }
