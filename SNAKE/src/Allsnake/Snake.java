@@ -204,6 +204,9 @@ public class Snake {
 	public void setScore(int score) {
 		this.score = score;
 	}
-	
+
+	public boolean get_gameover() {
+		return game_over;
+	}
 	
 }
