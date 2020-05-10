@@ -5,13 +5,20 @@ public class Map {
 	
 	private static Map map = new Map();
 	private int[][] grid = null;
-	
-	private Map(){
-		
-	}
+	private int gameSize = 80;
+/**
+ * 
+ */
+public Map() {
+	// TODO Auto-generated constructor stub
+	grid = new int[gameSize][gameSize];
+}
 	
 	public static  Map getMap() {
 		return map;
+	}
+	public int[][] getgrid() {
+		return grid;
 	}
 	
 	public void setMapInfo(int index1, int index2, int num) {

@@ -33,8 +33,9 @@ import com.sun.prism.Image;
 /**
 * @author Peuch
 */
-public class ServerUIControl  implements Runnable, KeyListener, WindowListener {
+public class ServerUIControl implements KeyListener, WindowListener {
 	// KEYS MAP
+	private static ServerUIControl serverUIControl = new ServerUIControl();
 	public final static int UP = 0;
 	public final static int DOWN = 1;
 	public final static int LEFT = 2;
@@ -52,6 +53,7 @@ public class ServerUIControl  implements Runnable, KeyListener, WindowListener {
 	private int height = 720;
 	private int width = 1200;
 	private int gameSize = 80;
+	public Map map = null;
 	private long speed = 70;
 	private Frame frame = null;
 	private Canvas canvas = null;
@@ -64,8 +66,8 @@ public class ServerUIControl  implements Runnable, KeyListener, WindowListener {
 	private int seconde, minute, milliseconde = 0; // Clock values
 	private long cycleTime = 0;
 	private long sleepTime = 0;
-	private int bonusTime = 0;
-	private int malusTime = 0;
+	public int bonusTime = 0;
+	public int malusTime = 0;
 	public boolean inittrue= false;
 	private int backgroundright = 300;
 	private int backgroundDown = 10;
@@ -73,7 +75,8 @@ public class ServerUIControl  implements Runnable, KeyListener, WindowListener {
 	JTextField idField = new JTextField();
 	JTextField passwordField = new JTextField();
 	ServerDB serverdb;
-	Player[] playerlist = new Player[0];
+	private Player[] playerlist = new Player[0];
+	
 	
 	
 
@@ -81,30 +84,46 @@ public class ServerUIControl  implements Runnable, KeyListener, WindowListener {
 	 * @param args the command line arguments
 	 */
 
-public void run() {
-	// TODO Auto-generated method stub
-	this.mainLoop();
-}
+//public void run() {
+//	// TODO Auto-generated method stub
+//	this.mainLoop();
+//}
 	public ServerUIControl() {
-		super();
+//		try {
+//			serverUIControl = new ser
+//		}
+//		super();
 		frame = new Frame();
 		canvas = new Canvas();
-		grid = new int[gameSize][gameSize];
+		
+		map = new Map();
+		grid = Map.getMap().getgrid();
 //		this.addplayer(new Player("001", gameSize));
 //		snake = playerlist[0].getSnake();
 		this.init();
 		
 		serverdb = new ServerDB();
 		serverdb.Updata(serverdb.getMap(), serverdb.getDB());
+		
+//		this.addplayer(new Player("001", gameSize));
+//		snake = playerlist[0].getSnake();
+//		for (int i = 0; i < gameSize * gameSize; i++) {
+//			snake.setSnakeInfo(i, 0, -1);
+//			snake.setSnakeInfo(i, 1, -1);
+//
+//		}
+//		snake.setSnakeInfo(0, 0, gameSize / 2);
+//        snake.setSnakeInfo(0, 1, gameSize / 2);
+//		grid[gameSize / 2][gameSize / 2] = SNAKE;
+		
 		this.renderGame();
-//		this.mainLoop();
+		this.mainLoop();
 	}
 	
-	private synchronized void Login(String id,String password) {
+	public synchronized  void Login(String id,String password) {
 //Verify the password of the filled database account.
 		if (serverdb.Login(id, password, serverdb.getMap()) != "") {
 			System.out.println("success login");
-			JOptionPane.showMessageDialog(null, "Success Login","", JOptionPane.INFORMATION_MESSAGE);
 			this.addplayer(new Player("001", gameSize));
 			snake = playerlist[0].getSnake();
 			for (int i = 0; i < gameSize * gameSize; i++) {
@@ -115,6 +134,8 @@ public void run() {
 			snake.setSnakeInfo(0, 0, gameSize / 2);
 	        snake.setSnakeInfo(0, 1, gameSize / 2);
 			grid[gameSize / 2][gameSize / 2] = SNAKE;
+			JOptionPane.showMessageDialog(null, "Success Login","", JOptionPane.INFORMATION_MESSAGE);
+
 		}else {
 			JOptionPane.showMessageDialog(null, "Fail Login","", JOptionPane.INFORMATION_MESSAGE);
 		}
@@ -159,10 +180,12 @@ public void run() {
 
 	public void mainLoop() {
 		while (!game_over) {
+			Thread aThread;
 			cycleTime = System.currentTimeMillis();
 			if (!paused) {
-				direction = next_direction;
-				moveSnake(); 
+				 aThread = new Thread(new Dateprocess(playerlist));
+				aThread.start();
+//				moveSnake(); 
 			}
 			renderGame();
 			cycleTime = System.currentTimeMillis() - cycleTime;
@@ -171,8 +194,9 @@ public void run() {
 				sleepTime = 0;
 			try {
 				Thread.sleep(sleepTime);
+				
 			} catch (InterruptedException ex) {
-				Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+				Logger.getLogger(ServerUIControl.class.getName()).log(Level.SEVERE, null, ex);
 			}
 		}
 	}
@@ -256,7 +280,7 @@ public void run() {
 					graph.setColor(Color.white);
 					graph.fillRect(200, 20+backgroundDown+ height/3+15+(i)*30,30,30);
 					graph.setColor(Color.BLACK);
-					graph.drawString("" + score, 200, 20+backgroundDown+ height/3+7+(i+1)*30);
+					graph.drawString("" + playerlist[i].getScore(), 200, 20+backgroundDown+ height/3+7+(i+1)*30);
 				}
 				graph.dispose();
 			} while (strategy.contentsRestored());
@@ -282,119 +306,119 @@ public void run() {
 		return temps;
 	}
 
-	private void moveSnake() {
-		if (direction < 0) {
-			return;
-		}
-		int ymove = 0;
-		int xmove = 0;
-		switch (direction) {
-		case UP:
-			xmove = 0;
-			ymove = -1;
-			break;
-		case DOWN:
-			xmove = 0;
-			ymove = 1;
-			break;
-		case RIGHT:
-			xmove = 1;
-			ymove = 0;
-			break;
-		case LEFT:
-			xmove = -1;
-			ymove = 0;
-			break;
-		default:
-			xmove = 0;
-			ymove = 0;
-			break;
-		}
-		int tempx = snake.getSnakeInfo(0, 0);
-		int tempy = snake.getSnakeInfo(0, 1);
-		int fut_x = snake.getSnakeInfo(0, 0) + xmove;
-		int fut_y = snake.getSnakeInfo(0, 1) + ymove;
-		if (fut_x < 0)
-			fut_x = gameSize - 1;
-		if (fut_y < 0)
-			fut_y = gameSize - 1;
-		if (fut_x >= gameSize)
-			fut_x = 0;
-		if (fut_y >= gameSize)
-			fut_y = 0;
-		if (grid[fut_x][fut_y] == FOOD_BONUS) {
-			grow++;
-			score++;
-			placeBonus(FOOD_BONUS);
-		}
-		if (grid[fut_x][fut_y] == FOOD_MALUS) {
-			grow += 2;
-			score--;
-		} else if (grid[fut_x][fut_y] == BIG_FOOD_BONUS) {
-			grow += 3;
-			score += 3;
-		}
-		snake.setSnakeInfo(0, 0, fut_x);
-		snake.setSnakeInfo(0, 1, fut_y);
-		if ((grid[snake.getSnakeInfo(0, 0)][snake.getSnakeInfo(0, 1)] == SNAKE)) {
-			gameOver();
-			return;
-		}
-		grid[tempx][tempy] = EMPTY;
-		int snakex, snakey, i;
-		for (i = 1; i < gameSize * gameSize; i++) {
-			if ((snake.getSnakeInfo(i, 0) < 0) || (snake.getSnakeInfo(i, 0) < 0)) {
-				break;
-			}
-			grid[snake.getSnakeInfo(i, 0)][snake.getSnakeInfo(i, 1)] = EMPTY;
-			snakex = snake.getSnakeInfo(i, 0);
-			snakey = snake.getSnakeInfo(i, 1);
-			snake.setSnakeInfo(i, 0, tempx);
-			snake.setSnakeInfo(i, 1, tempy);
-			tempx = snakex;
-			tempy = snakey;
-		}
-		for (i = 0; i < gameSize * gameSize; i++) {
-			if ((snake.getSnakeInfo(i, 0) < 0) || (snake.getSnakeInfo(i, 1) < 0)) {
-				break;
-			}
-			grid[snake.getSnakeInfo(i, 0)][snake.getSnakeInfo(i, 1)] = SNAKE;
-		}
-		bonusTime--;
-		if (bonusTime == 0) {
-			for (i = 0; i < gameSize; i++) {
-				for (int j = 0; j < gameSize; j++) {
-					if (grid[i][j] == BIG_FOOD_BONUS)
-						grid[i][j] = EMPTY;
-				}
-			}
-		}
-		malusTime--;
-		if (malusTime == 0) {
-			for (i = 0; i < gameSize; i++) {
-				for (int j = 0; j < gameSize; j++) {
-					if (grid[i][j] == FOOD_MALUS)
-						grid[i][j] = EMPTY;
-				}
-			}
-		}
-		if (grow > 0) {
-			snake.setSnakeInfo(i, 0, tempx);
-			snake.setSnakeInfo(i, 1, tempx);
-			grid[snake.getSnakeInfo(i, 0)][snake.getSnakeInfo(i, 1)] = SNAKE;
-			if (score % 10 == 0) {
-				placeBonus(BIG_FOOD_BONUS);
-				bonusTime = 100;
-			}
-			if (score % 5 == 0) {
-				placeMalus(FOOD_MALUS);
-				malusTime = 100;
-			}
-			grow--;
-		}
-	}
+//	private void moveSnake() {
+//		if (direction < 0) {
+//			return;
+//		}
+//		int ymove = 0;
+//		int xmove = 0;
+//		switch (direction) {
+//		case UP:
+//			xmove = 0;
+//			ymove = -1;
+//			break;
+//		case DOWN:
+//			xmove = 0;
+//			ymove = 1;
+//			break;
+//		case RIGHT:
+//			xmove = 1;
+//			ymove = 0;
+//			break;
+//		case LEFT:
+//			xmove = -1;
+//			ymove = 0;
+//			break;
+//		default:
+//			xmove = 0;
+//			ymove = 0;
+//			break;
+//		}
+//		int tempx = snake.getSnakeInfo(0, 0);
+//		int tempy = snake.getSnakeInfo(0, 1);
+//		int fut_x = snake.getSnakeInfo(0, 0) + xmove;
+//		int fut_y = snake.getSnakeInfo(0, 1) + ymove;
+//		if (fut_x < 0)
+//			fut_x = gameSize - 1;
+//		if (fut_y < 0)
+//			fut_y = gameSize - 1;
+//		if (fut_x >= gameSize)
+//			fut_x = 0;
+//		if (fut_y >= gameSize)
+//			fut_y = 0;
+//		if (grid[fut_x][fut_y] == FOOD_BONUS) {
+//			grow++;
+//			score++;
+//			placeBonus(FOOD_BONUS);
+//		}
+//		if (grid[fut_x][fut_y] == FOOD_MALUS) {
+//			grow += 2;
+//			score--;
+//		} else if (grid[fut_x][fut_y] == BIG_FOOD_BONUS) {
+//			grow += 3;
+//			score += 3;
+//		}
+//		snake.setSnakeInfo(0, 0, fut_x);
+//		snake.setSnakeInfo(0, 1, fut_y);
+//		if ((grid[snake.getSnakeInfo(0, 0)][snake.getSnakeInfo(0, 1)] == SNAKE)) {
+//			gameOver();
+//			return;
+//		}
+//		grid[tempx][tempy] = EMPTY;
+//		int snakex, snakey, i;
+//		for (i = 1; i < gameSize * gameSize; i++) {
+//			if ((snake.getSnakeInfo(i, 0) < 0) || (snake.getSnakeInfo(i, 0) < 0)) {
+//				break;
+//			}
+//			grid[snake.getSnakeInfo(i, 0)][snake.getSnakeInfo(i, 1)] = EMPTY;
+//			snakex = snake.getSnakeInfo(i, 0);
+//			snakey = snake.getSnakeInfo(i, 1);
+//			snake.setSnakeInfo(i, 0, tempx);
+//			snake.setSnakeInfo(i, 1, tempy);
+//			tempx = snakex;
+//			tempy = snakey;
+//		}
+//		for (i = 0; i < gameSize * gameSize; i++) {
+//			if ((snake.getSnakeInfo(i, 0) < 0) || (snake.getSnakeInfo(i, 1) < 0)) {
+//				break;
+//			}
+//			grid[snake.getSnakeInfo(i, 0)][snake.getSnakeInfo(i, 1)] = SNAKE;
+//		}
+//		bonusTime--;
+//		if (bonusTime == 0) {
+//			for (i = 0; i < gameSize; i++) {
+//				for (int j = 0; j < gameSize; j++) {
+//					if (grid[i][j] == BIG_FOOD_BONUS)
+//						grid[i][j] = EMPTY;
+//				}
+//			}
+//		}
+//		malusTime--;
+//		if (malusTime == 0) {
+//			for (i = 0; i < gameSize; i++) {
+//				for (int j = 0; j < gameSize; j++) {
+//					if (grid[i][j] == FOOD_MALUS)
+//						grid[i][j] = EMPTY;
+//				}
+//			}
+//		}
+//		if (grow > 0) {
+//			snake.setSnakeInfo(i, 0, tempx);
+//			snake.setSnakeInfo(i, 1, tempx);
+//			grid[snake.getSnakeInfo(i, 0)][snake.getSnakeInfo(i, 1)] = SNAKE;
+//			if (score % 10 == 0) {
+//				placeBonus(BIG_FOOD_BONUS);
+//				bonusTime = 100;
+//			}
+//			if (score % 5 == 0) {
+//				placeMalus(FOOD_MALUS);
+//				malusTime = 100;
+//			}
+//			grow--;
+//		}
+//	}
 
-	private void placeBonus(int bonus_type) {
+	public void placeBonus(int bonus_type) {
 		int x = (int) (Math.random() * 1000) % gameSize;
 		int y = (int) (Math.random() * 1000) % gameSize;
 		if (grid[x][y] == EMPTY) {
@@ -404,7 +428,7 @@ public void run() {
 		}
 	}
 
-	private void placeMalus(int malus_type) {
+	public void placeMalus(int malus_type) {
 		int x = (int) (Math.random() * 1000) % gameSize;
 		int y = (int) (Math.random() * 1000) % gameSize;
 		if (grid[x][y] == EMPTY) {
@@ -429,30 +453,34 @@ public void run() {
 	}
 
 	// IMPLEMENTED FUNCTIONS
-	public void keyPressed(KeyEvent ke) {
+	public synchronized void  keyPressed(KeyEvent ke) {
 		int code = ke.getKeyCode();
 		Dimension dim;
 		if(snake!=null) {
 		switch (code) {
 		
 		case KeyEvent.VK_UP:
-			if (direction != DOWN) {
-				next_direction = UP;
+			if (playerlist[0].getSnake().getDirection() != DOWN) {
+//				next_direction = UP;
+				playerlist[0].Getbuffer().append(UP);
 			}
 			break;
 		case KeyEvent.VK_DOWN:
-			if (direction != UP) {
-				next_direction = DOWN;
+			if (playerlist[0].getSnake().getDirection() != UP) {
+//				next_direction = DOWN;
+				playerlist[0].Getbuffer().append(DOWN);
 			}
 			break;
 		case KeyEvent.VK_LEFT:
-			if (direction != RIGHT) {
-				next_direction = LEFT;
+			if (playerlist[0].getSnake().getDirection()  != RIGHT) {
+//				next_direction = LEFT;
+				playerlist[0].Getbuffer().append(LEFT);
 			}
 			break;
 		case KeyEvent.VK_RIGHT:
-			if (direction != LEFT) {
-				next_direction = RIGHT;
+			if (playerlist[0].getSnake().getDirection()  != LEFT) {
+//				next_direction = RIGHT;
+				playerlist[0].Getbuffer().append(RIGHT);
 			}
 			break;
 		case KeyEvent.VK_F11:
@@ -482,6 +510,58 @@ public void run() {
 		}
 		}
 	}
+	public int getSeconde() {
+		return seconde;
+	}
+
+	public void setSeconde(int seconde) {
+		this.seconde = seconde;
+	}
+
+	public int getMinute() {
+		return minute;
+	}
+
+	public void setMinute(int minute) {
+		this.minute = minute;
+	}
+
+	public int getMilliseconde() {
+		return milliseconde;
+	}
+
+	public void setMilliseconde(int milliseconde) {
+		this.milliseconde = milliseconde;
+	}
+
+	public long getCycleTime() {
+		return cycleTime;
+	}
+
+	public void setCycleTime(long cycleTime) {
+		this.cycleTime = cycleTime;
+	}
+
+
+	public void setBonusTime(int bonusTime) {
+		this.bonusTime = bonusTime;
+	}
+
+	public int getMalusTime() {
+		return malusTime;
+	}
+
+	public void setMalusTime(int malusTime) {
+		this.malusTime = malusTime;
+	}
+
+	public long getSleepTime() {
+		return sleepTime;
+	}
+
+	public void setSleepTime(long sleepTime) {
+		this.sleepTime = sleepTime;
+	}
 
 	public void windowClosing(WindowEvent we) {
 		System.exit(0);
@@ -510,5 +590,39 @@ public void run() {
 	}
 
 	public void windowDeactivated(WindowEvent we) {
+	}
+
+	/**
+	 * @return
+	 */
+	public static  ServerUIControl getSever() {
+		// TODO Auto-generated method stub
+
+		return serverUIControl;
+	}
+
+	/**
+	 * @return
+	 */
+	public int getBonusTime() {
+		// TODO Auto-generated method stub
+		return bonusTime;
+	}
+
+	/**
+	 * @return
+	 */
+	public int getmalusTime() {
+		// TODO Auto-generated method stub
+		return malusTime;
+	}
+
+	/**
+	 * @param i
+	 */
+	public void setmalusTime(int i) {
+		// TODO Auto-generated method stub
+		malusTime = i;
+		
 	}
 }

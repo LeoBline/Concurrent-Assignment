@@ -1,5 +1,7 @@
 package Allsnake;
 
+import sun.security.action.GetBooleanAction;
+
 /**
  * The Player Class
  *
@@ -25,8 +27,12 @@ public class Player {
     public  Player(String id,int gamesize) {
     	this.ID = id;
 		game_size=gamesize;
-		mySnake = new Snake(new int[game_size * game_size][2]);
+		int[][] a =new int[game_size * game_size][2];
+		mySnake = new Snake(a);
 	}
+    public Buffer Getbuffer() {
+    	return playerBuffer;
+    }
 
 
     public void InitSnake(){
