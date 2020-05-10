@@ -94,6 +94,9 @@ public class Server implements KeyListener, WindowListener {
 			} catch (InterruptedException ex) {
 				Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
 			}
+			if (snake1.getGameOver()) {
+				gameOver();
+			}
 		}
 	}
 
@@ -233,10 +236,6 @@ public class Server implements KeyListener, WindowListener {
 		} while (strategy.contentsLost());
 	}
 
-
-
-
-
 	private String getTime() {
 		String temps = new String(minute + ":" + seconde);
 		if (snake1.getDirection() < 0 || paused)
@@ -253,7 +252,9 @@ public class Server implements KeyListener, WindowListener {
 		return temps;
 	}
 
-
+	private void gameOver() {
+		game_over = true;
+	}
 	//--------------------------------- place food-----------------------------------------------------------
 	public void placeBonus(int bonus_type) {
 		int x = (int) (Math.random() * 1000) % gameSize;

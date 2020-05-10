@@ -168,10 +168,13 @@ public class Snake {
 	/**
 	 * gameOver means this snake is dead
 	 */
-	public void gameOver() {
+	private void gameOver() {
 		game_over = true;
 	}
 
+	public boolean getGameOver() {
+		return game_over;
+	}
 	public void setSnakeInfo(int index1, int index2, int num) {
 		snake[index1][index2] = num;
 	}
