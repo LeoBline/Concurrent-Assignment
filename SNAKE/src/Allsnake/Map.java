@@ -17,6 +17,7 @@ public class Map {
 		return map;
 	}
 	public static MapNode getMapNode(){
+		return getMapNode();
 
 	}
 	public void setMapInfo(int index1, int index2, int num) {
