@@ -82,10 +82,11 @@ public class ServerUIControl implements KeyListener, WindowListener {
 	 */
 
 	public ServerUIControl() {
-
+		
 		frame = new Frame();
 		canvas = new Canvas();
 		
+		// map, serverUIControl singleton class
 		map = new Map();
 		grid = Map.getMap().getgrid();
 		this.init();
@@ -97,7 +98,8 @@ public class ServerUIControl implements KeyListener, WindowListener {
 		this.renderGame();
 		this.mainLoop();
 	}
-	//fix the bug
+	
+	// TODO login: anytime one player login
 	public synchronized  void Login(String id,String password) {
 //Verify the password of the filled database account.
 		if (serverdb.Login(id, password, serverdb.getMap()) != "") {
@@ -122,7 +124,7 @@ public class ServerUIControl implements KeyListener, WindowListener {
 	}
 
 	public void init() {
-//
+// draw window
 		frame.setSize(width + 310, height + 300);
 		frame.setResizable(false);
 		frame.setLocationByPlatform(true);
@@ -167,7 +169,7 @@ public class ServerUIControl implements KeyListener, WindowListener {
 				aThread.start();
 //				moveSnake(); 
 			}
-
+			//repaint game window
 			renderGame();
 			cycleTime = System.currentTimeMillis() - cycleTime;
 			sleepTime = speed - cycleTime;
@@ -408,6 +410,8 @@ public class ServerUIControl implements KeyListener, WindowListener {
 		}
 		}
 	}
+	
+	// setters---------------------getters------------------------------------------------------------------------
 	public int getSeconde() {
 		return seconde;
 	}

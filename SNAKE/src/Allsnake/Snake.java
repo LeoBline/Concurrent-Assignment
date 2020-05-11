@@ -146,6 +146,7 @@ public class Snake {
 			Length--;
 		}
 	}
+	
 	/**
 	 * gameOver means this snake is dead
 	 */
