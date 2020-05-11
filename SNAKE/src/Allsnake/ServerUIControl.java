@@ -2,9 +2,6 @@
  * 
  */
 package Allsnake;
-
-
-//Simple snake code from https://code.google.com/p/java-snake/source/browse/trunk/javasnake/src/snake/Main.java
 import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -51,7 +48,7 @@ public class ServerUIControl implements KeyListener, WindowListener {
 	private int direction = -1;
 	private int next_direction = -1;
 	private int height = 720;
-	private int width = 1200;
+	private int width = 720;
 	private int gameSize = 80;
 	public Map map = null;
 	private long speed = 70;
@@ -84,48 +81,30 @@ public class ServerUIControl implements KeyListener, WindowListener {
 	 * @param args the command line arguments
 	 */
 
-//public void run() {
-//	// TODO Auto-generated method stub
-//	this.mainLoop();
-//}
 	public ServerUIControl() {
-//		try {
-//			serverUIControl = new ser
-//		}
-//		super();
+
 		frame = new Frame();
 		canvas = new Canvas();
 		
 		map = new Map();
 		grid = Map.getMap().getgrid();
-//		this.addplayer(new Player("001", gameSize));
-//		snake = playerlist[0].getSnake();
 		this.init();
 		
 		serverdb = new ServerDB();
 		serverdb.Updata(serverdb.getMap(), serverdb.getDB());
 		
-//		this.addplayer(new Player("001", gameSize));
-//		snake = playerlist[0].getSnake();
-//		for (int i = 0; i < gameSize * gameSize; i++) {
-//			snake.setSnakeInfo(i, 0, -1);
-//			snake.setSnakeInfo(i, 1, -1);
-//
-//		}
-//		snake.setSnakeInfo(0, 0, gameSize / 2);
-//        snake.setSnakeInfo(0, 1, gameSize / 2);
-//		grid[gameSize / 2][gameSize / 2] = SNAKE;
 		
 		this.renderGame();
 		this.mainLoop();
 	}
-	
+	//fix the bug
 	public synchronized  void Login(String id,String password) {
 //Verify the password of the filled database account.
 		if (serverdb.Login(id, password, serverdb.getMap()) != "") {
 			System.out.println("success login");
+			//add player and snake
 			this.addplayer(new Player("001", gameSize));
-			snake = playerlist[0].getSnake();
+			snake = playerlist[playerlist.length-1].getSnake();
 			for (int i = 0; i < gameSize * gameSize; i++) {
 				snake.setSnakeInfo(i, 0, -1);
 				snake.setSnakeInfo(i, 1, -1);
@@ -134,6 +113,7 @@ public class ServerUIControl implements KeyListener, WindowListener {
 			snake.setSnakeInfo(0, 0, gameSize / 2);
 	        snake.setSnakeInfo(0, 1, gameSize / 2);
 			grid[gameSize / 2][gameSize / 2] = SNAKE;
+			
 			JOptionPane.showMessageDialog(null, "Success Login","", JOptionPane.INFORMATION_MESSAGE);
 
 		}else {
@@ -187,6 +167,7 @@ public class ServerUIControl implements KeyListener, WindowListener {
 				aThread.start();
 //				moveSnake(); 
 			}
+
 			renderGame();
 			cycleTime = System.currentTimeMillis() - cycleTime;
 			sleepTime = speed - cycleTime;
@@ -257,7 +238,7 @@ public class ServerUIControl implements KeyListener, WindowListener {
 					}
 				}
 				graph.setFont(new Font(Font.SANS_SERIF, Font.BOLD, height / 40));
-				if (false) {
+				if (game_over) {
 					graph.setColor(Color.RED);
 					graph.drawString("GAME OVER", height / 2 - 30, height / 2);
 					graph.drawString("YOUR SCORE : " + score, height / 2 - 40, height / 2 + 50);
@@ -276,7 +257,7 @@ public class ServerUIControl implements KeyListener, WindowListener {
 //				graph.drawString("SCORE = " + score, 150, 20+backgroundDown+ height/3+7+30);
 				for(int i=0 ;i<playerlist.length;i++) {
 					graph.drawString(playerlist[i].getID(), 25, 20+backgroundDown+ height/3+7+(i+1)*30);
-					String scoreString = ""+score;
+					String scoreString = ""+playerlist[i].getScore();
 					graph.setColor(Color.white);
 					graph.fillRect(200, 20+backgroundDown+ height/3+15+(i)*30,30,30);
 					graph.setColor(Color.BLACK);
@@ -306,117 +287,6 @@ public class ServerUIControl implements KeyListener, WindowListener {
 		return temps;
 	}
 
-//	private void moveSnake() {
-//		if (direction < 0) {
-//			return;
-//		}
-//		int ymove = 0;
-//		int xmove = 0;
-//		switch (direction) {
-//		case UP:
-//			xmove = 0;
-//			ymove = -1;
-//			break;
-//		case DOWN:
-//			xmove = 0;
-//			ymove = 1;
-//			break;
-//		case RIGHT:
-//			xmove = 1;
-//			ymove = 0;
-//			break;
-//		case LEFT:
-//			xmove = -1;
-//			ymove = 0;
-//			break;
-//		default:
-//			xmove = 0;
-//			ymove = 0;
-//			break;
-//		}
-//		int tempx = snake.getSnakeInfo(0, 0);
-//		int tempy = snake.getSnakeInfo(0, 1);
-//		int fut_x = snake.getSnakeInfo(0, 0) + xmove;
-//		int fut_y = snake.getSnakeInfo(0, 1) + ymove;
-//		if (fut_x < 0)
-//			fut_x = gameSize - 1;
-//		if (fut_y < 0)
-//			fut_y = gameSize - 1;
-//		if (fut_x >= gameSize)
-//			fut_x = 0;
-//		if (fut_y >= gameSize)
-//			fut_y = 0;
-//		if (grid[fut_x][fut_y] == FOOD_BONUS) {
-//			grow++;
-//			score++;
-//			placeBonus(FOOD_BONUS);
-//		}
-//		if (grid[fut_x][fut_y] == FOOD_MALUS) {
-//			grow += 2;
-//			score--;
-//		} else if (grid[fut_x][fut_y] == BIG_FOOD_BONUS) {
-//			grow += 3;
-//			score += 3;
-//		}
-//		snake.setSnakeInfo(0, 0, fut_x);
-//		snake.setSnakeInfo(0, 1, fut_y);
-//		if ((grid[snake.getSnakeInfo(0, 0)][snake.getSnakeInfo(0, 1)] == SNAKE)) {
-//			gameOver();
-//			return;
-//		}
-//		grid[tempx][tempy] = EMPTY;
-//		int snakex, snakey, i;
-//		for (i = 1; i < gameSize * gameSize; i++) {
-//			if ((snake.getSnakeInfo(i, 0) < 0) || (snake.getSnakeInfo(i, 0) < 0)) {
-//				break;
-//			}
-//			grid[snake.getSnakeInfo(i, 0)][snake.getSnakeInfo(i, 1)] = EMPTY;
-//			snakex = snake.getSnakeInfo(i, 0);
-//			snakey = snake.getSnakeInfo(i, 1);
-//			snake.setSnakeInfo(i, 0, tempx);
-//			snake.setSnakeInfo(i, 1, tempy);
-//			tempx = snakex;
-//			tempy = snakey;
-//		}
-//		for (i = 0; i < gameSize * gameSize; i++) {
-//			if ((snake.getSnakeInfo(i, 0) < 0) || (snake.getSnakeInfo(i, 1) < 0)) {
-//				break;
-//			}
-//			grid[snake.getSnakeInfo(i, 0)][snake.getSnakeInfo(i, 1)] = SNAKE;
-//		}
-//		bonusTime--;
-//		if (bonusTime == 0) {
-//			for (i = 0; i < gameSize; i++) {
-//				for (int j = 0; j < gameSize; j++) {
-//					if (grid[i][j] == BIG_FOOD_BONUS)
-//						grid[i][j] = EMPTY;
-//				}
-//			}
-//		}
-//		malusTime--;
-//		if (malusTime == 0) {
-//			for (i = 0; i < gameSize; i++) {
-//				for (int j = 0; j < gameSize; j++) {
-//					if (grid[i][j] == FOOD_MALUS)
-//						grid[i][j] = EMPTY;
-//				}
-//			}
-//		}
-//		if (grow > 0) {
-//			snake.setSnakeInfo(i, 0, tempx);
-//			snake.setSnakeInfo(i, 1, tempx);
-//			grid[snake.getSnakeInfo(i, 0)][snake.getSnakeInfo(i, 1)] = SNAKE;
-//			if (score % 10 == 0) {
-//				placeBonus(BIG_FOOD_BONUS);
-//				bonusTime = 100;
-//			}
-//			if (score % 5 == 0) {
-//				placeMalus(FOOD_MALUS);
-//				malusTime = 100;
-//			}
-//			grow--;
-//		}
-//	}
 
 	public void placeBonus(int bonus_type) {
 		int x = (int) (Math.random() * 1000) % gameSize;
@@ -458,7 +328,7 @@ public class ServerUIControl implements KeyListener, WindowListener {
 		Dimension dim;
 		if(snake!=null) {
 		switch (code) {
-		
+		//player1
 		case KeyEvent.VK_UP:
 			if (playerlist[0].getSnake().getDirection() != DOWN) {
 //				next_direction = UP;
@@ -483,6 +353,34 @@ public class ServerUIControl implements KeyListener, WindowListener {
 				playerlist[0].Getbuffer().append(RIGHT);
 			}
 			break;
+		
+			//player2
+		case KeyEvent.VK_W:
+			if (playerlist[1].getSnake().getDirection()  != DOWN &&playerlist.length==2) {
+//				next_direction = RIGHT;
+				playerlist[1].Getbuffer().append(UP);
+			}
+			break;
+			
+		case KeyEvent.VK_S:
+			if (playerlist[1].getSnake().getDirection() != UP &&playerlist.length==2) {
+//				next_direction = DOWN;
+				playerlist[1].Getbuffer().append(DOWN);
+			}
+			break;
+		case KeyEvent.VK_A:
+			if (playerlist[1].getSnake().getDirection()  != RIGHT &&playerlist.length==2) {
+//				next_direction = LEFT;
+				playerlist[1].Getbuffer().append(LEFT);
+			}
+			break;
+		case KeyEvent.VK_D:
+			if (playerlist[1].getSnake().getDirection()  != LEFT &&playerlist.length==2) {
+//				next_direction = RIGHT;
+				playerlist[1].Getbuffer().append(RIGHT);
+			}
+			break;
+			
 		case KeyEvent.VK_F11:
 			dim = Toolkit.getDefaultToolkit().getScreenSize();
 			if ((height != dim.height - 50) || (width != dim.height - 50)) {
