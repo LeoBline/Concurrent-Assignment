@@ -165,7 +165,7 @@ public class ServerUIControl implements KeyListener, WindowListener {
 			Thread aThread;
 			cycleTime = System.currentTimeMillis();
 			if (!paused) {
-				 aThread = new Thread(new Dateprocess(playerlist));
+				aThread = new Thread(new Dateprocess(playerlist));
 				aThread.start();
 //				moveSnake(); 
 			}
