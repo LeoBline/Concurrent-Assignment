@@ -17,7 +17,6 @@ public class Main {
 	 */
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		ExecutorService executorService= Executors.newFixedThreadPool(4);
 		ServerUIControl server= new ServerUIControl();
  
 		
