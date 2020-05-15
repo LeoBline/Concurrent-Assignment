@@ -299,7 +299,7 @@ public class ServerUIControl implements KeyListener, WindowListener {
 		if (playerlist[0].getSnake().getDirection() == -1 || paused)
 			return temps;
 		milliseconde++;
-		System.out.println(milliseconde);
+
 		if (milliseconde == 14) {
 			seconde++;
 			milliseconde = 0;
