@@ -36,6 +36,9 @@ public class Snake {
 	}
 
 	public synchronized void moveSnake() {
+		if(this.getSnakeInfo(0, 0)==-1) {
+			return;
+		}
 		if (direction < 0) {
 			return;
 		}
@@ -87,12 +90,14 @@ public class Snake {
 			Length += 3;
 			score += 3;
 		}
-		this.setSnakeInfo(0, 0, fut_x);
-		this.setSnakeInfo(0, 1, fut_y);
-		if ((map.getMapInfo(this.getSnakeInfo(0, 0), this.getSnakeInfo(0, 1)) == SNAKE)) {
+		if ((map.getMapInfo(fut_x, fut_y) == SNAKE)) {
 			gameOver();
+
 			return;
 		}
+		this.setSnakeInfo(0, 0, fut_x);
+		this.setSnakeInfo(0, 1, fut_y);
+
 		map.setMapInfo(tempx, tempy, EMPTY);
 		int snakex, snakey, i;
 		for (i = 1; i < gameSize * gameSize; i++) {
@@ -151,7 +156,13 @@ public class Snake {
 	 */
 	public void gameOver() {
 		game_over = true;
-		
+		for(int i = 0 ; i<  gameSize * gameSize;i++) {
+			if(this.getSnakeInfo(i, 0)>-1) {
+				map.setMapInfo(this.getSnakeInfo(i, 0), this.getSnakeInfo(i, 1), EMPTY);
+				this.setSnakeInfo(i, 0, -1);
+				this.setSnakeInfo(i, 1, -1);
+			}
+		}
 	}
 	public boolean getGameover() {
 		return game_over;

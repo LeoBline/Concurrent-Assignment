@@ -179,6 +179,12 @@ public class ServerUIControl implements KeyListener, WindowListener {
 			if (!paused) {
 				 aThread = new Thread(new Dateprocess(playerlist));
 				aThread.start();
+				for(int i =0 ; i< playerlist.length;i++) {
+					if(playerlist[i].getSnake().getGameover() == true) {
+						playerlist[i].InitSnake();
+						RandomBirth(playerlist[i].getSnake());
+					}
+				}
 //				moveSnake(); 
 			}
 

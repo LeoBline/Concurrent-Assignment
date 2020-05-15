@@ -21,7 +21,7 @@ public Map() {
 		return grid;
 	}
 	
-	public void setMapInfo(int index1, int index2, int num) {
+	public synchronized void setMapInfo(int index1, int index2, int num) {
 		grid[index1][index2] = num;
 	}
 	
