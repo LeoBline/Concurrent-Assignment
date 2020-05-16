@@ -9,9 +9,12 @@ package Allsnake;
  */
 public class Dateprocess implements Runnable {
 private Player[] playerlist;	
-public Dateprocess(Player[] playlist) {
+private int star=0,end =0;
+public Dateprocess(Player[] playlist,int starnumber,int endnumber) {
 		// TODO Auto-generated constructor stub
 		playerlist = playlist;
+		star = starnumber;
+		end=endnumber;
 	}
 	/* (non-Javadoc)
 	 * @see java.lang.Runnable#run()
@@ -24,7 +27,7 @@ public Dateprocess(Player[] playlist) {
 	public void run() {
 		// TODO Auto-generated method stub
 		if(playerlist!=null) {
-		for(int i = 0 ; i < playerlist.length; i++)
+		for(int i = star ; i < end; i++)
 		{
 			playerlist[i].getSnake().setNext_direction(playerlist[i].Getbuffer().take(playerlist[i].getSnake().getDirection()));
 			playerlist[i].getSnake().setDirection(playerlist[i].getSnake().getNext_direction());

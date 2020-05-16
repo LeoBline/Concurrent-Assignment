@@ -185,8 +185,13 @@ public class ServerUIControl implements KeyListener, WindowListener {
 			if (!paused) {
 
 				ExecutorService executorService2 = Executors.newFixedThreadPool(10);
+				if(playerlist.length<=2) {
 
-				executorService2.execute(new Dateprocess(playerlist));
+				executorService2.execute(new Dateprocess(playerlist,0,playerlist.length));
+				}else {
+					executorService2.execute(new Dateprocess(playerlist,0,playerlist.length/2));
+					executorService2.execute(new Dateprocess(playerlist,playerlist.length/2,playerlist.length));
+				}
 //				 aThread = new Thread(new Dateprocess(playerlist));
 //				aThread.start();
 				for(int i =0 ; i< playerlist.length;i++) {
