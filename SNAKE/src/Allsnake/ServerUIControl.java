@@ -74,11 +74,14 @@ public class ServerUIControl implements KeyListener, WindowListener {
 	private int backgroundright = 300;
 	private int backgroundDown = 10;
 	JButton loginButton = new JButton("Login");
+	JButton AddRobotButton = new JButton("Add Robot");
 	JTextField idField = new JTextField();
 	JTextField passwordField = new JTextField();
 	ServerDB serverdb;
 	private Player[] playerlist = new Player[0];
+	private Player[] robotlist = new Player[0];
 	ExecutorService pool= null;
+	private int Robotnumber=1;
 	
 	
 	
@@ -148,8 +151,24 @@ public class ServerUIControl implements KeyListener, WindowListener {
 		frame.setLocationByPlatform(true);
 		canvas.setSize(width + 300, height + 300);
 		loginButton.setBounds(25,20+backgroundDown+200 , backgroundright-40, 30);
+		AddRobotButton.setBounds(25, 20+backgroundDown+940, backgroundright-40, 30);
 		idField.setBounds(25, 20+backgroundDown+80, backgroundright-40, 30);
 		passwordField.setBounds(25, 20+backgroundDown+150, backgroundright-40, 30);
+		AddRobotButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+//				if(true) {
+//					System.out.println("test");
+//				Robotnumber++;
+//				String robotname = ""+Robotnumber;
+//				addRobot(new Player(robotname, gameSize));
+//				System.out.println("test1");
+//				RandomBirth(robotlist[robotlist.length-1].getSnake());
+//				}else {
+//					JOptionPane.showMessageDialog(null, "It must have at last one player in the game","", JOptionPane.INFORMATION_MESSAGE);
+//				}
+			}
+			});
 		loginButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -162,7 +181,9 @@ public class ServerUIControl implements KeyListener, WindowListener {
 		frame.add(idField);
 		frame.add(passwordField);
 		frame.add(loginButton);
+		frame.add(AddRobotButton);
 		frame.add(canvas);
+		
 		canvas.addKeyListener(this);
 		frame.addWindowListener(this);
 		frame.dispose();
@@ -362,6 +383,16 @@ public class ServerUIControl implements KeyListener, WindowListener {
 		}
 		newplayerlistPlayers[playerlist.length] = a;
 		playerlist = newplayerlistPlayers;
+	}
+	public void addRobot(Player a) {
+		
+		Player[] newplayerlistPlayers = new Player[robotlist.length+1];
+		for(int i =0 ; i<robotlist.length;i++) {
+			newplayerlistPlayers[i] = robotlist[i];
+			
+		}
+		newplayerlistPlayers[robotlist.length] = a;
+		robotlist = newplayerlistPlayers;
 	}
 
 	// IMPLEMENTED FUNCTIONS
