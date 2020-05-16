@@ -83,11 +83,10 @@ public class ServerUIControl implements KeyListener, WindowListener {
 	 */
 
 	public ServerUIControl() {
-		
+
 		frame = new Frame();
 		canvas = new Canvas();
 		
-		// map, serverUIControl singleton class
 		map = new Map();
 		grid = Map.getMap().getgrid();
 		this.init();
@@ -99,8 +98,7 @@ public class ServerUIControl implements KeyListener, WindowListener {
 		this.renderGame();
 		this.mainLoop();
 	}
-	
-	// TODO login: anytime one player login
+	//fix the bug
 	public synchronized  void Login(String id,String password) {
 //Verify the password of the filled database account.
 		if (serverdb.Login(id, password, serverdb.getMap()) != "") {
@@ -108,24 +106,38 @@ public class ServerUIControl implements KeyListener, WindowListener {
 			//add player and snake
 			this.addplayer(new Player("001", gameSize));
 			snake = playerlist[playerlist.length-1].getSnake();
-			for (int i = 0; i < gameSize * gameSize; i++) {
-				snake.setSnakeInfo(i, 0, -1);
-				snake.setSnakeInfo(i, 1, -1);
-
-			}
-			snake.setSnakeInfo(0, 0, gameSize / 2);
-	        snake.setSnakeInfo(0, 1, gameSize / 2);
-			grid[gameSize / 2][gameSize / 2] = SNAKE;
-			
+			RandomBirth(snake);
 			JOptionPane.showMessageDialog(null, "Success Login","", JOptionPane.INFORMATION_MESSAGE);
 
 		}else {
 			JOptionPane.showMessageDialog(null, "Fail Login","", JOptionPane.INFORMATION_MESSAGE);
 		}
 	}
+	//Random place to generate snakes for new players
+	public void RandomBirth(Snake snake) {
+	
+		//init snake
+		for (int i = 0; i < gameSize * gameSize; i++) {
+			snake.setSnakeInfo(i, 0, -1);
+			snake.setSnakeInfo(i, 1, -1);
+
+		}
+		int random1 = (int) (Math.random()*gameSize);  
+		int random2= (int) (Math.random()*gameSize);  
+		//Determine if there is a snake at a randomly generated location
+		if(grid[random1][random2] != SNAKE) {
+		
+		snake.setSnakeInfo(0, 0, random1);
+		
+        snake.setSnakeInfo(0, 1, random2);
+		grid[random1][random2] = SNAKE;
+		}else {
+			RandomBirth(playerlist[playerlist.length-1].getSnake());
+		}
+	}
 
 	public void init() {
-// draw window
+//
 		frame.setSize(width + 310, height + 300);
 		frame.setResizable(false);
 		frame.setLocationByPlatform(true);
@@ -166,11 +178,17 @@ public class ServerUIControl implements KeyListener, WindowListener {
 			Thread aThread;
 			cycleTime = System.currentTimeMillis();
 			if (!paused) {
-				aThread = new Thread(new Dateprocess(playerlist));
+				 aThread = new Thread(new Dateprocess(playerlist));
 				aThread.start();
+				for(int i =0 ; i< playerlist.length;i++) {
+					if(playerlist[i].getSnake().getGameover() == true) {
+						playerlist[i].InitSnake();
+						RandomBirth(playerlist[i].getSnake());
+					}
+				}
 //				moveSnake(); 
 			}
-			//repaint game window
+
 			renderGame();
 			cycleTime = System.currentTimeMillis() - cycleTime;
 			sleepTime = speed - cycleTime;
@@ -248,11 +266,13 @@ public class ServerUIControl implements KeyListener, WindowListener {
 					graph.drawString("YOUR TIME : " + getTime(), height / 2 - 42, height / 2 + 100);
 				} else if (paused) {
 					graph.setColor(Color.RED);
-					graph.drawString("PAUSED", height / 2 - 30, height / 2);
+					graph.drawString("PAUSED", backgroundright+500, 20+backgroundDown);
+
 				}
 				graph.setColor(Color.BLACK);
 				graph.drawString("SCORE = " + score, backgroundright+10, 20+backgroundDown);
 				graph.drawString("TIME = " + getTime(), backgroundright+190, 20+backgroundDown); // Clock
+//				System.out.println(getTime());
 				graph.drawString("Login", backgroundright/2-20, 20+backgroundDown);
 				graph.drawString("ID :", 25, 20+backgroundDown+30);
 				graph.drawString("Password :", 25, 20+backgroundDown+100);
@@ -276,9 +296,11 @@ public class ServerUIControl implements KeyListener, WindowListener {
 
 	private String getTime() {
 		String temps = new String(minute + ":" + seconde);
-		if (direction < 0 || paused)
+		if(playerlist.length >0) {
+		if (playerlist[0].getSnake().getDirection() == -1 || paused)
 			return temps;
 		milliseconde++;
+
 		if (milliseconde == 14) {
 			seconde++;
 			milliseconde = 0;
@@ -288,6 +310,9 @@ public class ServerUIControl implements KeyListener, WindowListener {
 			minute++;
 		}
 		return temps;
+		}else {
+			return temps;
+		}
 	}
 
 
@@ -384,6 +409,32 @@ public class ServerUIControl implements KeyListener, WindowListener {
 			}
 			break;
 			
+		case KeyEvent.VK_I:
+			if (playerlist[2].getSnake().getDirection()  != DOWN &&playerlist.length==3) {
+//				next_direction = RIGHT;
+				playerlist[2].Getbuffer().append(UP);
+			}
+			break;
+			
+		case KeyEvent.VK_K:
+			if (playerlist[2].getSnake().getDirection() != UP &&playerlist.length==3) {
+//				next_direction = DOWN;
+				playerlist[2].Getbuffer().append(DOWN);
+			}
+			break;
+		case KeyEvent.VK_J:
+			if (playerlist[2].getSnake().getDirection()  != RIGHT &&playerlist.length==3) {
+//				next_direction = LEFT;
+				playerlist[2].Getbuffer().append(LEFT);
+			}
+			break;
+		case KeyEvent.VK_L:
+			if (playerlist[2].getSnake().getDirection()  != LEFT &&playerlist.length==3) {
+//				next_direction = RIGHT;
+				playerlist[2].Getbuffer().append(RIGHT);
+			}
+			break;
+			
 		case KeyEvent.VK_F11:
 			dim = Toolkit.getDefaultToolkit().getScreenSize();
 			if ((height != dim.height - 50) || (width != dim.height - 50)) {
@@ -411,8 +462,6 @@ public class ServerUIControl implements KeyListener, WindowListener {
 		}
 		}
 	}
-	
-	// setters---------------------getters------------------------------------------------------------------------
 	public int getSeconde() {
 		return seconde;
 	}
@@ -529,3 +578,4 @@ public class ServerUIControl implements KeyListener, WindowListener {
 		
 	}
 }
+
