@@ -293,6 +293,7 @@ public class ServerUIControl implements KeyListener, WindowListener {
 		} while (strategy.contentsLost());
 	}
 
+	//get the time
 	private String getTime() {
 		String temps = new String(minute + ":" + seconde);
 		if(playerlist.length >0) {
