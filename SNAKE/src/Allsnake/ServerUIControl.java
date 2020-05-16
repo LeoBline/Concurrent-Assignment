@@ -18,6 +18,10 @@ import java.awt.event.MouseEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.awt.image.BufferStrategy;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -74,6 +78,7 @@ public class ServerUIControl implements KeyListener, WindowListener {
 	JTextField passwordField = new JTextField();
 	ServerDB serverdb;
 	private Player[] playerlist = new Player[0];
+	ExecutorService pool= null;
 	
 	
 	
@@ -178,8 +183,12 @@ public class ServerUIControl implements KeyListener, WindowListener {
 			Thread aThread;
 			cycleTime = System.currentTimeMillis();
 			if (!paused) {
-				 aThread = new Thread(new Dateprocess(playerlist));
-				aThread.start();
+
+				ExecutorService executorService2 = Executors.newFixedThreadPool(10);
+
+				executorService2.execute(new Dateprocess(playerlist));
+//				 aThread = new Thread(new Dateprocess(playerlist));
+//				aThread.start();
 				for(int i =0 ; i< playerlist.length;i++) {
 					if(playerlist[i].getSnake().getGameover() == true) {
 						playerlist[i].InitSnake();
@@ -384,54 +393,80 @@ public class ServerUIControl implements KeyListener, WindowListener {
 		
 			//player2
 		case KeyEvent.VK_W:
-			if (playerlist[1].getSnake().getDirection()  != DOWN &&playerlist.length==2) {
+			if (playerlist[1].getSnake().getDirection()  != DOWN &&playerlist.length>=2) {
 //				next_direction = RIGHT;
 				playerlist[1].Getbuffer().append(UP);
 			}
 			break;
 			
 		case KeyEvent.VK_S:
-			if (playerlist[1].getSnake().getDirection() != UP &&playerlist.length==2) {
+			if (playerlist[1].getSnake().getDirection() != UP &&playerlist.length>=2) {
 //				next_direction = DOWN;
 				playerlist[1].Getbuffer().append(DOWN);
 			}
 			break;
 		case KeyEvent.VK_A:
-			if (playerlist[1].getSnake().getDirection()  != RIGHT &&playerlist.length==2) {
+			if (playerlist[1].getSnake().getDirection()  != RIGHT &&playerlist.length>=2) {
 //				next_direction = LEFT;
 				playerlist[1].Getbuffer().append(LEFT);
 			}
 			break;
 		case KeyEvent.VK_D:
-			if (playerlist[1].getSnake().getDirection()  != LEFT &&playerlist.length==2) {
+			if (playerlist[1].getSnake().getDirection()  != LEFT &&playerlist.length>=2) {
 //				next_direction = RIGHT;
 				playerlist[1].Getbuffer().append(RIGHT);
 			}
 			break;
 			
 		case KeyEvent.VK_I:
-			if (playerlist[2].getSnake().getDirection()  != DOWN &&playerlist.length==3) {
+			if (playerlist[2].getSnake().getDirection()  != DOWN &&playerlist.length>=3) {
 //				next_direction = RIGHT;
 				playerlist[2].Getbuffer().append(UP);
 			}
 			break;
 			
 		case KeyEvent.VK_K:
-			if (playerlist[2].getSnake().getDirection() != UP &&playerlist.length==3) {
+			if (playerlist[2].getSnake().getDirection() != UP &&playerlist.length>=3) {
 //				next_direction = DOWN;
 				playerlist[2].Getbuffer().append(DOWN);
 			}
 			break;
 		case KeyEvent.VK_J:
-			if (playerlist[2].getSnake().getDirection()  != RIGHT &&playerlist.length==3) {
+			if (playerlist[2].getSnake().getDirection()  != RIGHT &&playerlist.length>=3) {
 //				next_direction = LEFT;
 				playerlist[2].Getbuffer().append(LEFT);
 			}
 			break;
 		case KeyEvent.VK_L:
-			if (playerlist[2].getSnake().getDirection()  != LEFT &&playerlist.length==3) {
+			if (playerlist[2].getSnake().getDirection()  != LEFT &&playerlist.length>=3) {
 //				next_direction = RIGHT;
 				playerlist[2].Getbuffer().append(RIGHT);
+			}
+			break;
+			
+		case KeyEvent.VK_G:
+			if (playerlist[3].getSnake().getDirection()  != DOWN &&playerlist.length>=4) {
+//				next_direction = RIGHT;
+				playerlist[3].Getbuffer().append(UP);
+			}
+			break;
+			
+		case KeyEvent.VK_B:
+			if (playerlist[3].getSnake().getDirection() != UP &&playerlist.length>=4) {
+//				next_direction = DOWN;
+				playerlist[3].Getbuffer().append(DOWN);
+			}
+			break;
+		case KeyEvent.VK_V:
+			if (playerlist[3].getSnake().getDirection()  != RIGHT &&playerlist.length>=4) {
+//				next_direction = LEFT;
+				playerlist[3].Getbuffer().append(LEFT);
+			}
+			break;
+		case KeyEvent.VK_N:
+			if (playerlist[3].getSnake().getDirection()  != LEFT &&playerlist.length>=4) {
+//				next_direction = RIGHT;
+				playerlist[3].Getbuffer().append(RIGHT);
 			}
 			break;
 			

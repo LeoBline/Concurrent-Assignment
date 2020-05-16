@@ -31,13 +31,14 @@ public Dateprocess(Player[] playlist) {
 			playerlist[i].getSnake().moveSnake();
 		}
 		
-		}else {
-			try {
-			this.wait();
-			}catch (Exception e) {
-				// TODO: handle exception
-			}
 		}
+//		else {
+//			try {
+//			this.wait();
+//			}catch (Exception e) {
+//				// TODO: handle exception
+//			}
+//		}
 	}
 
 }
