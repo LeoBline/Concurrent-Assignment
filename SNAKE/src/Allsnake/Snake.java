@@ -1,5 +1,6 @@
 package Allsnake;
 
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -186,6 +187,13 @@ public class Snake {
 		} else {
 			placeMalus(malus_type);
 		}
+	}
+	//this method if for robot to get redom direction
+	public int RandomDirection() {
+		
+		Random r=new Random();
+		int i=r.nextInt(4);
+		return i;
 	}
 
 	

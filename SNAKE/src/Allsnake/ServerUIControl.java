@@ -79,10 +79,13 @@ public class ServerUIControl implements KeyListener, WindowListener {
 	JTextField passwordField = new JTextField();
 	ServerDB serverdb;
 	private Player[] playerlist = new Player[0];
-	private Player[] robotlist = new Player[0];
 	ExecutorService pool= null;
 	private int Robotnumber=1;
 	
+	private int fistplayerOrder=99999;
+	private int secondplayerOrder=99999;
+	private int thirdplayerOrder=99999;
+	private int fourthplayerOrder=99999;
 	
 	
 
@@ -121,6 +124,21 @@ public class ServerUIControl implements KeyListener, WindowListener {
 			JOptionPane.showMessageDialog(null, "Fail Login","", JOptionPane.INFORMATION_MESSAGE);
 		}
 	}
+	
+	//add Robot 
+	public synchronized  void addRobot() {
+			
+					System.out.println("success login");
+					//add Robot player and snake
+					this.addplayer(new Player("Robot", gameSize));
+					playerlist[playerlist.length-1].setIsRobot(true);
+					snake = playerlist[playerlist.length-1].getSnake();
+					
+					RandomBirth(snake);
+			}
+	
+	
+	
 	//Random place to generate snakes for new players
 	public void RandomBirth(Snake snake) {
 	
@@ -157,16 +175,11 @@ public class ServerUIControl implements KeyListener, WindowListener {
 		AddRobotButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-//				if(true) {
-//					System.out.println("test");
-//				Robotnumber++;
-//				String robotname = ""+Robotnumber;
-//				addRobot(new Player(robotname, gameSize));
-//				System.out.println("test1");
-//				RandomBirth(robotlist[robotlist.length-1].getSnake());
-//				}else {
-//					JOptionPane.showMessageDialog(null, "It must have at last one player in the game","", JOptionPane.INFORMATION_MESSAGE);
-//				}
+			// TODO Auto-generated method stub
+
+
+				addRobot();
+
 			}
 			});
 		loginButton.addMouseListener(new MouseAdapter() {
@@ -205,11 +218,12 @@ public class ServerUIControl implements KeyListener, WindowListener {
 			cycleTime = System.currentTimeMillis();
 			if (!paused) {
 
-				ExecutorService executorService2 = Executors.newFixedThreadPool(10);
+				ExecutorService executorService2 = Executors.newFixedThreadPool(100);
 				if(playerlist.length<=2) {
 
 				executorService2.execute(new Dateprocess(playerlist,0,playerlist.length));
 				}else {
+					
 					executorService2.execute(new Dateprocess(playerlist,0,playerlist.length/2));
 					executorService2.execute(new Dateprocess(playerlist,playerlist.length/2,playerlist.length));
 				}
@@ -236,6 +250,18 @@ public class ServerUIControl implements KeyListener, WindowListener {
 				Logger.getLogger(ServerUIControl.class.getName()).log(Level.SEVERE, null, ex);
 			}
 		}
+	}
+	
+	public int TruePlayerNumber() {
+		int TruePlayernumber =0;
+		if(playerlist != null) {
+		for(int a =0 ; a <playerlist.length;a++) {
+			if(playerlist[a].getIsRobot() == false) {
+				TruePlayernumber++;
+			}
+		}
+		}
+		return TruePlayernumber;
 	}
 
 	private void initGame() {
@@ -383,16 +409,6 @@ public class ServerUIControl implements KeyListener, WindowListener {
 		}
 		newplayerlistPlayers[playerlist.length] = a;
 		playerlist = newplayerlistPlayers;
-	}
-	public void addRobot(Player a) {
-		
-		Player[] newplayerlistPlayers = new Player[robotlist.length+1];
-		for(int i =0 ; i<robotlist.length;i++) {
-			newplayerlistPlayers[i] = robotlist[i];
-			
-		}
-		newplayerlistPlayers[robotlist.length] = a;
-		robotlist = newplayerlistPlayers;
 	}
 
 	// IMPLEMENTED FUNCTIONS

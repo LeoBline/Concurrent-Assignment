@@ -12,6 +12,7 @@ public class Player {
     private Snake mySnake;
     private Buffer playerBuffer = new Buffer();
     private static int game_size;
+    private boolean IsRobot = false;
 
 
 
@@ -56,6 +57,12 @@ public class Player {
 
     public String getID() {
         return ID;
+    }
+    public void setIsRobot(boolean flag) {
+    	this.IsRobot = flag;
+    }
+    public boolean getIsRobot() {
+    	return this.IsRobot;
     }
 
 //    public void setID(String ID) {

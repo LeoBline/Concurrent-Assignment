@@ -29,19 +29,19 @@ public Dateprocess(Player[] playlist,int starnumber,int endnumber) {
 		if(playerlist!=null) {
 		for(int i = star ; i < end; i++)
 		{
+			if(playerlist[i].getIsRobot()==false) {
 			playerlist[i].getSnake().setNext_direction(playerlist[i].Getbuffer().take(playerlist[i].getSnake().getDirection()));
 			playerlist[i].getSnake().setDirection(playerlist[i].getSnake().getNext_direction());
 			playerlist[i].getSnake().moveSnake();
+			}else {
+				playerlist[i].getSnake().setNext_direction(playerlist[i].getSnake().RandomDirection());
+				playerlist[i].getSnake().setDirection(playerlist[i].getSnake().getNext_direction());
+				playerlist[i].getSnake().moveSnake();
+			}
 		}
 		
 		}
-//		else {
-//			try {
-//			this.wait();
-//			}catch (Exception e) {
-//				// TODO: handle exception
-//			}
-//		}
+
 	}
 
 }
