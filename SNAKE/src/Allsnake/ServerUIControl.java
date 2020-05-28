@@ -82,7 +82,7 @@ public class ServerUIControl implements KeyListener, WindowListener {
 	ExecutorService pool= null;
 	private int Robotnumber=1;
 	
-	private int fistplayerOrder=99999;
+	private int firstplayerOrder=99999;
 	private int secondplayerOrder=99999;
 	private int thirdplayerOrder=99999;
 	private int fourthplayerOrder=99999;
@@ -119,6 +119,15 @@ public class ServerUIControl implements KeyListener, WindowListener {
 			snake = playerlist[playerlist.length-1].getSnake();
 			RandomBirth(snake);
 			JOptionPane.showMessageDialog(null, "Success Login","", JOptionPane.INFORMATION_MESSAGE);
+			if(firstplayerOrder == 99999) {
+				firstplayerOrder =playerlist.length-1;
+			}else if(secondplayerOrder == 99999) {
+				secondplayerOrder =playerlist.length-1;
+			}else if(thirdplayerOrder == 99999) {
+				thirdplayerOrder =playerlist.length-1;
+			}else if (fourthplayerOrder == 99999) {
+				fourthplayerOrder =playerlist.length-1;
+			}
 
 		}else {
 			JOptionPane.showMessageDialog(null, "Fail Login","", JOptionPane.INFORMATION_MESSAGE);
@@ -419,106 +428,138 @@ public class ServerUIControl implements KeyListener, WindowListener {
 		switch (code) {
 		//player1
 		case KeyEvent.VK_UP:
-			if (playerlist[0].getSnake().getDirection() != DOWN) {
+			if(firstplayerOrder !=99999) {
+			if (playerlist[firstplayerOrder].getSnake().getDirection() != DOWN ) {
 //				next_direction = UP;
-				playerlist[0].Getbuffer().append(UP);
+				playerlist[firstplayerOrder].Getbuffer().append(UP);
+			}
 			}
 			break;
 		case KeyEvent.VK_DOWN:
-			if (playerlist[0].getSnake().getDirection() != UP) {
+			if(firstplayerOrder !=99999) {
+			if (playerlist[firstplayerOrder].getSnake().getDirection() != UP) {
 //				next_direction = DOWN;
-				playerlist[0].Getbuffer().append(DOWN);
+				playerlist[firstplayerOrder].Getbuffer().append(DOWN);
+			}
 			}
 			break;
 		case KeyEvent.VK_LEFT:
-			if (playerlist[0].getSnake().getDirection()  != RIGHT) {
+			if(firstplayerOrder !=99999) {
+			if (playerlist[firstplayerOrder].getSnake().getDirection()  != RIGHT) {
 //				next_direction = LEFT;
-				playerlist[0].Getbuffer().append(LEFT);
+				playerlist[firstplayerOrder].Getbuffer().append(LEFT);
+			}
 			}
 			break;
 		case KeyEvent.VK_RIGHT:
-			if (playerlist[0].getSnake().getDirection()  != LEFT) {
+			if(firstplayerOrder !=99999) {
+			if (playerlist[firstplayerOrder].getSnake().getDirection()  != LEFT) {
 //				next_direction = RIGHT;
-				playerlist[0].Getbuffer().append(RIGHT);
+				playerlist[firstplayerOrder].Getbuffer().append(RIGHT);
+			}
 			}
 			break;
 		
 			//player2
 		case KeyEvent.VK_W:
-			if (playerlist[1].getSnake().getDirection()  != DOWN &&playerlist.length>=2) {
+			if(secondplayerOrder !=99999) {
+			if (playerlist[secondplayerOrder].getSnake().getDirection()  != DOWN) {
 //				next_direction = RIGHT;
-				playerlist[1].Getbuffer().append(UP);
+				playerlist[secondplayerOrder].Getbuffer().append(UP);
+			}
 			}
 			break;
 			
 		case KeyEvent.VK_S:
-			if (playerlist[1].getSnake().getDirection() != UP &&playerlist.length>=2) {
+			if(secondplayerOrder !=99999) {
+			if (playerlist[secondplayerOrder].getSnake().getDirection() != UP) {
 //				next_direction = DOWN;
-				playerlist[1].Getbuffer().append(DOWN);
+				playerlist[secondplayerOrder].Getbuffer().append(DOWN);
+			}
 			}
 			break;
 		case KeyEvent.VK_A:
-			if (playerlist[1].getSnake().getDirection()  != RIGHT &&playerlist.length>=2) {
+			if(secondplayerOrder !=99999) {
+			if (playerlist[secondplayerOrder].getSnake().getDirection()  != RIGHT ) {
 //				next_direction = LEFT;
-				playerlist[1].Getbuffer().append(LEFT);
+				playerlist[secondplayerOrder].Getbuffer().append(LEFT);
+			}
 			}
 			break;
 		case KeyEvent.VK_D:
-			if (playerlist[1].getSnake().getDirection()  != LEFT &&playerlist.length>=2) {
+			if(secondplayerOrder !=99999) {
+			if (playerlist[secondplayerOrder].getSnake().getDirection()  != LEFT ) {
 //				next_direction = RIGHT;
-				playerlist[1].Getbuffer().append(RIGHT);
+				playerlist[secondplayerOrder].Getbuffer().append(RIGHT);
+			}
 			}
 			break;
 			
 		case KeyEvent.VK_I:
-			if (playerlist[2].getSnake().getDirection()  != DOWN &&playerlist.length>=3) {
+			if(thirdplayerOrder !=99999) {
+			if (playerlist[thirdplayerOrder].getSnake().getDirection()  != DOWN ) {
 //				next_direction = RIGHT;
-				playerlist[2].Getbuffer().append(UP);
+				playerlist[thirdplayerOrder].Getbuffer().append(UP);
+			}
 			}
 			break;
 			
 		case KeyEvent.VK_K:
-			if (playerlist[2].getSnake().getDirection() != UP &&playerlist.length>=3) {
+			if(thirdplayerOrder !=99999) {
+			if (playerlist[thirdplayerOrder].getSnake().getDirection() != UP ) {
 //				next_direction = DOWN;
-				playerlist[2].Getbuffer().append(DOWN);
+				playerlist[thirdplayerOrder].Getbuffer().append(DOWN);
+			}
 			}
 			break;
 		case KeyEvent.VK_J:
-			if (playerlist[2].getSnake().getDirection()  != RIGHT &&playerlist.length>=3) {
+			if(thirdplayerOrder !=99999) {
+			if (playerlist[thirdplayerOrder].getSnake().getDirection()  != RIGHT ) {
 //				next_direction = LEFT;
-				playerlist[2].Getbuffer().append(LEFT);
+				playerlist[thirdplayerOrder].Getbuffer().append(LEFT);
+			}
 			}
 			break;
 		case KeyEvent.VK_L:
-			if (playerlist[2].getSnake().getDirection()  != LEFT &&playerlist.length>=3) {
+			if(thirdplayerOrder !=99999) {
+			if (playerlist[thirdplayerOrder].getSnake().getDirection()  != LEFT ) {
 //				next_direction = RIGHT;
-				playerlist[2].Getbuffer().append(RIGHT);
+				playerlist[thirdplayerOrder].Getbuffer().append(RIGHT);
+			}
 			}
 			break;
 			
 		case KeyEvent.VK_G:
-			if (playerlist[3].getSnake().getDirection()  != DOWN &&playerlist.length>=4) {
+			if(fourthplayerOrder !=99999) {
+			if (playerlist[fourthplayerOrder].getSnake().getDirection()  != DOWN ) {
 //				next_direction = RIGHT;
-				playerlist[3].Getbuffer().append(UP);
+				playerlist[fourthplayerOrder].Getbuffer().append(UP);
+			}
 			}
 			break;
 			
 		case KeyEvent.VK_B:
-			if (playerlist[3].getSnake().getDirection() != UP &&playerlist.length>=4) {
+			if(fourthplayerOrder !=99999) {
+			if (playerlist[fourthplayerOrder].getSnake().getDirection() != UP) {
 //				next_direction = DOWN;
-				playerlist[3].Getbuffer().append(DOWN);
+				playerlist[fourthplayerOrder].Getbuffer().append(DOWN);
+			}
 			}
 			break;
 		case KeyEvent.VK_V:
-			if (playerlist[3].getSnake().getDirection()  != RIGHT &&playerlist.length>=4) {
+			if(fourthplayerOrder !=99999) {
+			if (playerlist[fourthplayerOrder].getSnake().getDirection()  != RIGHT ) {
 //				next_direction = LEFT;
-				playerlist[3].Getbuffer().append(LEFT);
+				playerlist[fourthplayerOrder].Getbuffer().append(LEFT);
+			}
 			}
 			break;
 		case KeyEvent.VK_N:
-			if (playerlist[3].getSnake().getDirection()  != LEFT &&playerlist.length>=4) {
+			if(fourthplayerOrder !=99999) {
+			if (playerlist[fourthplayerOrder].getSnake().getDirection()  != LEFT ) {
 //				next_direction = RIGHT;
-				playerlist[3].Getbuffer().append(RIGHT);
+				playerlist[fourthplayerOrder].Getbuffer().append(RIGHT);
+			}
 			}
 			break;
 			
