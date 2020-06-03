@@ -21,9 +21,6 @@ public class Player {
      *
      * @param move The 'move' that get from player
      */
-    public void getPlayerMove(char move){
-        playerBuffer.append(move);
-    }
 
     public  Player(String id,int gamesize) {
     	this.ID = id;
