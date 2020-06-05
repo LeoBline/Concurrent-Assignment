@@ -103,7 +103,7 @@ public class ServerUIControl implements KeyListener, WindowListener {
 		this.init();
 		
 		serverdb = new ServerDB();
-		serverdb.Updata(serverdb.getMap(), serverdb.getDB());
+//		serverdb.Updata(serverdb.getMap());
 		
 		
 		this.renderGame();
@@ -112,7 +112,7 @@ public class ServerUIControl implements KeyListener, WindowListener {
 	//fix the bug
 	public synchronized  void Login(String id,String password) {
 //Verify the password of the filled database account.
-		if (serverdb.Login(id, password, serverdb.getMap()) != "") {
+		if (serverdb.Login(id, password) != "") {
 			System.out.println("success login");
 			//add player and snake
 			this.addplayer(new Player("001", gameSize));
@@ -139,11 +139,13 @@ public class ServerUIControl implements KeyListener, WindowListener {
 			
 					System.out.println("success login");
 					//add Robot player and snake
+					for(int i=0;i<50;i++) {
 					this.addplayer(new Player("Robot", gameSize));
 					playerlist[playerlist.length-1].setIsRobot(true);
 					snake = playerlist[playerlist.length-1].getSnake();
 					
 					RandomBirth(snake);
+					}
 			}
 	
 	
@@ -232,9 +234,11 @@ public class ServerUIControl implements KeyListener, WindowListener {
 
 				executorService2.execute(new Dateprocess(playerlist,0,playerlist.length));
 				}else {
-					
-					executorService2.execute(new Dateprocess(playerlist,0,playerlist.length/2));
-					executorService2.execute(new Dateprocess(playerlist,playerlist.length/2,playerlist.length));
+					int nu = playerlist.length/20;
+					for(int i=0 ;i<20;i++) {
+					executorService2.execute(new Dateprocess(playerlist,i*nu,(i+1)*nu));
+
+					}
 				}
 //				 aThread = new Thread(new Dateprocess(playerlist));
 //				aThread.start();
