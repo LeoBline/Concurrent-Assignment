@@ -35,7 +35,10 @@ public class Snake {
 	public Snake(int[][] array) {
 		snake = array;//init new snake body
 	}
-
+	
+	/**
+	 * Each time snake move, this method will adjust attributes behind UI
+	 */
 	public synchronized void moveSnake() {
 		if(this.getSnakeInfo(0, 0)==-1) {
 			return;
@@ -166,6 +169,11 @@ public class Snake {
 			}
 		}
 	}
+	
+	/**
+	 * Return the statement of this snake, if the snake dead or alive
+	 * @return
+	 */
 	public boolean getGameover() {
 		return game_over;
 	}
@@ -188,7 +196,11 @@ public class Snake {
 			placeMalus(malus_type);
 		}
 	}
-	//this method if for robot to get redom direction
+	/**
+	 * get random direction for snake to move.
+	 * this method return a random direction
+	 * @return direction
+	 */
 	public int RandomDirection() {
 		
 		Random r=new Random();
@@ -200,7 +212,12 @@ public class Snake {
 	public void setSnakeInfo(int index1, int index2, int num) {
 		snake[index1][index2] = num;
 	}
-	
+	/**
+	 * return the location of one part on snake
+	 * @param index1
+	 * @param index2
+	 * @return one part of snake
+	 */
 	public int getSnakeInfo(int index1, int index2) {
 		return snake[index1][index2];
 	}
