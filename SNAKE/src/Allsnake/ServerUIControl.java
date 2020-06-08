@@ -54,7 +54,7 @@ public class ServerUIControl implements KeyListener, WindowListener {
 	private int next_direction = -1;
 	private int height = 720;
 	private int width = 720;
-	private int gameSize = 80;
+	private int gameSize = 100;
 	public Map map = null;
 	private long speed = 70;
 	private Frame frame = null;
@@ -81,6 +81,7 @@ public class ServerUIControl implements KeyListener, WindowListener {
 	private Player[] playerlist = new Player[0];
 	ExecutorService pool= null;
 	private int Robotnumber=1;
+
 	
 	private int firstplayerOrder=99999;
 	private int secondplayerOrder=99999;
@@ -139,7 +140,7 @@ public class ServerUIControl implements KeyListener, WindowListener {
 			
 					System.out.println("success login");
 					//add Robot player and snake
-					for(int i=0;i<50;i++) {
+					for(int i=0;i<10;i++) {
 					this.addplayer(new Player("Robot", gameSize));
 					playerlist[playerlist.length-1].setIsRobot(true);
 					snake = playerlist[playerlist.length-1].getSnake();
@@ -229,16 +230,18 @@ public class ServerUIControl implements KeyListener, WindowListener {
 			cycleTime = System.currentTimeMillis();
 			if (!paused) {
 
-				ExecutorService executorService2 = Executors.newFixedThreadPool(100);
+				ExecutorService executorService2 = Executors.newCachedThreadPool();
 				if(playerlist.length<=2) {
 
 				executorService2.execute(new Dateprocess(playerlist,0,playerlist.length));
 				}else {
 					int nu = playerlist.length/20;
+					int remain =playerlist.length%20;
 					for(int i=0 ;i<20;i++) {
 					executorService2.execute(new Dateprocess(playerlist,i*nu,(i+1)*nu));
 
 					}
+					executorService2.execute(new Dateprocess(playerlist,20*nu,20*nu+remain));
 				}
 //				 aThread = new Thread(new Dateprocess(playerlist));
 //				aThread.start();

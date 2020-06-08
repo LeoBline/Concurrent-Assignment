@@ -15,7 +15,7 @@ public class Snake {
 	public final static int FOOD_MALUS = 2;
 	public final static int BIG_FOOD_BONUS = 3;
 	public final static int SNAKE = 4;
-	private int gameSize = 80;
+	private int gameSize = 100;
 	public int bonusTime = 0;
 	public int malusTime = 0;
 
@@ -41,6 +41,7 @@ public class Snake {
 	 */
 	public synchronized void moveSnake() {
 		if(this.getSnakeInfo(0, 0)==-1) {
+			System.out.println("error");
 			return;
 		}
 		if (direction < 0) {
