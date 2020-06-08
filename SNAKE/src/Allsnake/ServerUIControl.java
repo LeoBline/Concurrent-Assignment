@@ -55,8 +55,8 @@ public class ServerUIControl implements KeyListener, WindowListener {
 	private Snake snake = null;
 	private int direction = -1;
 	private int next_direction = -1;
-	private int height = 720;
-	private int width = 720;
+	private int height = 1000;
+	private int width = 1000;
 	private int gameSize = 100;
 	public Map map = null;
 	private long speed = 70;
@@ -180,7 +180,7 @@ public class ServerUIControl implements KeyListener, WindowListener {
 
 	public void init() {
 //
-		frame.setSize(width + 310, height + 300);
+		frame.setSize(width + 340, height+50 );
 		frame.setResizable(false);
 		frame.setLocationByPlatform(true);
 		canvas.setSize(width + 300, height + 300);
@@ -306,7 +306,7 @@ public class ServerUIControl implements KeyListener, WindowListener {
 				graph.setColor(Color.black);
 //				Draw a border line
 				graph.drawRect(backgroundright-1, backgroundDown-1, width+1 ,height+1);
-				graph.drawRect(10, backgroundDown-1+ height/3+7, backgroundright-15 ,height+1);
+				graph.drawRect(10, backgroundDown-1+ height/3+7, backgroundright-15 ,height-350);
 
 				graph.drawRect(10, backgroundDown-1, backgroundright-15 ,height/3);
 				graph.setColor(Color.WHITE);
@@ -368,8 +368,7 @@ public class ServerUIControl implements KeyListener, WindowListener {
 
 				}
 				graph.setColor(Color.BLACK);
-				graph.drawString("SCORE = " + score, backgroundright+10, 20+backgroundDown);
-				graph.drawString("TIME = " + getTime(), backgroundright+190, 20+backgroundDown); // Clock
+				graph.drawString("TIME = " + getTime(), backgroundright+10, 20+backgroundDown); // Clock
 //				System.out.println(getTime());
 				graph.drawString("Login", backgroundright/2-20, 20+backgroundDown);
 				graph.drawString("ID :", 25, 20+backgroundDown+30);
