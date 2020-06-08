@@ -25,7 +25,7 @@ public Map() {
 		grid[index1][index2] = num;
 	}
 	
-	public int getMapInfo(int index1, int index2) {
+	public synchronized int getMapInfo(int index1, int index2) {
 		return grid[index1][index2];
 	}
 

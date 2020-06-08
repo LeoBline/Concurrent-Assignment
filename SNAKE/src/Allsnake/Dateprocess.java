@@ -34,11 +34,16 @@ public Dateprocess(Player[] playlist,int starnumber,int endnumber) {
 			playerlist[i].getSnake().setDirection(playerlist[i].getSnake().getNext_direction());
 			playerlist[i].getSnake().moveSnake();
 			}else {
+				
 				playerlist[i].getSnake().setNext_direction(playerlist[i].getSnake().RandomDirection());
 				playerlist[i].getSnake().setDirection(playerlist[i].getSnake().getNext_direction());
+					
+				
 				playerlist[i].getSnake().moveSnake();
+				
 			}
 		}
+
 		
 		}
 

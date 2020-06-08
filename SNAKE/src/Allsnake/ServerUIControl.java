@@ -151,7 +151,7 @@ public class ServerUIControl implements KeyListener, WindowListener {
 	
 	
 	//Random place to generate snakes for new players
-	public void RandomBirth(Snake snake) {
+	public synchronized void RandomBirth(Snake snake) {
 	
 		//init snake
 		for (int i = 0; i < gameSize * gameSize; i++) {
@@ -229,25 +229,23 @@ public class ServerUIControl implements KeyListener, WindowListener {
 			cycleTime = System.currentTimeMillis();
 			if (!paused) {
 
-				ExecutorService executorService2 = Executors.newFixedThreadPool(100);
+				ExecutorService executorService2 = Executors.newFixedThreadPool(1000);
 				if(playerlist.length<=2) {
 
 				executorService2.execute(new Dateprocess(playerlist,0,playerlist.length));
 				}else {
 					int nu = playerlist.length/20;
+					int remain = playerlist.length%20;
 					for(int i=0 ;i<20;i++) {
 					executorService2.execute(new Dateprocess(playerlist,i*nu,(i+1)*nu));
 
+					
 					}
+						executorService2.execute(new Dateprocess(playerlist,20*nu,20*nu+remain));
+						System.out.println(playerlist[0].getSnake().getDirection());
 				}
-//				 aThread = new Thread(new Dateprocess(playerlist));
-//				aThread.start();
-				for(int i =0 ; i< playerlist.length;i++) {
-					if(playerlist[i].getSnake().getGameover() == true) {
-						playerlist[i].InitSnake();
-						RandomBirth(playerlist[i].getSnake());
-					}
-				}
+
+				resurrectionSnake();
 //				moveSnake(); 
 			}
 
@@ -261,6 +259,15 @@ public class ServerUIControl implements KeyListener, WindowListener {
 				
 			} catch (InterruptedException ex) {
 				Logger.getLogger(ServerUIControl.class.getName()).log(Level.SEVERE, null, ex);
+			}
+		}
+	}
+	
+	public synchronized void resurrectionSnake() {
+		for(int i =0 ; i< playerlist.length;i++) {
+			if(playerlist[i].getSnake().getGameover() == true) {
+				playerlist[i].InitSnake();
+				RandomBirth(playerlist[i].getSnake());
 			}
 		}
 	}
@@ -287,11 +294,12 @@ public class ServerUIControl implements KeyListener, WindowListener {
 		placeBonus(FOOD_BONUS);
 	}
 
-	private void renderGame() {
+	private synchronized void renderGame() {
 		int gridUnit = height / gameSize;
-		canvas.paint(graph);
+		canvas.paint(graph);int cout=0;
 		do {
 			do {
+				
 				graph = strategy.getDrawGraphics();
 				// Draw Background
 				graph.setColor(Color.black);
@@ -304,6 +312,38 @@ public class ServerUIControl implements KeyListener, WindowListener {
 				graph.fillRect(0+backgroundright, backgroundDown, width, height);
 				// Draw snake, bonus ...
 				int gridCase = EMPTY;
+				int[][] test =new int[gameSize][gameSize];
+				for (int i = 0; i < gameSize; i++) {
+					for (int j = 0; j < gameSize; j++) {
+						gridCase = grid[i][j];
+						switch (gridCase) {
+						case FOOD_BONUS:
+							test[i][j] = FOOD_BONUS;
+
+							break;
+						case FOOD_MALUS:
+							test[i][j] = FOOD_MALUS;
+							break; 
+						case BIG_FOOD_BONUS:
+							test[i][j] = BIG_FOOD_BONUS;
+							break;
+						default:
+							break;
+						}
+					}
+					}
+				for(int i =0;i<playerlist.length;i++) {
+					for(int j=0;j<playerlist[i].getSnake().getLength();i++) {
+						test[playerlist[i].getSnake().getSnakeInfo(j, 0)][playerlist[i].getSnake().getSnakeInfo(j, 1)] = SNAKE;
+					}
+					for (int z = 0; z< gameSize * gameSize; z++) {
+						if ((playerlist[i].getSnake().getSnakeInfo(z, 0) < 0) || (playerlist[i].getSnake().getSnakeInfo(z, 1) < 0)) {
+							break;
+						}
+						test[playerlist[i].getSnake().getSnakeInfo(z, 0)][playerlist[i].getSnake().getSnakeInfo(z, 1)] = SNAKE;
+					}
+				}
+				grid = test;
 				for (int i = 0; i < gameSize; i++) {
 					for (int j = 0; j < gameSize; j++) {
 						gridCase = grid[i][j];
@@ -311,6 +351,7 @@ public class ServerUIControl implements KeyListener, WindowListener {
 						case SNAKE:
 							graph.setColor(Color.BLUE);
 							graph.fillOval(i * gridUnit+backgroundright, j * gridUnit+backgroundDown, gridUnit, gridUnit);
+							cout++;
 							break;
 						case FOOD_BONUS:
 							graph.setColor(Color.darkGray);
@@ -321,7 +362,7 @@ public class ServerUIControl implements KeyListener, WindowListener {
 							graph.setColor(Color.RED);
 							graph.fillOval(i * gridUnit+backgroundright + gridUnit / 4, j * gridUnit+backgroundDown + gridUnit / 4, gridUnit / 2,
 									gridUnit / 2);
-							break;
+							break; 
 						case BIG_FOOD_BONUS:
 							graph.setColor(Color.GREEN);
 							graph.fillOval(i * gridUnit+backgroundright + gridUnit / 4, j * gridUnit+backgroundDown + gridUnit / 4, gridUnit / 2,
@@ -366,6 +407,7 @@ public class ServerUIControl implements KeyListener, WindowListener {
 			strategy.show();
 			Toolkit.getDefaultToolkit().sync();
 		} while (strategy.contentsLost());
+//		System.out.println(cout);
 	}
 
 	private String getTime() {

@@ -8,7 +8,7 @@ public class Buffer {
 	public Buffer() {
 		super();
 		//it can store 40 chars.
-		MovementList = new int[40];
+		MovementList = new int[100];
 		Inptr = 0;
 	}
 	//we use ' ' present null.

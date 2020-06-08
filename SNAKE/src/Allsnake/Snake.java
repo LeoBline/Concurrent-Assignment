@@ -41,9 +41,11 @@ public class Snake {
 	 */
 	public synchronized void moveSnake() {
 		if(this.getSnakeInfo(0, 0)==-1) {
+
 			return;
 		}
 		if (direction < 0) {
+			
 			return;
 		}
 		int ymove = 0;
@@ -159,13 +161,13 @@ public class Snake {
 	/**
 	 * gameOver means this snake is dead
 	 */
-	public void gameOver() {
+	public synchronized void gameOver() {
 		game_over = true;
 		for(int i = 0 ; i<  gameSize * gameSize;i++) {
 			if(this.getSnakeInfo(i, 0)>-1) {
 				map.setMapInfo(this.getSnakeInfo(i, 0), this.getSnakeInfo(i, 1), EMPTY);
-				this.setSnakeInfo(i, 0, -1);
-				this.setSnakeInfo(i, 1, -1);
+//				this.setSnakeInfo(i, 0, -1);
+//				this.setSnakeInfo(i, 1, -1);
 			}
 		}
 	}
@@ -174,7 +176,7 @@ public class Snake {
 	 * Return the statement of this snake, if the snake dead or alive
 	 * @return
 	 */
-	public boolean getGameover() {
+	public synchronized boolean getGameover() {
 		return game_over;
 	}
 
@@ -201,7 +203,7 @@ public class Snake {
 	 * this method return a random direction
 	 * @return direction
 	 */
-	public int RandomDirection() {
+	public synchronized int RandomDirection() {
 		
 		Random r=new Random();
 		int i=r.nextInt(4);
@@ -209,7 +211,7 @@ public class Snake {
 	}
 
 	
-	public void setSnakeInfo(int index1, int index2, int num) {
+	public synchronized void setSnakeInfo(int index1, int index2, int num) {
 		snake[index1][index2] = num;
 	}
 	/**
@@ -218,23 +220,23 @@ public class Snake {
 	 * @param index2
 	 * @return one part of snake
 	 */
-	public int getSnakeInfo(int index1, int index2) {
+	public synchronized int getSnakeInfo(int index1, int index2) {
 		return snake[index1][index2];
 	}
 		
-	public int getDirection() {
+	public synchronized int getDirection() {
 		return direction;
 	}
 
-	public void setDirection(int direction) {
+	public synchronized void setDirection(int direction) {
 		this.direction = direction;
 	}
 	
-	public int getNext_direction() {
+	public synchronized int getNext_direction() {
 		return next_direction;
 	}
 
-	public void setNext_direction(int next_direction) {
+	public synchronized void setNext_direction(int next_direction) {
 		this.next_direction = next_direction;
 	}
 
@@ -242,6 +244,9 @@ public class Snake {
 		return score;
 	}
 
+	public int getLength() {
+		return Length;
+	}
 	public void setScore(int score) {
 		this.score = score;
 	}

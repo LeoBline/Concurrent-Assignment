@@ -33,7 +33,7 @@ public class Player {
     }
 
 
-    public void InitSnake(){
+    public synchronized void InitSnake(){
     	mySnake = new Snake(new int[game_size * game_size][2]);
     	playerBuffer = new Buffer();
 
