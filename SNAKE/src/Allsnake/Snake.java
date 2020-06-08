@@ -42,6 +42,7 @@ public class Snake {
 	public synchronized void moveSnake() {
 		if(this.getSnakeInfo(0, 0)==-1) {
 			System.out.println("error");
+			this.gameOver();
 			return;
 		}
 		if (direction < 0) {
@@ -117,12 +118,15 @@ public class Snake {
 			tempx = snakex;
 			tempy = snakey;
 		}
-		for (i = 0; i < gameSize * gameSize; i++) {
+		int a=0;
+		for (i = 0; i < gameSize*gameSize; i++) {
 			if ((this.getSnakeInfo(i, 0) < 0) || (this.getSnakeInfo(i, 1) < 0)) {
 				break;
 			}
+			a++;
 			map.setMapInfo(this.getSnakeInfo(i, 0), this.getSnakeInfo(i, 1), SNAKE);
-		}
+			
+		}System.out.println(a);
 		bonusTime = bonusTime -1;
 		if (bonusTime == 0) {
 			for (i = 0; i < gameSize; i++) {
@@ -133,6 +137,7 @@ public class Snake {
 			}
 		}
 		malusTime = malusTime-1;
+//		System.out.println(malusTime);
 		if (malusTime == 0) {
 			for (i = 0; i < gameSize; i++) {
 				for (int j = 0; j < gameSize; j++) {
@@ -160,13 +165,16 @@ public class Snake {
 	/**
 	 * gameOver means this snake is dead
 	 */
-	public void gameOver() {
+	public synchronized void gameOver() {
 		game_over = true;
 		for(int i = 0 ; i<  gameSize * gameSize;i++) {
 			if(this.getSnakeInfo(i, 0)>-1) {
 				map.setMapInfo(this.getSnakeInfo(i, 0), this.getSnakeInfo(i, 1), EMPTY);
+				int a =this.getSnakeInfo(i, 0);;
+				int b = this.getSnakeInfo(i, 1);
 				this.setSnakeInfo(i, 0, -1);
 				this.setSnakeInfo(i, 1, -1);
+				map.setMapInfo(a, b, EMPTY);
 			}
 		}
 	}
