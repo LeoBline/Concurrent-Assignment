@@ -33,6 +33,8 @@ import javax.swing.JTextField;
 
 import com.sun.prism.Image;
 
+import sun.security.util.Length;
+
 /**
 * @author Peuch
 */
@@ -154,7 +156,7 @@ public class ServerUIControl implements KeyListener, WindowListener {
 	
 	
 	//Random place to generate snakes for new players
-	public void RandomBirth(Snake snake) {
+	public synchronized void RandomBirth(Snake snake) {
 	
 		//init snake
 		for (int i = 0; i < gameSize * gameSize; i++) {
@@ -231,26 +233,19 @@ public class ServerUIControl implements KeyListener, WindowListener {
 			Thread aThread;
 			cycleTime = System.currentTimeMillis();
 			if (!paused) {
-
-				
-
-
 					int nu = playerlist.length/20;
 					int remain =playerlist.length%20;
 					for(int i=0 ;i<20;i++) {
-					executorService2.execute(new Dateprocess(playerlist,i*nu,(i+1)*nu));
-
+					executorService2.execute(new Dateprocess(playerlist,i*nu,(i+1)*nu));		
 					}
 					executorService2.execute(new Dateprocess(playerlist,20*nu,20*nu+remain));
-				
-
 				for(int i =0 ; i< playerlist.length;i++) {
 					if(playerlist[i].getSnake().getGameover() == true) {
 						playerlist[i].InitSnake();
 						RandomBirth(playerlist[i].getSnake());
 					}
 				}
-			}
+			
 
 			renderGame();
 			cycleTime = System.currentTimeMillis() - cycleTime;
@@ -262,6 +257,16 @@ public class ServerUIControl implements KeyListener, WindowListener {
 				
 			} catch (InterruptedException ex) {
 				Logger.getLogger(ServerUIControl.class.getName()).log(Level.SEVERE, null, ex);
+			}
+			}
+		}
+	}
+	
+	public synchronized void resurrectionSnake() {
+		for(int i =0 ; i< playerlist.length;i++) {
+			if(playerlist[i].getSnake().getGameover() == true) {
+				playerlist[i].InitSnake();
+				RandomBirth(playerlist[i].getSnake());
 			}
 		}
 	}
@@ -285,16 +290,17 @@ public class ServerUIControl implements KeyListener, WindowListener {
 				grid[i][j] = EMPTY;
 			}
 		}
-		for (int i =0 ;i<new Random().nextInt(4)+1;i++) {
+		for (int i =0 ;i<new Random().nextInt(4)+2;i++) {
 		placeBonus(FOOD_BONUS);
 		}
 	}
 
-	private void renderGame() {
+	private synchronized void renderGame() {
 		int gridUnit = height / gameSize;
-		canvas.paint(graph);
+		canvas.paint(graph);int cout=0;
 		do {
 			do {
+				
 				graph = strategy.getDrawGraphics();
 				// Draw Background
 				graph.setColor(Color.black);
@@ -309,11 +315,29 @@ public class ServerUIControl implements KeyListener, WindowListener {
 				int gridCase = EMPTY;
 				for (int i = 0; i < gameSize; i++) {
 					for (int j = 0; j < gameSize; j++) {
+						if(grid[i][j]==SNAKE) {
+							grid[i][j]=EMPTY;
+						}
+				}
+			}
+				if(playerlist!=null) {
+				for(int i =0;i<playerlist.length;i++) {
+					for (int z = 0; z< gameSize * gameSize; z++) {
+						if ((playerlist[i].getSnake().getSnakeInfo(z, 0) < 0) || (playerlist[i].getSnake().getSnakeInfo(z, 1) < 0)) {
+							break;
+						}
+						grid[playerlist[i].getSnake().getSnakeInfo(z, 0)][playerlist[i].getSnake().getSnakeInfo(z, 1)] = SNAKE;
+					}
+				}
+				}
+				for (int i = 0; i < gameSize; i++) {
+					for (int j = 0; j < gameSize; j++) {
 						gridCase = grid[i][j];
 						switch (gridCase) {
 						case SNAKE:
 							graph.setColor(Color.BLUE);
 							graph.fillOval(i * gridUnit+backgroundright, j * gridUnit+backgroundDown, gridUnit, gridUnit);
+							cout++;
 							break;
 						case FOOD_BONUS:
 							graph.setColor(Color.darkGray);
@@ -322,9 +346,6 @@ public class ServerUIControl implements KeyListener, WindowListener {
 							break;
 						case FOOD_MALUS:
 							graph.setColor(Color.RED);
-							graph.fillOval(i * gridUnit+backgroundright + gridUnit / 4, j * gridUnit+backgroundDown + gridUnit / 4, gridUnit,
-									gridUnit );
-							break;
 						case BIG_FOOD_BONUS:
 							graph.setColor(Color.GREEN);
 							graph.fillOval(i * gridUnit+backgroundright + gridUnit / 4, j * gridUnit+backgroundDown + gridUnit / 4, gridUnit *2,
@@ -355,14 +376,16 @@ public class ServerUIControl implements KeyListener, WindowListener {
 				graph.drawString("Password :", 25, 20+backgroundDown+100);
 				graph.drawString("Scoreboard", backgroundright/2-60, 20+backgroundDown+ height/3+7);
 //				graph.drawString("SCORE = " + score, 150, 20+backgroundDown+ height/3+7+30);
+				int a=0;
 				for(int i=0 ;i<playerlist.length;i++) {
 					if(playerlist[i].getIsRobot()==false) {
-					graph.drawString(playerlist[i].getID(), 25, 20+backgroundDown+ height/3+7+(i+1)*30);
+					graph.drawString(playerlist[i].getID(), 25, 20+backgroundDown+ height/3+7+(a+1)*30);
 					String scoreString = ""+playerlist[i].getScore();
 					graph.setColor(Color.white);
-					graph.fillRect(200, 20+backgroundDown+ height/3+15+(i)*30,30,30);
+					graph.fillRect(200, 20+backgroundDown+ height/3+15+(a)*30,30,30);
 					graph.setColor(Color.BLACK);
-					graph.drawString("" + playerlist[i].getScore(), 200, 20+backgroundDown+ height/3+7+(i+1)*30);
+					graph.drawString("" + playerlist[i].getScore(), 200, 20+backgroundDown+ height/3+7+(a+1)*30);
+					a++;
 					}
 				}
 				graph.dispose();
@@ -371,6 +394,7 @@ public class ServerUIControl implements KeyListener, WindowListener {
 			strategy.show();
 			Toolkit.getDefaultToolkit().sync();
 		} while (strategy.contentsLost());
+//		System.out.println(cout);
 	}
 
 	private String getTime() {

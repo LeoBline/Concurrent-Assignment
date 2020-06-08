@@ -46,6 +46,7 @@ public class Snake {
 			return;
 		}
 		if (direction < 0) {
+			
 			return;
 		}
 		int ymove = 0;
@@ -88,6 +89,8 @@ public class Snake {
 			Length++;
 			score++;
 			placeBonus(FOOD_BONUS);
+			
+			System.out.println("Plant");
 		}
 		if (map.getMapInfo(fut_x, fut_y) == FOOD_MALUS) {
 			Length += 2;
@@ -123,10 +126,10 @@ public class Snake {
 			if ((this.getSnakeInfo(i, 0) < 0) || (this.getSnakeInfo(i, 1) < 0)) {
 				break;
 			}
-			a++;
+			
 			map.setMapInfo(this.getSnakeInfo(i, 0), this.getSnakeInfo(i, 1), SNAKE);
 			
-		}System.out.println(a);
+		}
 		bonusTime = bonusTime -1;
 		if (bonusTime == 0) {
 			for (i = 0; i < gameSize; i++) {
@@ -175,6 +178,7 @@ public class Snake {
 				this.setSnakeInfo(i, 0, -1);
 				this.setSnakeInfo(i, 1, -1);
 				map.setMapInfo(a, b, EMPTY);
+
 			}
 		}
 	}
@@ -183,7 +187,7 @@ public class Snake {
 	 * Return the statement of this snake, if the snake dead or alive
 	 * @return
 	 */
-	public boolean getGameover() {
+	public synchronized boolean getGameover() {
 		return game_over;
 	}
 
@@ -210,7 +214,7 @@ public class Snake {
 	 * this method return a random direction
 	 * @return direction
 	 */
-	public int RandomDirection() {
+	public synchronized int RandomDirection() {
 		
 		Random r=new Random();
 		int i=r.nextInt(4);
@@ -218,7 +222,7 @@ public class Snake {
 	}
 
 	
-	public void setSnakeInfo(int index1, int index2, int num) {
+	public synchronized void setSnakeInfo(int index1, int index2, int num) {
 		snake[index1][index2] = num;
 	}
 	/**
@@ -227,23 +231,23 @@ public class Snake {
 	 * @param index2
 	 * @return one part of snake
 	 */
-	public int getSnakeInfo(int index1, int index2) {
+	public synchronized int getSnakeInfo(int index1, int index2) {
 		return snake[index1][index2];
 	}
 		
-	public int getDirection() {
+	public synchronized int getDirection() {
 		return direction;
 	}
 
-	public void setDirection(int direction) {
+	public synchronized void setDirection(int direction) {
 		this.direction = direction;
 	}
 	
-	public int getNext_direction() {
+	public synchronized int getNext_direction() {
 		return next_direction;
 	}
 
-	public void setNext_direction(int next_direction) {
+	public synchronized void setNext_direction(int next_direction) {
 		this.next_direction = next_direction;
 	}
 
@@ -251,6 +255,9 @@ public class Snake {
 		return score;
 	}
 
+	public int getLength() {
+		return Length;
+	}
 	public void setScore(int score) {
 		this.score = score;
 	}
