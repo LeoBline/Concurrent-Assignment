@@ -118,26 +118,14 @@ public class Snake {
 		this.setSnakeInfo(0, 1, fut_y);
 
 		map.setMapInfo(tempx, tempy, EMPTY);
-		int snakex, snakey, i;
-		for (i = 1; i < gameSize * gameSize; i++) {
-			if ((this.getSnakeInfo(i, 0) < 0) || (this.getSnakeInfo(i, 0) < 0)) {
-				break;
-			}
-			map.setMapInfo(this.getSnakeInfo(i, 0), this.getSnakeInfo(i, 1), EMPTY);
-			snakex = this.getSnakeInfo(i, 0);
-			snakey = this.getSnakeInfo(i, 1);
-			this.setSnakeInfo(i, 0, tempx);
-			this.setSnakeInfo(i, 1, tempy);
-			tempx = snakex;
-			tempy = snakey;
-		}
-		int a=0;
-		for (i = 0; i < gameSize*gameSize; i++) {
+
+		updatasnake(tempx, tempy);
+		int i;
+		for ( i = 0; i < gameSize*gameSize; i++) {
 			if ((this.getSnakeInfo(i, 0) < 0) || (this.getSnakeInfo(i, 1) < 0)) {
 				break;
 			}
 			
-			map.setMapInfo(this.getSnakeInfo(i, 0), this.getSnakeInfo(i, 1), SNAKE);
 			
 		}
 		bonusTime = bonusTime -1;
@@ -171,7 +159,7 @@ public class Snake {
 				placeMalus(FOOD_MALUS);
 				setMalusTime(100);
 			}
-			Length--;
+			setLength(Length-1);
 		}
 	}
 	
@@ -231,6 +219,29 @@ public class Snake {
 		return i;
 	}
 
+	public synchronized void updatasnake(int tempx,int tempy) {
+		int snakex, snakey, i;
+		for (i = 1; i < gameSize * gameSize; i++) {
+			if ((this.getSnakeInfo(i, 0) < 0) || (this.getSnakeInfo(i, 0) < 0)) {
+				break;
+			}
+			map.setMapInfo(this.getSnakeInfo(i, 0), this.getSnakeInfo(i, 1), EMPTY);
+			snakex = this.getSnakeInfo(i, 0);
+			snakey = this.getSnakeInfo(i, 1);
+			this.setSnakeInfo(i, 0, tempx);
+			this.setSnakeInfo(i, 1, tempy);
+			tempx = snakex;
+			tempy = snakey;
+		}
+		for ( i = 0; i < gameSize*gameSize; i++) {
+			if ((this.getSnakeInfo(i, 0) < 0) || (this.getSnakeInfo(i, 1) < 0)) {
+				break;
+			}
+			
+			map.setMapInfo(this.getSnakeInfo(i, 0), this.getSnakeInfo(i, 1), SNAKE);
+			
+		}
+	}
 	
 	public synchronized void setSnakeInfo(int index1, int index2, int num) {
 		snake[index1][index2] = num;

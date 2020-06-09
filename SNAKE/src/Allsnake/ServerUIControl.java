@@ -127,7 +127,6 @@ public class ServerUIControl implements KeyListener, WindowListener {
 			//add player and snake
 			this.addplayer(new Player("001", gameSize));
 			addRealPlaylistOrder(playerlist.length-1);
-			System.out.println("12312312");
 			snake = playerlist[playerlist.length-1].getSnake();
 			RandomBirth(snake);	
 			setRealPlayerkeypress();
@@ -441,13 +440,11 @@ public class ServerUIControl implements KeyListener, WindowListener {
 
 				graph.setColor(Color.BLACK);
 				graph.drawString("TIME = " + getTime(), backgroundright+10, 20+backgroundDown); // Clock
-//				System.out.println(getTime());
 				graph.drawString("Login", backgroundright/2-20, 20+backgroundDown);
 				graph.drawString("ID :", 25, 20+backgroundDown+30);
 				graph.drawString("Password :", 25, 20+backgroundDown+100);
 				graph.drawString("Time", 25, backgroundDown+250);
 				graph.drawString("Scoreboard", backgroundright/2-60, 20+backgroundDown+ height/3+7);
-//				graph.drawString("SCORE = " + score, 150, 20+backgroundDown+ height/3+7+30);
 				int a=0;		
 				if (game_over) {
 					graph.setColor(Color.RED);
@@ -475,7 +472,6 @@ public class ServerUIControl implements KeyListener, WindowListener {
 			Toolkit.getDefaultToolkit().sync();
 		} while (strategy.contentsLost());
 
-//		System.out.println(cout);
 	}
 
 	private String getTime() {
