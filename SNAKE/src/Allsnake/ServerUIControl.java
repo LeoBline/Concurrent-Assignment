@@ -342,7 +342,7 @@ public class ServerUIControl implements KeyListener, WindowListener {
 		}
 	}
 
-	private synchronized void renderGame() {
+	private  void renderGame() {
 		int gridUnit = height / gameSize;
 		canvas.paint(graph);int cout=0;
 		do {
@@ -543,26 +543,14 @@ public class ServerUIControl implements KeyListener, WindowListener {
 	// IMPLEMENTED FUNCTIONS
 	public synchronized void  keyPressed(KeyEvent ke) {
 		int code = ke.getKeyCode();
-		Dimension dim;
 		if(snake!=null) {
+			//judge the inputkeypress and add direction to the buffer
 			for(int i =0;i<realPlayListOrder.length;i++) {
 				playerlist[realPlayListOrder[i]].judgeInput(code);
 			}
+			
+			
 		switch (code) {		
-		case KeyEvent.VK_F11:
-			dim = Toolkit.getDefaultToolkit().getScreenSize();
-			if ((height != dim.height - 50) || (width != dim.height - 50)) {
-				height = dim.height - 50;
-				width = dim.height - 50;
-			} else {
-				height = 600;
-				width = 600;
-			}
-			frame.setSize(width + 7, height + 27);
-			canvas.setSize(width + 7, height + 27);
-			canvas.validate();
-			frame.validate();
-			break;
 		case KeyEvent.VK_ESCAPE:
 			System.exit(0);
 			break;
@@ -570,7 +558,6 @@ public class ServerUIControl implements KeyListener, WindowListener {
 				paused = !paused;
 			break;
 		default:
-			// Unsupported key
 			break;
 		}
 		}
@@ -585,6 +572,9 @@ public class ServerUIControl implements KeyListener, WindowListener {
 		realPlayListOrder = neworderlist;
 		System.out.println(realPlayListOrder.length);
 	}
+	
+	
+	
 	
 	public void setRealPlayerkeypress() {
 		switch(realPlayListOrder.length){
