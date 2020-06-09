@@ -90,12 +90,6 @@ public class ServerUIControl implements KeyListener, WindowListener {
 	private Player[] playerlist = new Player[0];
 	ExecutorService pool= null;
 	private int Robotnumber=1;
-
-	
-	private int firstplayerOrder=99999;
-	private int secondplayerOrder=99999;
-	private int thirdplayerOrder=99999;
-	private int fourthplayerOrder=99999;
 	private int[] realPlayListOrder = new int[0];
 	
 	
