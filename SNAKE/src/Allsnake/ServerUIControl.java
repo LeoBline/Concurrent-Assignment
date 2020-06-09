@@ -230,7 +230,6 @@ public class ServerUIControl implements KeyListener, WindowListener {
 
 	public void mainLoop() {
 		while (!game_over) {
-			Thread aThread;
 			cycleTime = System.currentTimeMillis();
 			if (!paused) {
 					int nu = playerlist.length/20;
@@ -245,7 +244,7 @@ public class ServerUIControl implements KeyListener, WindowListener {
 						RandomBirth(playerlist[i].getSnake());
 					}
 				}
-			
+			}
 
 			renderGame();
 			cycleTime = System.currentTimeMillis() - cycleTime;
@@ -258,7 +257,7 @@ public class ServerUIControl implements KeyListener, WindowListener {
 			} catch (InterruptedException ex) {
 				Logger.getLogger(ServerUIControl.class.getName()).log(Level.SEVERE, null, ex);
 			}
-			}
+			
 		}
 	}
 	
@@ -357,6 +356,7 @@ public class ServerUIControl implements KeyListener, WindowListener {
 					}
 				}
 				graph.setFont(new Font(Font.SANS_SERIF, Font.BOLD, height / 40));
+				System.out.println(paused);
 				if (game_over) {
 					graph.setColor(Color.RED);
 					graph.drawString("GAME OVER", height / 2 - 30, height / 2);
@@ -613,7 +613,6 @@ public class ServerUIControl implements KeyListener, WindowListener {
 			System.exit(0);
 			break;
 		case KeyEvent.VK_SPACE:
-			if (!game_over)
 				paused = !paused;
 			break;
 		default:

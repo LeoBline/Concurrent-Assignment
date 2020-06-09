@@ -86,20 +86,28 @@ public class Snake {
 		if (fut_y >= gameSize)
 			fut_y = 0;
 		if (map.getMapInfo(fut_x, fut_y)== FOOD_BONUS) {
+			//if two snake eat same food it will stop one
+//			if(map.eatfood(fut_x,fut_y)==true) {
 			Length++;
 			score++;
 			placeBonus(FOOD_BONUS);
-			
-			System.out.println("Plant");
+//			}
 		}
 		if (map.getMapInfo(fut_x, fut_y) == FOOD_MALUS) {
+			//if two snake eat same food it will stop one
+//			if(map.eatfood(fut_x,fut_y)==true) {
 			Length += 2;
 			score--;
+//			}
 		} else if (map.getMapInfo(fut_x, fut_y) == BIG_FOOD_BONUS) {
+			//if two snake eat same food it will stop one
+//			if(map.eatfood(fut_x,fut_y)==true) {
 			Length += 3;
 			score += 3;
+//			}
 		}
 		if ((map.getMapInfo(fut_x, fut_y) == SNAKE)) {
+			
 			gameOver();
 
 			return;

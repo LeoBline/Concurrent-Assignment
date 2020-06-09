@@ -28,6 +28,15 @@ public Map() {
 	public synchronized int getMapInfo(int index1, int index2) {
 		return grid[index1][index2];
 	}
+	//if two snake eat same food it will just allow one to eat
+	public synchronized boolean eatfood(int x,int y) {
+		if(grid[x][y]==1||grid[x][y]==2||grid[x][y]==3) {
+			grid[x][y]=0;
+			return true;
+		}else {
+			return false;
+		}
+	}
 
 	public void setMap(int[][] array) {
 		grid = array;
