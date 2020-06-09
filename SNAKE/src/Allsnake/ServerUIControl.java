@@ -33,6 +33,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 import com.sun.corba.se.impl.orbutil.closure.Future;
+//import com.sun.java.util.jar.pack.Instruction.Switch;
 import com.sun.prism.Image;
 
 import sun.security.util.Length;
@@ -95,6 +96,7 @@ public class ServerUIControl implements KeyListener, WindowListener {
 	private int secondplayerOrder=99999;
 	private int thirdplayerOrder=99999;
 	private int fourthplayerOrder=99999;
+	private int[] realPlayListOrder = new int[0];
 	
 	
 	
@@ -116,7 +118,6 @@ public class ServerUIControl implements KeyListener, WindowListener {
 		this.init();
 		
 		
-		
 		this.renderGame();
 		this.mainLoop();
 	}
@@ -131,19 +132,12 @@ public class ServerUIControl implements KeyListener, WindowListener {
 			System.out.println("success login");
 			//add player and snake
 			this.addplayer(new Player("001", gameSize));
+			addRealPlaylistOrder(playerlist.length-1);
+			System.out.println("12312312");
 			snake = playerlist[playerlist.length-1].getSnake();
-			RandomBirth(snake);
+			RandomBirth(snake);	
+			setRealPlayerkeypress();
 			JOptionPane.showMessageDialog(null, "Success Login","", JOptionPane.INFORMATION_MESSAGE);
-			if(firstplayerOrder == 99999) {
-				firstplayerOrder =playerlist.length-1;
-			}else if(secondplayerOrder == 99999) {
-				secondplayerOrder =playerlist.length-1;
-			}else if(thirdplayerOrder == 99999) {
-				thirdplayerOrder =playerlist.length-1;
-			}else if (fourthplayerOrder == 99999) {
-				fourthplayerOrder =playerlist.length-1;
-			}
-
 		}else {
 			JOptionPane.showMessageDialog(null, "Fail Login","", JOptionPane.INFORMATION_MESSAGE);
 		}
@@ -392,44 +386,45 @@ public class ServerUIControl implements KeyListener, WindowListener {
 							graph.setColor(Color.BLUE);
 							graph.fillOval(i * gridUnit+backgroundright, j * gridUnit+backgroundDown, gridUnit, gridUnit);
 							graph.setColor(Color.PINK);
-								if(firstplayerOrder!=99999) {
+							if(realPlayListOrder!=null) {
+								if(realPlayListOrder.length>0) {
 
 										for (int z = 0; z< gameSize * gameSize; z++) {
-											if ((playerlist[firstplayerOrder].getSnake().getSnakeInfo(z, 0) < 0) || (playerlist[firstplayerOrder].getSnake().getSnakeInfo(z, 1) < 0)) {
+											if ((playerlist[realPlayListOrder[0]].getSnake().getSnakeInfo(z, 0) < 0) || (playerlist[realPlayListOrder[0]].getSnake().getSnakeInfo(z, 1) < 0)) {
 												break;
 											}
-											graph.fillOval(playerlist[firstplayerOrder].getSnake().getSnakeInfo(z, 0)*gridUnit+backgroundright,playerlist[firstplayerOrder].getSnake().getSnakeInfo(z, 1)*gridUnit+backgroundDown,gridUnit,gridUnit);
+											graph.fillOval(playerlist[realPlayListOrder[0]].getSnake().getSnakeInfo(z, 0)*gridUnit+backgroundright,playerlist[realPlayListOrder[0]].getSnake().getSnakeInfo(z, 1)*gridUnit+backgroundDown,gridUnit,gridUnit);
 										}
 									
 								}
 								graph.setColor(Color.ORANGE);
-								if (secondplayerOrder!=99999) {
+								if (realPlayListOrder.length>1) {
 									for (int z = 0; z< gameSize * gameSize; z++) {
-										if ((playerlist[secondplayerOrder].getSnake().getSnakeInfo(z, 0) < 0) || (playerlist[secondplayerOrder].getSnake().getSnakeInfo(z, 1) < 0)) {
+										if ((playerlist[realPlayListOrder[1]].getSnake().getSnakeInfo(z, 0) < 0) || (playerlist[realPlayListOrder[1]].getSnake().getSnakeInfo(z, 1) < 0)) {
 											break;
 										}
-										graph.fillOval(playerlist[secondplayerOrder].getSnake().getSnakeInfo(z, 0)*gridUnit+backgroundright,playerlist[secondplayerOrder].getSnake().getSnakeInfo(z, 1)*gridUnit+backgroundDown,gridUnit,gridUnit);
+										graph.fillOval(playerlist[realPlayListOrder[1]].getSnake().getSnakeInfo(z, 0)*gridUnit+backgroundright,playerlist[realPlayListOrder[1]].getSnake().getSnakeInfo(z, 1)*gridUnit+backgroundDown,gridUnit,gridUnit);
 									}
 								}
 								graph.setColor(Color.DARK_GRAY);
-								if (thirdplayerOrder!=99999) {
+								if (realPlayListOrder.length>2) {
 									for (int z = 0; z< gameSize * gameSize; z++) {
-										if ((playerlist[thirdplayerOrder].getSnake().getSnakeInfo(z, 0) < 0) || (playerlist[thirdplayerOrder].getSnake().getSnakeInfo(z, 1) < 0)) {
+										if ((playerlist[realPlayListOrder[2]].getSnake().getSnakeInfo(z, 0) < 0) || (playerlist[realPlayListOrder[2]].getSnake().getSnakeInfo(z, 1) < 0)) {
 											break;
 										}
-										graph.fillOval(playerlist[thirdplayerOrder].getSnake().getSnakeInfo(z, 0)*gridUnit+backgroundright,playerlist[thirdplayerOrder].getSnake().getSnakeInfo(z, 1)*gridUnit+backgroundDown,gridUnit,gridUnit);
+										graph.fillOval(playerlist[realPlayListOrder[2]].getSnake().getSnakeInfo(z, 0)*gridUnit+backgroundright,playerlist[realPlayListOrder[2]].getSnake().getSnakeInfo(z, 1)*gridUnit+backgroundDown,gridUnit,gridUnit);
 									}
 								}
 								graph.setColor(Color.LIGHT_GRAY);
-								if (fourthplayerOrder!=99999) {
+								if (realPlayListOrder.length>3) {
 									for (int z = 0; z< gameSize * gameSize; z++) {
-										if ((playerlist[fourthplayerOrder].getSnake().getSnakeInfo(z, 0) < 0) || (playerlist[fourthplayerOrder].getSnake().getSnakeInfo(z, 1) < 0)) {
+										if ((playerlist[realPlayListOrder[3]].getSnake().getSnakeInfo(z, 0) < 0) || (playerlist[realPlayListOrder[3]].getSnake().getSnakeInfo(z, 1) < 0)) {
 											break;
 										}
-										graph.fillOval(playerlist[fourthplayerOrder].getSnake().getSnakeInfo(z, 0)*gridUnit+backgroundright,playerlist[fourthplayerOrder].getSnake().getSnakeInfo(z, 1)*gridUnit+backgroundDown,gridUnit,gridUnit);
+										graph.fillOval(playerlist[realPlayListOrder[3]].getSnake().getSnakeInfo(z, 0)*gridUnit+backgroundright,playerlist[realPlayListOrder[3]].getSnake().getSnakeInfo(z, 1)*gridUnit+backgroundDown,gridUnit,gridUnit);
 									}
 								}
-							
+							}
 							break;
 						case FOOD_BONUS:
 							graph.setColor(Color.darkGray);
@@ -550,144 +545,10 @@ public class ServerUIControl implements KeyListener, WindowListener {
 		int code = ke.getKeyCode();
 		Dimension dim;
 		if(snake!=null) {
-		switch (code) {
-		//player1
-		case KeyEvent.VK_UP:
-			if(firstplayerOrder !=99999) {
-			if (playerlist[firstplayerOrder].getSnake().getDirection() != DOWN ) {
-//				next_direction = UP;
-				playerlist[firstplayerOrder].Getbuffer().append(UP);
+			for(int i =0;i<realPlayListOrder.length;i++) {
+				playerlist[realPlayListOrder[i]].judgeInput(code);
 			}
-			}
-			break;
-		case KeyEvent.VK_DOWN:
-			if(firstplayerOrder !=99999) {
-			if (playerlist[firstplayerOrder].getSnake().getDirection() != UP) {
-//				next_direction = DOWN;
-				playerlist[firstplayerOrder].Getbuffer().append(DOWN);
-			}
-			}
-			break;
-		case KeyEvent.VK_LEFT:
-			if(firstplayerOrder !=99999) {
-			if (playerlist[firstplayerOrder].getSnake().getDirection()  != RIGHT) {
-//				next_direction = LEFT;
-				playerlist[firstplayerOrder].Getbuffer().append(LEFT);
-			}
-			}
-			break;
-		case KeyEvent.VK_RIGHT:
-			if(firstplayerOrder !=99999) {
-			if (playerlist[firstplayerOrder].getSnake().getDirection()  != LEFT) {
-//				next_direction = RIGHT;
-				playerlist[firstplayerOrder].Getbuffer().append(RIGHT);
-			}
-			}
-			break;
-		
-			//player2
-		case KeyEvent.VK_W:
-			if(secondplayerOrder !=99999) {
-			if (playerlist[secondplayerOrder].getSnake().getDirection()  != DOWN) {
-//				next_direction = RIGHT;
-				playerlist[secondplayerOrder].Getbuffer().append(UP);
-			}
-			}
-			break;
-			
-		case KeyEvent.VK_S:
-			if(secondplayerOrder !=99999) {
-			if (playerlist[secondplayerOrder].getSnake().getDirection() != UP) {
-//				next_direction = DOWN;
-				playerlist[secondplayerOrder].Getbuffer().append(DOWN);
-			}
-			}
-			break;
-		case KeyEvent.VK_A:
-			if(secondplayerOrder !=99999) {
-			if (playerlist[secondplayerOrder].getSnake().getDirection()  != RIGHT ) {
-//				next_direction = LEFT;
-				playerlist[secondplayerOrder].Getbuffer().append(LEFT);
-			}
-			}
-			break;
-		case KeyEvent.VK_D:
-			if(secondplayerOrder !=99999) {
-			if (playerlist[secondplayerOrder].getSnake().getDirection()  != LEFT ) {
-//				next_direction = RIGHT;
-				playerlist[secondplayerOrder].Getbuffer().append(RIGHT);
-			}
-			}
-			break;
-			
-		case KeyEvent.VK_I:
-			if(thirdplayerOrder !=99999) {
-			if (playerlist[thirdplayerOrder].getSnake().getDirection()  != DOWN ) {
-//				next_direction = RIGHT;
-				playerlist[thirdplayerOrder].Getbuffer().append(UP);
-			}
-			}
-			break;
-			
-		case KeyEvent.VK_K:
-			if(thirdplayerOrder !=99999) {
-			if (playerlist[thirdplayerOrder].getSnake().getDirection() != UP ) {
-//				next_direction = DOWN;
-				playerlist[thirdplayerOrder].Getbuffer().append(DOWN);
-			}
-			}
-			break;
-		case KeyEvent.VK_J:
-			if(thirdplayerOrder !=99999) {
-			if (playerlist[thirdplayerOrder].getSnake().getDirection()  != RIGHT ) {
-//				next_direction = LEFT;
-				playerlist[thirdplayerOrder].Getbuffer().append(LEFT);
-			}
-			}
-			break;
-		case KeyEvent.VK_L:
-			if(thirdplayerOrder !=99999) {
-			if (playerlist[thirdplayerOrder].getSnake().getDirection()  != LEFT ) {
-//				next_direction = RIGHT;
-				playerlist[thirdplayerOrder].Getbuffer().append(RIGHT);
-			}
-			}
-			break;
-			
-		case KeyEvent.VK_G:
-			if(fourthplayerOrder !=99999) {
-			if (playerlist[fourthplayerOrder].getSnake().getDirection()  != DOWN ) {
-//				next_direction = RIGHT;
-				playerlist[fourthplayerOrder].Getbuffer().append(UP);
-			}
-			}
-			break;
-			
-		case KeyEvent.VK_B:
-			if(fourthplayerOrder !=99999) {
-			if (playerlist[fourthplayerOrder].getSnake().getDirection() != UP) {
-//				next_direction = DOWN;
-				playerlist[fourthplayerOrder].Getbuffer().append(DOWN);
-			}
-			}
-			break;
-		case KeyEvent.VK_V:
-			if(fourthplayerOrder !=99999) {
-			if (playerlist[fourthplayerOrder].getSnake().getDirection()  != RIGHT ) {
-//				next_direction = LEFT;
-				playerlist[fourthplayerOrder].Getbuffer().append(LEFT);
-			}
-			}
-			break;
-		case KeyEvent.VK_N:
-			if(fourthplayerOrder !=99999) {
-			if (playerlist[fourthplayerOrder].getSnake().getDirection()  != LEFT ) {
-//				next_direction = RIGHT;
-				playerlist[fourthplayerOrder].Getbuffer().append(RIGHT);
-			}
-			}
-			break;
-			
+		switch (code) {		
 		case KeyEvent.VK_F11:
 			dim = Toolkit.getDefaultToolkit().getScreenSize();
 			if ((height != dim.height - 50) || (width != dim.height - 50)) {
@@ -712,6 +573,36 @@ public class ServerUIControl implements KeyListener, WindowListener {
 			// Unsupported key
 			break;
 		}
+		}
+	}
+	
+	
+	//add new RealPlayerOrder to the Order list 
+	public void addRealPlaylistOrder(int a) {
+		int[] neworderlist = new int[realPlayListOrder.length+1];
+		System.arraycopy(realPlayListOrder, 0, neworderlist, 0, realPlayListOrder.length);
+		neworderlist[neworderlist.length-1] = a;
+		realPlayListOrder = neworderlist;
+		System.out.println(realPlayListOrder.length);
+	}
+	
+	public void setRealPlayerkeypress() {
+		switch(realPlayListOrder.length){
+			case 1:
+				playerlist[realPlayListOrder[0]].setkeypress(KeyEvent.VK_UP, KeyEvent.VK_DOWN, KeyEvent.VK_RIGHT, KeyEvent.VK_LEFT);
+				break;
+			case 2:
+				playerlist[realPlayListOrder[1]].setkeypress(KeyEvent.VK_W, KeyEvent.VK_S, KeyEvent.VK_D, KeyEvent.VK_A);
+				break;
+			case 3:
+				playerlist[realPlayListOrder[2]].setkeypress(KeyEvent.VK_I, KeyEvent.VK_K, KeyEvent.VK_L, KeyEvent.VK_J);
+				break;
+			case 4:
+				playerlist[realPlayListOrder[3]].setkeypress(KeyEvent.VK_G, KeyEvent.VK_B, KeyEvent.VK_N, KeyEvent.VK_V);
+				break;
+			default:
+				break;
+				
 		}
 	}
 	public int getSeconde() {

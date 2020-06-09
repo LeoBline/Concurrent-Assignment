@@ -13,6 +13,11 @@ public class Player {
     private Buffer playerBuffer = new Buffer();
     private static int game_size;
     private boolean IsRobot = false;
+    private int[] OperationButtons={999,999,999,999};//up,down,right,left keypress
+	public final static int UP = 0;
+	public final static int DOWN = 1;
+	public final static int LEFT = 2;
+	public final static int RIGHT = 3;
 
 
 
@@ -27,6 +32,7 @@ public class Player {
 		game_size=gamesize;
 		int[][] a =new int[game_size * game_size][2];
 		mySnake = new Snake(a);
+		
 	}
     public Buffer Getbuffer() {
     	return playerBuffer;
@@ -60,6 +66,52 @@ public class Player {
     }
     public boolean getIsRobot() {
     	return this.IsRobot;
+    }
+    
+    public void setkeypress(int up,int down,int right,int left) {
+    	OperationButtons[0]=up;
+    	OperationButtons[1]=down;
+    	OperationButtons[2]=right;
+    	OperationButtons[3]=left;
+    	
+    }
+    
+    public int getUpButtons() {
+    	return OperationButtons[0];
+    }
+    public int getDownButtons() {
+    	return OperationButtons[1];
+    }
+    public int getRightButtons() {
+    	return OperationButtons[2];
+    }
+    public int getLeftButtons() {
+    	return OperationButtons[3];
+    }
+    
+    public void judgeInput(int a) {
+    	if(a==this.getUpButtons()) {
+    		if(this.getSnake().getDirection()!=DOWN && this.getSnake().getDirection()!=UP) {
+    		this.Getbuffer().append(UP);
+    		}
+    	}
+    	if(a==this.getDownButtons()) {
+    		if(this.getSnake().getDirection()!=DOWN && this.getSnake().getDirection()!=UP) {
+    		this.Getbuffer().append(DOWN);
+    		}
+    	}
+    	if(a==this.getRightButtons()) {
+    		if(this.getSnake().getDirection()!=RIGHT && this.getSnake().getDirection()!=LEFT) {
+    		this.Getbuffer().append(RIGHT);
+    		}
+    	}
+    	if(a==this.getLeftButtons()) {
+    		if(this.getSnake().getDirection()!=RIGHT && this.getSnake().getDirection()!=LEFT) {
+    		this.Getbuffer().append(LEFT);
+    		}
+    	}
+    	
+    	
     }
 
 //    public void setID(String ID) {
