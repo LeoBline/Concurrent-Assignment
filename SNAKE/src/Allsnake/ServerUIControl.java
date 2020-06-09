@@ -18,6 +18,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.awt.image.BufferStrategy;
+import java.text.SimpleDateFormat;
 import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -34,13 +35,14 @@ import javax.swing.JTextField;
 import com.sun.prism.Image;
 
 import sun.security.util.Length;
+import sun.util.calendar.BaseCalendar.Date;
 
 /**
 * @author Peuch
 */
 public class ServerUIControl implements KeyListener, WindowListener {
 	// KEYS MAP
-	private static ServerUIControl serverUIControl = new ServerUIControl();
+//	private static ServerUIControl serverUIControl = new ServerUIControl();
 	public final static int UP = 0;
 	public final static int DOWN = 1;
 	public final static int LEFT = 2;
@@ -68,7 +70,7 @@ public class ServerUIControl implements KeyListener, WindowListener {
 	private boolean paused = false;
 	private int score = 0;
 	private int grow = 0;
-	private int seconde, minute, milliseconde = 0; // Clock values
+	private int seconde, minute, milliseconde=0; // Clock values
 	private long cycleTime = 0;
 	private long sleepTime = 0;
 	public int bonusTime = 0;
@@ -80,6 +82,8 @@ public class ServerUIControl implements KeyListener, WindowListener {
 	JButton AddRobotButton = new JButton("Add Robot");
 	JTextField idField = new JTextField();
 	JTextField passwordField = new JTextField();
+	JTextField TimeField = new JTextField();
+	JButton SetTimeButton = new JButton("Set");
 	ServerDB serverdb;
 	private Player[] playerlist = new Player[0];
 	ExecutorService pool= null;
@@ -180,6 +184,7 @@ public class ServerUIControl implements KeyListener, WindowListener {
 
 	public void init() {
 //
+		minute = 5;
 		frame.setSize(width + 340, height+50 );
 		frame.setResizable(false);
 		frame.setLocationByPlatform(true);
@@ -188,6 +193,40 @@ public class ServerUIControl implements KeyListener, WindowListener {
 		AddRobotButton.setBounds(25, 20+backgroundDown+940, backgroundright-40, 30);
 		idField.setBounds(25, 20+backgroundDown+80, backgroundright-40, 30);
 		passwordField.setBounds(25, 20+backgroundDown+150, backgroundright-40, 30);
+		TimeField.setBounds(100, backgroundDown+260, backgroundright-170, 30);
+		SetTimeButton.setBounds(25,20+backgroundDown+290 , backgroundright-40, 30);
+		idField.setText("001");
+		passwordField.setText("123456");
+		TimeField.setText("05:00");
+		SetTimeButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+			// TODO Auto-generated method stub
+
+				String time =TimeField.getText();
+
+				SimpleDateFormat format=new SimpleDateFormat("HH:mm");
+		 
+				//judge it is right format
+
+				boolean dateflag=true;
+				try
+				{
+				java.util.Date date = format.parse(time);
+				} catch (Exception e1)
+				{
+				dateflag=false;
+			}
+				if(dateflag==false) {
+					JOptionPane.showMessageDialog(null, "Error time format.Example(05:00)","", JOptionPane.INFORMATION_MESSAGE);
+				}else {	
+					setMinute(Integer.parseInt( time.split(":")[0] ));
+					setSeconde(Integer.parseInt( time.split(":")[1] ));
+					JOptionPane.showMessageDialog(null, "Success set time","", JOptionPane.INFORMATION_MESSAGE);
+
+					
+				}
+			}});
 		AddRobotButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -209,9 +248,12 @@ public class ServerUIControl implements KeyListener, WindowListener {
 //		Add label and text box and login button.
 		frame.add(idField);
 		frame.add(passwordField);
+		frame.add(TimeField);
 		frame.add(loginButton);
+		frame.add(SetTimeButton);
 		frame.add(AddRobotButton);
 		frame.add(canvas);
+		
 		
 		canvas.addKeyListener(this);
 		frame.addWindowListener(this);
@@ -232,6 +274,9 @@ public class ServerUIControl implements KeyListener, WindowListener {
 		while (!game_over) {
 			cycleTime = System.currentTimeMillis();
 			if (!paused) {
+				if(seconde ==0 &&minute == 0) {
+		            game_over = true;
+	        }
 					int nu = playerlist.length/20;
 					int remain =playerlist.length%20;
 					for(int i=0 ;i<20;i++) {
@@ -356,26 +401,25 @@ public class ServerUIControl implements KeyListener, WindowListener {
 					}
 				}
 				graph.setFont(new Font(Font.SANS_SERIF, Font.BOLD, height / 40));
-				System.out.println(paused);
-				if (game_over) {
-					graph.setColor(Color.RED);
-					graph.drawString("GAME OVER", height / 2 - 30, height / 2);
-					graph.drawString("YOUR SCORE : " + score, height / 2 - 40, height / 2 + 50);
-					graph.drawString("YOUR TIME : " + getTime(), height / 2 - 42, height / 2 + 100);
-				} else if (paused) {
-					graph.setColor(Color.RED);
-					graph.drawString("PAUSED", backgroundright+500, 20+backgroundDown);
 
-				}
 				graph.setColor(Color.BLACK);
 				graph.drawString("TIME = " + getTime(), backgroundright+10, 20+backgroundDown); // Clock
 //				System.out.println(getTime());
 				graph.drawString("Login", backgroundright/2-20, 20+backgroundDown);
 				graph.drawString("ID :", 25, 20+backgroundDown+30);
 				graph.drawString("Password :", 25, 20+backgroundDown+100);
+				graph.drawString("Time", 25, backgroundDown+250);
 				graph.drawString("Scoreboard", backgroundright/2-60, 20+backgroundDown+ height/3+7);
 //				graph.drawString("SCORE = " + score, 150, 20+backgroundDown+ height/3+7+30);
-				int a=0;
+				int a=0;		
+				if (game_over) {
+					graph.setColor(Color.RED);
+					graph.drawString("GAME OVER", height / 2 - 30, height / 2);
+				} else if (paused) {
+					graph.setColor(Color.RED);
+					graph.drawString("PAUSED", backgroundright+500, 20+backgroundDown);
+
+				}
 				for(int i=0 ;i<playerlist.length;i++) {
 					if(playerlist[i].getIsRobot()==false) {
 					graph.drawString(playerlist[i].getID(), 25, 20+backgroundDown+ height/3+7+(a+1)*30);
@@ -393,24 +437,25 @@ public class ServerUIControl implements KeyListener, WindowListener {
 			strategy.show();
 			Toolkit.getDefaultToolkit().sync();
 		} while (strategy.contentsLost());
+
 //		System.out.println(cout);
 	}
 
 	private String getTime() {
 		String temps = new String(minute + ":" + seconde);
 		if(playerlist.length >0) {
-		if (playerlist[0].getSnake().getDirection() == -1 || paused)
+		if ( paused)
 			return temps;
-		milliseconde++;
-
-		if (milliseconde == 14) {
-			seconde++;
+		milliseconde--;
+		if (seconde == -1) {
+			seconde = 59;
+			minute--;
+		}
+		if (milliseconde == -14) {
+			seconde--;
 			milliseconde = 0;
 		}
-		if (seconde == 60) {
-			seconde = 0;
-			minute++;
-		}
+
 		return temps;
 		}else {
 			return temps;
@@ -706,11 +751,11 @@ public class ServerUIControl implements KeyListener, WindowListener {
 	/**
 	 * @return
 	 */
-	public static  ServerUIControl getSever() {
-		// TODO Auto-generated method stub
-
-		return serverUIControl;
-	}
+//	public static  ServerUIControl getSever() {
+//		// TODO Auto-generated method stub
+//
+//		return serverUIControl;
+//	}
 
 	/**
 	 * @return
