@@ -1,14 +1,23 @@
 package Allsnake;
-import org.mapdb.*; 
+import org.mapdb.*;
+
+import com.sun.xml.internal.bind.v2.model.core.ID;
+
 import java.io.File; 
 import java.io.Serializable; 
-import java.util.HashMap; 
+import java.util.HashMap;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentNavigableMap; 
 
-public class ServerDB {
+public class ServerDB implements Callable<String> {
         // configure and open database using builder pattern. 
         // all options are available with code auto-completion. 
 
+	private String id,password;
+	public ServerDB(String id,String password) {
+		this.id=id;
+		this.password = password;
+	}
  
     public synchronized String Login(String id,String password) {
     	//every time login will open the file db when login succeess or file will close the db.
@@ -50,4 +59,11 @@ public class ServerDB {
 //    public synchronized void end(DB db) {
 //    	db.close();
 //    }
+
+		@Override
+		public String call() throws Exception {
+			// TODO Auto-generated method stub
+			return Login(id, password);
+		}
+
 }

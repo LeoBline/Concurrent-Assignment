@@ -32,6 +32,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
+import com.sun.corba.se.impl.orbutil.closure.Future;
 import com.sun.prism.Image;
 
 import sun.security.util.Length;
@@ -94,6 +95,9 @@ public class ServerUIControl implements KeyListener, WindowListener {
 	private int secondplayerOrder=99999;
 	private int thirdplayerOrder=99999;
 	private int fourthplayerOrder=99999;
+	
+	
+	
 	ExecutorService executorService2 = Executors.newCachedThreadPool();
 	
 	
@@ -111,8 +115,6 @@ public class ServerUIControl implements KeyListener, WindowListener {
 		grid = Map.getMap().getgrid();
 		this.init();
 		
-		serverdb = new ServerDB();
-//		serverdb.Updata(serverdb.getMap());
 		
 		
 		this.renderGame();
@@ -121,7 +123,11 @@ public class ServerUIControl implements KeyListener, WindowListener {
 	//fix the bug
 	public synchronized  void Login(String id,String password) {
 //Verify the password of the filled database account.
-		if (serverdb.Login(id, password) != "") {
+		serverdb = new ServerDB(id,password);
+		java.util.concurrent.Future<String> future = executorService2.submit(serverdb);
+		try {
+			String result=future.get();
+		if (result!= "") {
 			System.out.println("success login");
 			//add player and snake
 			this.addplayer(new Player("001", gameSize));
@@ -140,6 +146,9 @@ public class ServerUIControl implements KeyListener, WindowListener {
 
 		}else {
 			JOptionPane.showMessageDialog(null, "Fail Login","", JOptionPane.INFORMATION_MESSAGE);
+		}
+		}catch (Exception e) {
+			// TODO: handle exception
 		}
 	}
 	
@@ -751,7 +760,7 @@ public class ServerUIControl implements KeyListener, WindowListener {
 	/**
 	 * @return
 	 */
-//	public static  ServerUIControl getSever() {
+//	public static  ServerUIControl  () {
 //		// TODO Auto-generated method stub
 //
 //		return serverUIControl;
