@@ -388,9 +388,48 @@ public class ServerUIControl implements KeyListener, WindowListener {
 						gridCase = grid[i][j];
 						switch (gridCase) {
 						case SNAKE:
+							
 							graph.setColor(Color.BLUE);
 							graph.fillOval(i * gridUnit+backgroundright, j * gridUnit+backgroundDown, gridUnit, gridUnit);
-							cout++;
+							graph.setColor(Color.PINK);
+								if(firstplayerOrder!=99999) {
+
+										for (int z = 0; z< gameSize * gameSize; z++) {
+											if ((playerlist[firstplayerOrder].getSnake().getSnakeInfo(z, 0) < 0) || (playerlist[firstplayerOrder].getSnake().getSnakeInfo(z, 1) < 0)) {
+												break;
+											}
+											graph.fillOval(playerlist[firstplayerOrder].getSnake().getSnakeInfo(z, 0)*gridUnit+backgroundright,playerlist[firstplayerOrder].getSnake().getSnakeInfo(z, 1)*gridUnit+backgroundDown,gridUnit,gridUnit);
+										}
+									
+								}
+								graph.setColor(Color.ORANGE);
+								if (secondplayerOrder!=99999) {
+									for (int z = 0; z< gameSize * gameSize; z++) {
+										if ((playerlist[secondplayerOrder].getSnake().getSnakeInfo(z, 0) < 0) || (playerlist[secondplayerOrder].getSnake().getSnakeInfo(z, 1) < 0)) {
+											break;
+										}
+										graph.fillOval(playerlist[secondplayerOrder].getSnake().getSnakeInfo(z, 0)*gridUnit+backgroundright,playerlist[secondplayerOrder].getSnake().getSnakeInfo(z, 1)*gridUnit+backgroundDown,gridUnit,gridUnit);
+									}
+								}
+								graph.setColor(Color.DARK_GRAY);
+								if (thirdplayerOrder!=99999) {
+									for (int z = 0; z< gameSize * gameSize; z++) {
+										if ((playerlist[thirdplayerOrder].getSnake().getSnakeInfo(z, 0) < 0) || (playerlist[thirdplayerOrder].getSnake().getSnakeInfo(z, 1) < 0)) {
+											break;
+										}
+										graph.fillOval(playerlist[thirdplayerOrder].getSnake().getSnakeInfo(z, 0)*gridUnit+backgroundright,playerlist[thirdplayerOrder].getSnake().getSnakeInfo(z, 1)*gridUnit+backgroundDown,gridUnit,gridUnit);
+									}
+								}
+								graph.setColor(Color.LIGHT_GRAY);
+								if (fourthplayerOrder!=99999) {
+									for (int z = 0; z< gameSize * gameSize; z++) {
+										if ((playerlist[fourthplayerOrder].getSnake().getSnakeInfo(z, 0) < 0) || (playerlist[fourthplayerOrder].getSnake().getSnakeInfo(z, 1) < 0)) {
+											break;
+										}
+										graph.fillOval(playerlist[fourthplayerOrder].getSnake().getSnakeInfo(z, 0)*gridUnit+backgroundright,playerlist[fourthplayerOrder].getSnake().getSnakeInfo(z, 1)*gridUnit+backgroundDown,gridUnit,gridUnit);
+									}
+								}
+							
 							break;
 						case FOOD_BONUS:
 							graph.setColor(Color.darkGray);
