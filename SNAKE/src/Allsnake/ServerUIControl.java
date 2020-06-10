@@ -289,27 +289,6 @@ public class ServerUIControl implements KeyListener, WindowListener {
 			
 		}
 	}
-	
-	public synchronized void resurrectionSnake() {
-		for(int i =0 ; i< playerlist.length;i++) {
-			if(playerlist[i].getSnake().getGameover() == true) {
-				playerlist[i].InitSnake();
-				RandomBirth(playerlist[i].getSnake());
-			}
-		}
-	}
-	
-	public int TruePlayerNumber() {
-		int TruePlayernumber =0;
-		if(playerlist != null) {
-		for(int a =0 ; a <playerlist.length;a++) {
-			if(playerlist[a].getIsRobot() == false) {
-				TruePlayernumber++;
-			}
-		}
-		}
-		return TruePlayernumber;
-	}
 
 	private void initGame() {
 		// Initialise tabs
@@ -494,16 +473,6 @@ public class ServerUIControl implements KeyListener, WindowListener {
 		}
 	}
 
-	public void placeMalus(int malus_type) {
-		int x = (int) (Math.random() * 1000) % gameSize;
-		int y = (int) (Math.random() * 1000) % gameSize;
-		if (grid[x][y] == EMPTY) {
-			grid[x][y] = malus_type;
-		} else {
-			placeMalus(malus_type);
-		}
-	}
-
 	private void gameOver() {
 		game_over = true;
 	}
@@ -573,64 +542,20 @@ public class ServerUIControl implements KeyListener, WindowListener {
 				
 		}
 	}
-	public int getSeconde() {
-		return seconde;
-	}
 
 	public void setSeconde(int seconde) {
 		this.seconde = seconde;
-	}
-
-	public int getMinute() {
-		return minute;
 	}
 
 	public void setMinute(int minute) {
 		this.minute = minute;
 	}
 
-	public int getMilliseconde() {
-		return milliseconde;
-	}
-
-	public void setMilliseconde(int milliseconde) {
-		this.milliseconde = milliseconde;
-	}
-
-	public long getCycleTime() {
-		return cycleTime;
-	}
-
-	public void setCycleTime(long cycleTime) {
-		this.cycleTime = cycleTime;
-	}
-
-
-	public void setBonusTime(int bonusTime) {
-		this.bonusTime = bonusTime;
-	}
-
-	public int getMalusTime() {
-		return malusTime;
-	}
-
-	public void setMalusTime(int malusTime) {
-		this.malusTime = malusTime;
-	}
-
-	public long getSleepTime() {
-		return sleepTime;
-	}
-
-	public void setSleepTime(long sleepTime) {
-		this.sleepTime = sleepTime;
-	}
-
 	public void windowClosing(WindowEvent we) {
 		System.exit(0);
 	}
 
-	// UNNUSED IMPLEMENTED FUNCTIONS
+	// UNUSED IMPLEMENTED FUNCTIONS
 	public void keyTyped(KeyEvent ke) {
 	}
 
@@ -655,38 +580,5 @@ public class ServerUIControl implements KeyListener, WindowListener {
 	public void windowDeactivated(WindowEvent we) {
 	}
 
-	/**
-	 * @return
-	 */
-//	public static  ServerUIControl  () {
-//		// TODO Auto-generated method stub
-//
-//		return serverUIControl;
-//	}
-
-	/**
-	 * @return
-	 */
-	public int getBonusTime() {
-		// TODO Auto-generated method stub
-		return bonusTime;
-	}
-
-	/**
-	 * @return
-	 */
-	public int getmalusTime() {
-		// TODO Auto-generated method stub
-		return malusTime;
-	}
-
-	/**
-	 * @param i
-	 */
-	public void setmalusTime(int i) {
-		// TODO Auto-generated method stub
-		malusTime = i;
-		
-	}
 }
 
