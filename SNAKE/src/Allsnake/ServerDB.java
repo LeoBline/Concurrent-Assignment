@@ -10,7 +10,11 @@ import java.util.concurrent.ConcurrentNavigableMap;
 public class ServerDB implements Callable<String> {
         // configure and open database using builder pattern. 
         // all options are available with code auto-completion. 
-
+		DB db = DBMaker.newFileDB(new File("PlayerInformation"))
+				.closeOnJvmShutdown()
+				.encryptionEnable("password")
+				.make();
+	ConcurrentNavigableMap<String, String> Playermap = db.getTreeMap("playerinformation");
 	private String id,password;
 	public ServerDB(String id,String password) {
 		this.id=id;
@@ -41,22 +45,22 @@ public class ServerDB implements Callable<String> {
     	}
     	
     }
-//    public synchronized ConcurrentNavigableMap<String, String> getMap(){
-//    	return Playermap;
-//    }
-//    public synchronized DB getDB(){
-//    	return db;
-//    }
-//    public void Updata(ConcurrentNavigableMap<String, String> Playermap,DB db) {
-//    	if (!Playermap.containsKey("001")) {
-//						    	Playermap.put("001","123456");
-//    	Playermap.put("002","123456");
-//		}
-//    	db.commit();
-//    }
-//    public synchronized void end(DB db) {
-//    	db.close();
-//    }
+    public synchronized ConcurrentNavigableMap<String, String> getMap(){
+    	return Playermap;
+    }
+    public synchronized DB getDB(){
+    	return db;
+    }
+    public void Updata(ConcurrentNavigableMap<String, String> Playermap,DB db) {
+    	if (!Playermap.containsKey("001")) {
+						    	Playermap.put("001","123456");
+    	Playermap.put("002","123456");
+		}
+    	db.commit();
+    }
+    public synchronized void end(DB db) {
+    	db.close();
+    }
 
 		@Override
 		public String call() throws Exception {

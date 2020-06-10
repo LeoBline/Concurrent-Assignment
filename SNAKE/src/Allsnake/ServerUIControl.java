@@ -97,7 +97,7 @@ public class ServerUIControl implements KeyListener, WindowListener {
 	public synchronized  void Login(String id,String password) {
 //Verify the password of the filled database account.
 		serverdb = new ServerDB(id,password);
-//		serverdb.Updata(serverdb.getMap(),serverdb.getDB());
+		serverdb.Updata(serverdb.getMap(),serverdb.getDB());
 		java.util.concurrent.Future<String> future = executorService2.submit(serverdb);
 		try {
 			String result=future.get();
