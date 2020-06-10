@@ -190,7 +190,7 @@ public class ServerUIControl implements KeyListener, WindowListener {
 	 */
 	public synchronized void playerLogin(String id, String password) {
 		serverdb = new ServerDB(id,password);
-		serverdb.Update(serverdb.getMap(),serverdb.getDB());
+		serverdb.update(serverdb.getMap(),serverdb.getDB());
 		java.util.concurrent.Future<String> future = LoginExecutorService.submit(serverdb);
 		try {
 			String result=future.get();

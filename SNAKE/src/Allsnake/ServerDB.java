@@ -56,7 +56,7 @@ public class ServerDB implements Callable<String> {
 	 * @param map
 	 * @param db
 	 */
-	public void Update(ConcurrentNavigableMap<String, String> map, DB db) {
+	public void update(ConcurrentNavigableMap<String, String> map, DB db) {
     	if (!map.containsKey("001")) {
 			map.put("001","123456");
 			map.put("002","123456");
