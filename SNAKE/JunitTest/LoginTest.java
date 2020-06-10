@@ -24,8 +24,13 @@ public class LoginTest {
      * @throws Exception
      */
     @Test
-    public void updatePlayerMapTest() throws Exception {
+    public void updatePlayerMapTest() throws InterruptedException {
         testServerDB.update(playerMap,db);
         Assert.assertEquals("001",testServerDB.call());;
+    }
+
+    @Test
+    public void concurrentLoginTest(){
+
     }
 }

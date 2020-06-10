@@ -10,6 +10,7 @@ import java.awt.event.*;
 import java.awt.image.BufferStrategy;
 import java.text.SimpleDateFormat;
 import java.util.Random;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Level;
@@ -158,7 +159,11 @@ public class ServerUIControl implements KeyListener, WindowListener {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				//player login to game
-				playerLogin(idField.getText(),passwordField.getText());
+				try {
+					playerLogin(idField.getText(),passwordField.getText());
+				} catch (InterruptedException interruptedException) {
+					interruptedException.printStackTrace();
+				}
 				System.out.println("Player : "+idField.getText()+"login successful");
 			}
 		});
@@ -188,11 +193,12 @@ public class ServerUIControl implements KeyListener, WindowListener {
 	 * @param id
 	 * @param password
 	 */
-	public synchronized void playerLogin(String id, String password) {
-		serverdb = new ServerDB(id,password);
-		serverdb.update(serverdb.getMap(),serverdb.getDB());
-		java.util.concurrent.Future<String> future = LoginExecutorService.submit(serverdb);
+	public synchronized void playerLogin(String id, String password) throws InterruptedException {
 		try {
+			serverdb = new ServerDB(id,password);
+			//Add all the players account to table
+			serverdb.update(serverdb.getMap(),serverdb.getDB());
+			java.util.concurrent.Future<String> future = LoginExecutorService.submit(serverdb);
 			String result=future.get();
 			System.out.println(result);
 		if (result!= "") {
@@ -209,8 +215,8 @@ public class ServerUIControl implements KeyListener, WindowListener {
 			//Draw a massage box to show login failed
 			JOptionPane.showMessageDialog(null, "Fail Login","", JOptionPane.INFORMATION_MESSAGE);
 		}
-		}catch (Exception e) {
-			// TODO: handle exception
+		}catch (InterruptedException | ExecutionException e) {
+			System.out.println(e);
 		}
 	}
 

@@ -28,7 +28,7 @@ public class ServerDB implements Callable<String> {
 	}
 
 
-	public String call() throws Exception {
+	public String call() throws InterruptedException {
 		// TODO Auto-generated method stub
 		return Login(id, password);
 	}
@@ -44,8 +44,9 @@ public class ServerDB implements Callable<String> {
     		if(playerMap.get(id).equals(password)) {
     			db.close();
     			return id;
-    		}else {db.close();
-    		return ""; }
+    		}else {
+    			db.close();
+    			return ""; }
     	}else {
     		db.close();
     		return ""; }
