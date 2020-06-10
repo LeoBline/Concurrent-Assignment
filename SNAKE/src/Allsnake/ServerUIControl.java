@@ -70,8 +70,7 @@ public class ServerUIControl implements KeyListener, WindowListener {
 	private int Robotnumber=1;
 	private int[] realPlayListOrder = new int[0];
 	
-	
-	
+
 	ExecutorService executorService2 = Executors.newCachedThreadPool();
 	
 	
@@ -207,10 +206,7 @@ public class ServerUIControl implements KeyListener, WindowListener {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 			// TODO Auto-generated method stub
-
-
 				addRobot();
-
 			}
 			});
 		loginButton.addMouseListener(new MouseAdapter() {

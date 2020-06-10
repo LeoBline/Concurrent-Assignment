@@ -53,8 +53,8 @@ public class ServerDB implements Callable<String> {
     }
     public void Updata(ConcurrentNavigableMap<String, String> Playermap,DB db) {
     	if (!Playermap.containsKey("001")) {
-						    	Playermap.put("001","123456");
-    	Playermap.put("002","123456");
+    		Playermap.put("001","123456");
+    	    Playermap.put("002","123456");
 		}
     	db.commit();
     }
