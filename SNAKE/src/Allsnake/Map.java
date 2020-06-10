@@ -4,24 +4,26 @@ public class Map {
 //make Map class a singleton patten
 	
 	private static Map map = new Map();
-	private int[][] grid = null;//2D array represent the location on the map
+	private int[][] grid = null;
 	private int gameSize = 100;
 
-/**
- * 
- */
-public Map() {
-	// TODO Auto-generated constructor stub
-	grid = new int[gameSize][gameSize];
-}
+
+	public Map() {
+		grid = new int[gameSize][gameSize];
+	}
 	
 	public static  Map getMap() {
 		return map;
 	}
-	public int[][] getgrid() {
+
+	public int[][] getGrid() {
 		return grid;
 	}
-	
+
+	public int getGameSize(){
+		return gameSize;
+	}
+
 	public synchronized void setMapInfo(int index1, int index2, int num) {
 		grid[index1][index2] = num;
 	}
@@ -29,8 +31,15 @@ public Map() {
 	public synchronized int getMapInfo(int index1, int index2) {
 		return grid[index1][index2];
 	}
-	//if two snake eat same food it will just allow one to eat
-	public synchronized boolean eatfood(int x,int y) {
+
+
+	/**
+	 * Make sure only one snake will get food when Multiple snakes tried to get bonus.
+	 * @param x
+	 * @param y
+	 * @return Whether this location is food or not
+	 */
+	public synchronized boolean eatFood(int x, int y) {
 		if(grid[x][y]==1||grid[x][y]==2||grid[x][y]==3) {
 			grid[x][y]=0;
 			return true;
@@ -39,7 +48,4 @@ public Map() {
 		}
 	}
 
-	public void setMap(int[][] array) {
-		grid = array;
-	}
 }

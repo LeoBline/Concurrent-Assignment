@@ -73,7 +73,7 @@ public class ServerUIControl implements KeyListener, WindowListener {
 		frame = new Frame();
 		canvas = new Canvas();
 		map = new Map();
-		gridMap = Map.getMap().getgrid();
+		gridMap = Map.getMap().getGrid();
 		initUI();
 		//renderGame();
 		mainLoop();
@@ -268,11 +268,11 @@ public class ServerUIControl implements KeyListener, WindowListener {
 					int nu = playerList.length/20;
 					int remain = playerList.length%20;
 					for(int i=0 ;i<20;i++) {
-					LoginExecutorService.execute(new Dateprocess(playerList,i*nu,(i+1)*nu));
+					LoginExecutorService.execute(new DateProcess(playerList,i*nu,(i+1)*nu));
 					}
-					LoginExecutorService.execute(new Dateprocess(playerList,20*nu,20*nu+remain));
+					LoginExecutorService.execute(new DateProcess(playerList,20*nu,20*nu+remain));
 				for(int i = 0; i< playerList.length; i++) {
-					if(playerList[i].getSnake().getGameover() == true) {
+					if(playerList[i].getSnake().getGameover()) {
 						playerList[i].InitSnake();
 						RandomBirth(playerList[i].getSnake());
 					}

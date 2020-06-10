@@ -7,10 +7,6 @@ package Allsnake;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-/**
- * @author Walege
- *
- */
 public class Main {
 
 	/**

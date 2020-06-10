@@ -14,16 +14,17 @@ public class Snake {
 	public final static int RIGHT = 3;
 	public final static int EMPTY = 0;
 	public final static int FOOD_BONUS = 1;
-	public final static int FOOD_MALUS = 2;
+	public final static int FOOD_MINUS = 2;
 	public final static int BIG_FOOD_BONUS = 3;
 	public final static int SNAKE = 4;
-	private int gameSize = 100;
+
 
 	public int bonusTime = 0;
-	public int malusTime = 0;
+	public int minusTime = 0;
 
 	Map map =  Map.getMap();
-	
+	private int gameSize = map.getGameSize();
+
 	private int[][] snake = null;
 	private int direction = -1;
 	private int next_direction = -1;
@@ -46,7 +47,7 @@ public class Snake {
 			return;
 		}
 		if (direction < 0) {
-			
+
 			return;
 		}
 		int ymove = 0;
@@ -87,22 +88,22 @@ public class Snake {
 			fut_y = 0;
 		if (map.getMapInfo(fut_x, fut_y)== FOOD_BONUS) {
 			//if two snake eat same food it will stop one
-			if(map.eatfood(fut_x,fut_y)==true) {
+			if(map.eatFood(fut_x,fut_y)==true) {
 				setLength(Length+1);
 				setScore(score+1);
 			placeBonus(FOOD_BONUS);
 			}
 		}
-		if (map.getMapInfo(fut_x, fut_y) == FOOD_MALUS) {
+		if (map.getMapInfo(fut_x, fut_y) == FOOD_MINUS) {
 			//if two snake eat same food it will stop one
-			if(map.eatfood(fut_x,fut_y)==true) {
+			if(map.eatFood(fut_x,fut_y)==true) {
 				setLength(Length+2);
 				setScore(score-1);
 
 			}
 		} else if (map.getMapInfo(fut_x, fut_y) == BIG_FOOD_BONUS) {
 			//if two snake eat same food it will stop one
-			if(map.eatfood(fut_x,fut_y)==true) {
+			if(map.eatFood(fut_x,fut_y)==true) {
 			setLength(Length+3);
 			setScore(score+3);
 			}
@@ -118,7 +119,7 @@ public class Snake {
 
 		map.setMapInfo(tempx, tempy, EMPTY);
 
-		updatasnake(tempx, tempy);
+		updateSnake(tempx, tempy);
 		int i;
 		for ( i = 0; i < gameSize*gameSize; i++) {
 			if ((this.getSnakeInfo(i, 0) < 0) || (this.getSnakeInfo(i, 1) < 0)) {
@@ -136,12 +137,12 @@ public class Snake {
 				}
 			}
 		}
-		malusTime = malusTime-1;
+		minusTime = minusTime -1;
 //		System.out.println(malusTime);
-		if (getMalusTime() == 0) {
+		if (getMinusTime() == 0) {
 			for (i = 0; i < gameSize; i++) {
 				for (int j = 0; j < gameSize; j++) {
-					if (map.getMapInfo(i, j) == FOOD_MALUS)
+					if (map.getMapInfo(i, j) == FOOD_MINUS)
 						map.setMapInfo(i, j, EMPTY);
 				}
 			}
@@ -155,8 +156,8 @@ public class Snake {
 				setBonusTime(100);
 			}
 			if (getScore() % 5 == 0) {
-				placeMalus(FOOD_MALUS);
-				setMalusTime(100);
+				placeMinus(FOOD_MINUS);
+				setMinusTime(100);
 			}
 			setLength(Length-1);
 		}
@@ -196,13 +197,13 @@ public class Snake {
 			placeBonus(bonus_type);
 		}
 	}
-	public void placeMalus(int malus_type) {
+	public void placeMinus(int malus_type) {
 		int x = (int) (Math.random() * 1000) % gameSize;
 		int y = (int) (Math.random() * 1000) % gameSize;
 		if (map.getMapInfo(x, y) == EMPTY) {
 			map.setMapInfo(x, y,malus_type);
 		} else {
-			placeMalus(malus_type);
+			placeMinus(malus_type);
 		}
 	}
 	/**
@@ -211,13 +212,12 @@ public class Snake {
 	 * @return direction
 	 */
 	public synchronized int RandomDirection() {
-		
 		Random r=new Random();
 		int i=r.nextInt(4);
 		return i;
 	}
 
-	public synchronized void updatasnake(int tempx,int tempy) {
+	public synchronized void updateSnake(int tempx, int tempy) {
 		int snakex, snakey, i;
 		for (i = 1; i < gameSize * gameSize; i++) {
 			if ((this.getSnakeInfo(i, 0) < 0) || (this.getSnakeInfo(i, 0) < 0)) {
@@ -298,17 +298,17 @@ public class Snake {
 	}
 
 	/**
-	 * @return the malusTime
+	 * @return the minusTime
 	 */
-	public synchronized int getMalusTime() {
-		return malusTime;
+	public synchronized int getMinusTime() {
+		return minusTime;
 	}
 
 	/**
-	 * @param malusTime the malusTime to set
+	 * @param minusTime the minusTime to set
 	 */
-	public synchronized void setMalusTime(int malusTime) {
-		this.malusTime = malusTime;
+	public synchronized void setMinusTime(int minusTime) {
+		this.minusTime = minusTime;
 	}
 	
 }
