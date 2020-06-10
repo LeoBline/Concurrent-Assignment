@@ -41,7 +41,6 @@ public class Player {
     	OperationButtons[1]=down;
     	OperationButtons[2]=right;
     	OperationButtons[3]=left;
-    	
     }
 	//Getter and setter
 	public int getScore() {

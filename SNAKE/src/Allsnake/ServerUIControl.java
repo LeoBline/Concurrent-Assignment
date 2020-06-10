@@ -33,42 +33,40 @@ public class ServerUIControl implements KeyListener, WindowListener {
 	public final static int FOOD_MALUS = 2;
 	public final static int BIG_FOOD_BONUS = 3;
 	public final static int SNAKE = 4;
-	private int[][] grid = null;
+	private int[][] grid;
 	private Snake snake = null;
-	private int direction = -1;
-	private int next_direction = -1;
+
 	private int height = 1000;
 	private int width = 1000;
 	private int gameSize = 100;
 	public Map map = null;
 	private long speed = 70;
-	private Frame frame = new Frame();
-	private Canvas canvas = null;
+	private Frame frame;
+	private Canvas canvas;
 	private Graphics graph = null;
 	private BufferStrategy strategy = null;
 	private boolean game_over = false;
 	private boolean paused = false;
-	private int score = 0;
-	private int grow = 0;
-	private int seconde, minute, milliseconde=0; // Clock values
+
+	private int second, minute, milliseconde=0; // Clock values
 	private long cycleTime = 0;
 	private long sleepTime = 0;
-	public int bonusTime = 0;
-	public int malusTime = 0;
-	public boolean inittrue= false;
+
 	private int backgroundright = 300;
 	private int backgroundDown = 10;
+
+	//Buttons
 	JButton loginButton = new JButton("Login");
 	JButton addRobotButton = new JButton("Add Robot");
 	JButton setTimeButton = new JButton("Set");
+
+	//TextFields
 	JTextField idField = new JTextField();
 	JTextField passwordField = new JTextField();
 	JTextField TimeField = new JTextField();
 
+	private Player[] playerList = new Player[0];
 
-	private Player[] playerlist = new Player[0];
-	ExecutorService pool= null;
-	private int Robotnumber=1;
 	private int[] realPlayListOrder = new int[0];
 
 	//The serverDb that store all the player's account
@@ -82,39 +80,21 @@ public class ServerUIControl implements KeyListener, WindowListener {
 		map = new Map();
 		grid = Map.getMap().getgrid();
 		initUI();
-		addListeners();
 		renderGame();
 		mainLoop();
 	}
 
-
+	/**
+	 * Initialize basic setting and components in frame
+	 */
 	public void initUI() {
-//
 		minute = 5;
 		frame.setSize(width + 340, height+50 );
 		frame.setResizable(false);
 		frame.setLocationByPlatform(true);
 		canvas.setSize(width + 300, height + 300);
-		loginButton.setBounds(25,20+backgroundDown+200 , backgroundright-40, 30);
-		addRobotButton.setBounds(25, 20+backgroundDown+940, backgroundright-40, 30);
-		idField.setBounds(25, 20+backgroundDown+80, backgroundright-40, 30);
-		passwordField.setBounds(25, 20+backgroundDown+150, backgroundright-40, 30);
-		TimeField.setBounds(100, backgroundDown+260, backgroundright-170, 30);
-		setTimeButton.setBounds(25,20+backgroundDown+290 , backgroundright-40, 30);
-		idField.setText("001");
-		passwordField.setText("123456");
-		TimeField.setText("05:00");
-
 //		Add label and text box and login button.
-		frame.add(idField);
-		frame.add(passwordField);
-		frame.add(TimeField);
-		frame.add(loginButton);
-		frame.add(setTimeButton);
-		frame.add(addRobotButton);
 		frame.add(canvas);
-
-
 		frame.addWindowListener(this);
 		frame.dispose();
 		frame.validate();
@@ -126,14 +106,25 @@ public class ServerUIControl implements KeyListener, WindowListener {
 		canvas.createBufferStrategy(2);
 		strategy = canvas.getBufferStrategy();
 		graph = strategy.getDrawGraphics();
+		addButtons();
+		addTextFields();
 		initGame();
 		renderGame();
 	}
 
 	/**
+	 * Create all the buttons in frame
 	 * Add MouseListener for all the created buttons in frame
 	 */
-	public void addListeners(){
+	public void addButtons(){
+
+		//Initialize buttons and add them to frame
+		loginButton.setBounds(25,20 + backgroundDown + 200 , backgroundright - 40, 30);
+		addRobotButton.setBounds(25, 20 + backgroundDown + 940, backgroundright - 40, 30);
+		setTimeButton.setBounds(25,20 + backgroundDown + 290 , backgroundright - 40, 30);
+		frame.add(loginButton);
+		frame.add(setTimeButton);
+		frame.add(addRobotButton);
 
 		//setTimeButton Listener
 		setTimeButton.addMouseListener(new MouseAdapter() {
@@ -156,7 +147,7 @@ public class ServerUIControl implements KeyListener, WindowListener {
 					JOptionPane.showMessageDialog(null, "Error time format.Example(05:00)","", JOptionPane.INFORMATION_MESSAGE);
 				}else {
 					setMinute(Integer.parseInt( time.split(":")[0] ));
-					setSeconde(Integer.parseInt( time.split(":")[1] ));
+					setSecond(Integer.parseInt( time.split(":")[1] ));
 					JOptionPane.showMessageDialog(null, "Success set time","", JOptionPane.INFORMATION_MESSAGE);
 				}
 			}});
@@ -181,11 +172,30 @@ public class ServerUIControl implements KeyListener, WindowListener {
 	}
 
 	/**
+	 * Create all the TextFileds in frame
+	 */
+	public void addTextFields(){
+
+		//Initialize all the TextFields
+		idField.setBounds(25, 20+backgroundDown+80, backgroundright-40, 30);
+		passwordField.setBounds(25, 20+backgroundDown+150, backgroundright-40, 30);
+		TimeField.setBounds(100, backgroundDown+260, backgroundright-170, 30);
+		idField.setText("001");//Default player id
+		passwordField.setText("123456");
+		TimeField.setText("05:00");
+
+		//Add them to the frame
+		frame.add(idField);
+		frame.add(passwordField);
+		frame.add(TimeField);
+	}
+
+	/**
 	 * Verify whether id and password located a account in DB.
 	 * @param id
 	 * @param password
 	 */
-	public synchronized  void playerLogin(String id, String password) {
+	public synchronized void playerLogin(String id, String password) {
 		serverdb = new ServerDB(id,password);
 		serverdb.Update(serverdb.getMap(),serverdb.getDB());
 		java.util.concurrent.Future<String> future = LoginExecutorService.submit(serverdb);
@@ -196,8 +206,8 @@ public class ServerUIControl implements KeyListener, WindowListener {
 			System.out.println("success login");
 			//add player and snake
 			this.addPlayer(new Player("001", gameSize));
-			addRealPlaylistOrder(playerlist.length-1);
-			snake = playerlist[playerlist.length-1].getSnake();
+			addRealPlaylistOrder(playerList.length-1);
+			snake = playerList[playerList.length-1].getSnake();
 			RandomBirth(snake);	
 			setRealPlayerKeypress();
 			//Draw a massage box to show login successful
@@ -219,8 +229,8 @@ public class ServerUIControl implements KeyListener, WindowListener {
 		//add Robot player
 		for(int i=0;i<10;i++) {
 			addPlayer(new Player("Robot", gameSize));
-			playerlist[playerlist.length-1].setIsRobot(true);
-			snake = playerlist[playerlist.length-1].getSnake();
+			playerList[playerList.length-1].setIsRobot(true);
+			snake = playerList[playerList.length-1].getSnake();
 			RandomBirth(snake);
 		}
 	}
@@ -248,29 +258,31 @@ public class ServerUIControl implements KeyListener, WindowListener {
         snake.setSnakeInfo(0, 1, random2);
 		grid[random1][random2] = SNAKE;
 		}else {
-			RandomBirth(playerlist[playerlist.length-1].getSnake());
+			RandomBirth(playerList[playerList.length-1].getSnake());
 		}
 	}
 
 
-
+	/**
+	 * Games main loop which will update the map and snake
+	 */
 	public void mainLoop() {
 		while (!game_over) {
 			cycleTime = System.currentTimeMillis();
 			if (!paused) {
-				if(seconde ==0 &&minute == 0) {
+				if(second ==0 &&minute == 0) {
 		            game_over = true;
 	        }
-					int nu = playerlist.length/20;
-					int remain =playerlist.length%20;
+					int nu = playerList.length/20;
+					int remain = playerList.length%20;
 					for(int i=0 ;i<20;i++) {
-					LoginExecutorService.execute(new Dateprocess(playerlist,i*nu,(i+1)*nu));
+					LoginExecutorService.execute(new Dateprocess(playerList,i*nu,(i+1)*nu));
 					}
-					LoginExecutorService.execute(new Dateprocess(playerlist,20*nu,20*nu+remain));
-				for(int i =0 ; i< playerlist.length;i++) {
-					if(playerlist[i].getSnake().getGameover() == true) {
-						playerlist[i].InitSnake();
-						RandomBirth(playerlist[i].getSnake());
+					LoginExecutorService.execute(new Dateprocess(playerList,20*nu,20*nu+remain));
+				for(int i = 0; i< playerList.length; i++) {
+					if(playerList[i].getSnake().getGameover() == true) {
+						playerList[i].InitSnake();
+						RandomBirth(playerList[i].getSnake());
 					}
 				}
 			}
@@ -326,13 +338,13 @@ public class ServerUIControl implements KeyListener, WindowListener {
 						}
 				}
 			}
-				if(playerlist!=null) {
-				for(int i =0;i<playerlist.length;i++) {
+				if(playerList !=null) {
+				for(int i = 0; i< playerList.length; i++) {
 					for (int z = 0; z< gameSize * gameSize; z++) {
-						if ((playerlist[i].getSnake().getSnakeInfo(z, 0) < 0) || (playerlist[i].getSnake().getSnakeInfo(z, 1) < 0)) {
+						if ((playerList[i].getSnake().getSnakeInfo(z, 0) < 0) || (playerList[i].getSnake().getSnakeInfo(z, 1) < 0)) {
 							break;
 						}
-						grid[playerlist[i].getSnake().getSnakeInfo(z, 0)][playerlist[i].getSnake().getSnakeInfo(z, 1)] = SNAKE;
+						grid[playerList[i].getSnake().getSnakeInfo(z, 0)][playerList[i].getSnake().getSnakeInfo(z, 1)] = SNAKE;
 					}
 				}
 				}
@@ -347,48 +359,48 @@ public class ServerUIControl implements KeyListener, WindowListener {
 							if(realPlayListOrder!=null) {
 								if(realPlayListOrder.length>0) {
 									for (int z = 0; z< gameSize * gameSize; z++) {
-										if ((playerlist[realPlayListOrder[0]].getSnake().getSnakeInfo(z, 0) < 0) ||
-												(playerlist[realPlayListOrder[0]].getSnake().getSnakeInfo(z, 1) < 0)) {
+										if ((playerList[realPlayListOrder[0]].getSnake().getSnakeInfo(z, 0) < 0) ||
+												(playerList[realPlayListOrder[0]].getSnake().getSnakeInfo(z, 1) < 0)) {
 											break;
 										}
-										graph.fillOval(playerlist[realPlayListOrder[0]].getSnake().getSnakeInfo(z, 0)*
-												gridUnit+backgroundright,playerlist[realPlayListOrder[0]].getSnake().getSnakeInfo(z, 1)
+										graph.fillOval(playerList[realPlayListOrder[0]].getSnake().getSnakeInfo(z, 0)*
+												gridUnit+backgroundright, playerList[realPlayListOrder[0]].getSnake().getSnakeInfo(z, 1)
 												*gridUnit+backgroundDown,gridUnit,gridUnit);
 									}
 								}
 								graph.setColor(Color.ORANGE);
 								if (realPlayListOrder.length>1) {
 									for (int z = 0; z< gameSize * gameSize; z++) {
-										if ((playerlist[realPlayListOrder[1]].getSnake().getSnakeInfo(z, 0) < 0) ||
-												(playerlist[realPlayListOrder[1]].getSnake().getSnakeInfo(z, 1) < 0)) {
+										if ((playerList[realPlayListOrder[1]].getSnake().getSnakeInfo(z, 0) < 0) ||
+												(playerList[realPlayListOrder[1]].getSnake().getSnakeInfo(z, 1) < 0)) {
 											break;
 										}
-										graph.fillOval(playerlist[realPlayListOrder[1]].getSnake().getSnakeInfo(z, 0)*
-												gridUnit+backgroundright,playerlist[realPlayListOrder[1]].getSnake().getSnakeInfo(z, 1)*
+										graph.fillOval(playerList[realPlayListOrder[1]].getSnake().getSnakeInfo(z, 0)*
+												gridUnit+backgroundright, playerList[realPlayListOrder[1]].getSnake().getSnakeInfo(z, 1)*
 												gridUnit+backgroundDown,gridUnit,gridUnit);
 									}
 								}
 								graph.setColor(Color.DARK_GRAY);
 								if (realPlayListOrder.length>2) {
 									for (int z = 0; z< gameSize * gameSize; z++) {
-										if ((playerlist[realPlayListOrder[2]].getSnake().getSnakeInfo(z, 0) < 0) ||
-												(playerlist[realPlayListOrder[2]].getSnake().getSnakeInfo(z, 1) < 0)) {
+										if ((playerList[realPlayListOrder[2]].getSnake().getSnakeInfo(z, 0) < 0) ||
+												(playerList[realPlayListOrder[2]].getSnake().getSnakeInfo(z, 1) < 0)) {
 											break;
 										}
-										graph.fillOval(playerlist[realPlayListOrder[2]].getSnake().getSnakeInfo(z, 0)*
-												gridUnit+backgroundright,playerlist[realPlayListOrder[2]].getSnake().getSnakeInfo(z, 1)*
+										graph.fillOval(playerList[realPlayListOrder[2]].getSnake().getSnakeInfo(z, 0)*
+												gridUnit+backgroundright, playerList[realPlayListOrder[2]].getSnake().getSnakeInfo(z, 1)*
 												gridUnit+backgroundDown,gridUnit,gridUnit);
 									}
 								}
 								graph.setColor(Color.LIGHT_GRAY);
 								if (realPlayListOrder.length>3) {
 									for (int z = 0; z< gameSize * gameSize; z++) {
-										if ((playerlist[realPlayListOrder[3]].getSnake().getSnakeInfo(z, 0) < 0) ||
-												(playerlist[realPlayListOrder[3]].getSnake().getSnakeInfo(z, 1) < 0)) {
+										if ((playerList[realPlayListOrder[3]].getSnake().getSnakeInfo(z, 0) < 0) ||
+												(playerList[realPlayListOrder[3]].getSnake().getSnakeInfo(z, 1) < 0)) {
 											break;
 										}
-										graph.fillOval(playerlist[realPlayListOrder[3]].getSnake().getSnakeInfo(z, 0)*
-												gridUnit+backgroundright,playerlist[realPlayListOrder[3]].getSnake().getSnakeInfo(z, 1)*
+										graph.fillOval(playerList[realPlayListOrder[3]].getSnake().getSnakeInfo(z, 0)*
+												gridUnit+backgroundright, playerList[realPlayListOrder[3]].getSnake().getSnakeInfo(z, 1)*
 												gridUnit+backgroundDown,gridUnit,gridUnit);
 									}
 								}
@@ -429,14 +441,14 @@ public class ServerUIControl implements KeyListener, WindowListener {
 					graph.drawString("GAME OVER", height / 2 - 30, height / 2);
 				}
 
-				for(int i=0 ;i<playerlist.length;i++) {
-					if(playerlist[i].getIsRobot()==false) {
-					graph.drawString(playerlist[i].getID(), 25, 20+backgroundDown+ height/3+7+(a+1)*30);
-					String scoreString = ""+playerlist[i].getScore();
+				for(int i = 0; i< playerList.length; i++) {
+					if(playerList[i].getIsRobot()==false) {
+					graph.drawString(playerList[i].getID(), 25, 20+backgroundDown+ height/3+7+(a+1)*30);
+					String scoreString = ""+ playerList[i].getScore();
 					graph.setColor(Color.white);
 					graph.fillRect(200, 20+backgroundDown+ height/3+15+(a)*30,30,30);
 					graph.setColor(Color.BLACK);
-					graph.drawString("" + playerlist[i].getScore(), 200, 20+backgroundDown+ height/3+7+(a+1)*30);
+					graph.drawString("" + playerList[i].getScore(), 200, 20+backgroundDown+ height/3+7+(a+1)*30);
 					a++;
 					}
 				}
@@ -450,17 +462,17 @@ public class ServerUIControl implements KeyListener, WindowListener {
 	}
 
 	private String getTime() {
-		String temps = new String(minute + ":" + seconde);
-		if(playerlist.length >0) {
+		String temps = new String(minute + ":" + second);
+		if(playerList.length >0) {
 		if ( paused)
 			return temps;
 		milliseconde--;
-		if (seconde == -1) {
-			seconde = 59;
+		if (second == -1) {
+			second = 59;
 			minute--;
 		}
 		if (milliseconde == -14) {
-			seconde--;
+			second--;
 			milliseconde = 0;
 		}
 
@@ -483,13 +495,13 @@ public class ServerUIControl implements KeyListener, WindowListener {
 
 	public void addPlayer(Player a) {
 		
-		Player[] newPlayerListPlayers = new Player[playerlist.length+1];
-		for(int i =0 ; i<playerlist.length;i++) {
-			newPlayerListPlayers[i] = playerlist[i];
+		Player[] newPlayerListPlayers = new Player[playerList.length+1];
+		for(int i = 0; i< playerList.length; i++) {
+			newPlayerListPlayers[i] = playerList[i];
 			
 		}
-		newPlayerListPlayers[playerlist.length] = a;
-		playerlist = newPlayerListPlayers;
+		newPlayerListPlayers[playerList.length] = a;
+		playerList = newPlayerListPlayers;
 	}
 
 	// IMPLEMENTED FUNCTIONS
@@ -498,7 +510,7 @@ public class ServerUIControl implements KeyListener, WindowListener {
 		if(snake!=null) {
 			//judge the input keypress and add direction to the buffer
 			for(int i =0;i<realPlayListOrder.length;i++) {
-				playerlist[realPlayListOrder[i]].judgeInput(code);
+				playerList[realPlayListOrder[i]].judgeInput(code);
 			}
 
 		switch (code) {		
@@ -535,24 +547,24 @@ public class ServerUIControl implements KeyListener, WindowListener {
 	public void setRealPlayerKeypress() {
 		switch(realPlayListOrder.length){
 			case 1:
-				playerlist[realPlayListOrder[0]].setKeypress(KeyEvent.VK_UP, KeyEvent.VK_DOWN, KeyEvent.VK_RIGHT, KeyEvent.VK_LEFT);
+				playerList[realPlayListOrder[0]].setKeypress(KeyEvent.VK_UP, KeyEvent.VK_DOWN, KeyEvent.VK_RIGHT, KeyEvent.VK_LEFT);
 				break;
 			case 2:
-				playerlist[realPlayListOrder[1]].setKeypress(KeyEvent.VK_W, KeyEvent.VK_S, KeyEvent.VK_D, KeyEvent.VK_A);
+				playerList[realPlayListOrder[1]].setKeypress(KeyEvent.VK_W, KeyEvent.VK_S, KeyEvent.VK_D, KeyEvent.VK_A);
 				break;
 			case 3:
-				playerlist[realPlayListOrder[2]].setKeypress(KeyEvent.VK_I, KeyEvent.VK_K, KeyEvent.VK_L, KeyEvent.VK_J);
+				playerList[realPlayListOrder[2]].setKeypress(KeyEvent.VK_I, KeyEvent.VK_K, KeyEvent.VK_L, KeyEvent.VK_J);
 				break;
 			case 4:
-				playerlist[realPlayListOrder[3]].setKeypress(KeyEvent.VK_G, KeyEvent.VK_B, KeyEvent.VK_N, KeyEvent.VK_V);
+				playerList[realPlayListOrder[3]].setKeypress(KeyEvent.VK_G, KeyEvent.VK_B, KeyEvent.VK_N, KeyEvent.VK_V);
 				break;
 			default:
 				break;
 		}
 	}
 
-	public void setSeconde(int seconde) {
-		this.seconde = seconde;
+	public void setSecond(int second) {
+		this.second = second;
 	}
 
 	public void setMinute(int minute) {
