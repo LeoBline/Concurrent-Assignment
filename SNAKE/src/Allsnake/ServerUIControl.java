@@ -42,7 +42,7 @@ public class ServerUIControl implements KeyListener, WindowListener {
 	private int gameSize = 100;
 	public Map map = null;
 	private long speed = 70;
-	private Frame frame = null;
+	private Frame frame = new Frame();
 	private Canvas canvas = null;
 	private Graphics graph = null;
 	private BufferStrategy strategy = null;
@@ -59,41 +59,136 @@ public class ServerUIControl implements KeyListener, WindowListener {
 	private int backgroundright = 300;
 	private int backgroundDown = 10;
 	JButton loginButton = new JButton("Login");
-	JButton AddRobotButton = new JButton("Add Robot");
+	JButton addRobotButton = new JButton("Add Robot");
+	JButton setTimeButton = new JButton("Set");
 	JTextField idField = new JTextField();
 	JTextField passwordField = new JTextField();
 	JTextField TimeField = new JTextField();
-	JButton SetTimeButton = new JButton("Set");
-	ServerDB serverdb;
+
+
 	private Player[] playerlist = new Player[0];
 	ExecutorService pool= null;
 	private int Robotnumber=1;
 	private int[] realPlayListOrder = new int[0];
-	
 
-	ExecutorService executorService2 = Executors.newCachedThreadPool();
-	
-	
+	//The serverDb that store all the player's account
+	ServerDB serverdb;
+	//Create a pool to handle the concurrent login task
+	ExecutorService LoginExecutorService = Executors.newCachedThreadPool();
 
 	public ServerUIControl() {
-
 		frame = new Frame();
 		canvas = new Canvas();
-		
 		map = new Map();
 		grid = Map.getMap().getgrid();
-		this.init();
-		
-		
-		this.renderGame();
-		this.mainLoop();
+		initUI();
+		addListeners();
+		renderGame();
+		mainLoop();
 	}
-	//fix the bug
-	public synchronized  void Login(String id,String password) {
-//Verify the password of the filled database account.
+
+
+	public void initUI() {
+//
+		minute = 5;
+		frame.setSize(width + 340, height+50 );
+		frame.setResizable(false);
+		frame.setLocationByPlatform(true);
+		canvas.setSize(width + 300, height + 300);
+		loginButton.setBounds(25,20+backgroundDown+200 , backgroundright-40, 30);
+		addRobotButton.setBounds(25, 20+backgroundDown+940, backgroundright-40, 30);
+		idField.setBounds(25, 20+backgroundDown+80, backgroundright-40, 30);
+		passwordField.setBounds(25, 20+backgroundDown+150, backgroundright-40, 30);
+		TimeField.setBounds(100, backgroundDown+260, backgroundright-170, 30);
+		setTimeButton.setBounds(25,20+backgroundDown+290 , backgroundright-40, 30);
+		idField.setText("001");
+		passwordField.setText("123456");
+		TimeField.setText("05:00");
+
+//		Add label and text box and login button.
+		frame.add(idField);
+		frame.add(passwordField);
+		frame.add(TimeField);
+		frame.add(loginButton);
+		frame.add(setTimeButton);
+		frame.add(addRobotButton);
+		frame.add(canvas);
+
+
+		frame.addWindowListener(this);
+		frame.dispose();
+		frame.validate();
+		frame.setTitle("Snake");
+		frame.setVisible(true);
+		canvas.addKeyListener(this);
+		canvas.setIgnoreRepaint(true);
+		canvas.setBackground(Color.WHITE);
+		canvas.createBufferStrategy(2);
+		strategy = canvas.getBufferStrategy();
+		graph = strategy.getDrawGraphics();
+		initGame();
+		renderGame();
+	}
+
+	/**
+	 * Add MouseListener for all the created buttons in frame
+	 */
+	public void addListeners(){
+
+		//setTimeButton Listener
+		setTimeButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				//Get the input from TextField
+				String time =TimeField.getText();
+				SimpleDateFormat format=new SimpleDateFormat("HH:mm");
+
+				//judge it is right format
+				boolean dateflag=true;
+				try
+				{
+					java.util.Date date = format.parse(time);
+				} catch (Exception e1)
+				{
+					dateflag=false;
+				}
+				if(dateflag==false) {
+					JOptionPane.showMessageDialog(null, "Error time format.Example(05:00)","", JOptionPane.INFORMATION_MESSAGE);
+				}else {
+					setMinute(Integer.parseInt( time.split(":")[0] ));
+					setSeconde(Integer.parseInt( time.split(":")[1] ));
+					JOptionPane.showMessageDialog(null, "Success set time","", JOptionPane.INFORMATION_MESSAGE);
+				}
+			}});
+
+		//addRobot Button listener
+		addRobotButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				addRobot();
+			}
+		});
+
+		//login button listener
+		loginButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				//player login to game
+				playerLogin(idField.getText(),passwordField.getText());
+				System.out.println("Player : "+idField.getText()+"login successful");
+			}
+		});
+	}
+
+	/**
+	 * Verify whether id and password located a account in DB.
+	 * @param id
+	 * @param password
+	 */
+	public synchronized  void playerLogin(String id, String password) {
 		serverdb = new ServerDB(id,password);
 		serverdb.Update(serverdb.getMap(),serverdb.getDB());
-		java.util.concurrent.Future<String> future = executorService2.submit(serverdb);
+		java.util.concurrent.Future<String> future = LoginExecutorService.submit(serverdb);
 		try {
 			String result=future.get();
 			System.out.println(result);
@@ -105,35 +200,40 @@ public class ServerUIControl implements KeyListener, WindowListener {
 			snake = playerlist[playerlist.length-1].getSnake();
 			RandomBirth(snake);	
 			setRealPlayerkeypress();
+			//Draw a massage box to show login successful
 			JOptionPane.showMessageDialog(null, "Success Login","", JOptionPane.INFORMATION_MESSAGE);
 		}else {
+			//Draw a massage box to show login failed
 			JOptionPane.showMessageDialog(null, "Fail Login","", JOptionPane.INFORMATION_MESSAGE);
 		}
 		}catch (Exception e) {
 			// TODO: handle exception
 		}
 	}
-	
-	//add Robot 
-	public synchronized  void addRobot() {
+
+	/**
+	 * Add a robot to the game
+	 */
+	public synchronized void addRobot() {
 			
-					System.out.println("success login");
-					//add Robot player and snake
-					for(int i=0;i<10;i++) {
-					this.addplayer(new Player("Robot", gameSize));
-					playerlist[playerlist.length-1].setIsRobot(true);
-					snake = playerlist[playerlist.length-1].getSnake();
-					
-					RandomBirth(snake);
-					}
-			}
-	
-	
-	
-	//Random place to generate snakes for new players
+		System.out.println("success login");
+		//add Robot player
+		for(int i=0;i<10;i++) {
+			addplayer(new Player("Robot", gameSize));
+			playerlist[playerlist.length-1].setIsRobot(true);
+			snake = playerlist[playerlist.length-1].getSnake();
+			RandomBirth(snake);
+		}
+	}
+
+
+	/**
+	 * If the player start playing or his snake get killed then give the snake a new place to reborn
+	 * @param snake
+	 */
 	public synchronized void RandomBirth(Snake snake) {
 	
-		//init snake
+		//Init snake
 		for (int i = 0; i < gameSize * gameSize; i++) {
 			snake.setSnakeInfo(i, 0, -1);
 			snake.setSnakeInfo(i, 1, -1);
@@ -153,90 +253,7 @@ public class ServerUIControl implements KeyListener, WindowListener {
 		}
 	}
 
-	public void init() {
-//
-		minute = 5;
-		frame.setSize(width + 340, height+50 );
-		frame.setResizable(false);
-		frame.setLocationByPlatform(true);
-		canvas.setSize(width + 300, height + 300);
-		loginButton.setBounds(25,20+backgroundDown+200 , backgroundright-40, 30);
-		AddRobotButton.setBounds(25, 20+backgroundDown+940, backgroundright-40, 30);
-		idField.setBounds(25, 20+backgroundDown+80, backgroundright-40, 30);
-		passwordField.setBounds(25, 20+backgroundDown+150, backgroundright-40, 30);
-		TimeField.setBounds(100, backgroundDown+260, backgroundright-170, 30);
-		SetTimeButton.setBounds(25,20+backgroundDown+290 , backgroundright-40, 30);
-		idField.setText("001");
-		passwordField.setText("123456");
-		TimeField.setText("05:00");
-		SetTimeButton.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-			// TODO Auto-generated method stub
 
-				String time =TimeField.getText();
-
-				SimpleDateFormat format=new SimpleDateFormat("HH:mm");
-		 
-				//judge it is right format
-
-				boolean dateflag=true;
-				try
-				{
-				java.util.Date date = format.parse(time);
-				} catch (Exception e1)
-				{
-				dateflag=false;
-			}
-				if(dateflag==false) {
-					JOptionPane.showMessageDialog(null, "Error time format.Example(05:00)","", JOptionPane.INFORMATION_MESSAGE);
-				}else {	
-					setMinute(Integer.parseInt( time.split(":")[0] ));
-					setSeconde(Integer.parseInt( time.split(":")[1] ));
-					JOptionPane.showMessageDialog(null, "Success set time","", JOptionPane.INFORMATION_MESSAGE);
-
-					
-				}
-			}});
-		AddRobotButton.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-			// TODO Auto-generated method stub
-				addRobot();
-			}
-			});
-		loginButton.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-			// TODO Auto-generated method stub
-			Login(idField.getText(),passwordField.getText());
-			System.out.println(idField.getText());
-			}
-			});
-//		Add label and text box and login button.
-		frame.add(idField);
-		frame.add(passwordField);
-		frame.add(TimeField);
-		frame.add(loginButton);
-		frame.add(SetTimeButton);
-		frame.add(AddRobotButton);
-		frame.add(canvas);
-		
-		
-		canvas.addKeyListener(this);
-		frame.addWindowListener(this);
-		frame.dispose();
-		frame.validate();
-		frame.setTitle("Snake");
-		frame.setVisible(true);
-		canvas.setIgnoreRepaint(true);
-		canvas.setBackground(Color.WHITE);
-		canvas.createBufferStrategy(2);
-		strategy = canvas.getBufferStrategy();
-		graph = strategy.getDrawGraphics();
-		initGame();
-		renderGame();
-	}
 
 	public void mainLoop() {
 		while (!game_over) {
@@ -248,9 +265,9 @@ public class ServerUIControl implements KeyListener, WindowListener {
 					int nu = playerlist.length/20;
 					int remain =playerlist.length%20;
 					for(int i=0 ;i<20;i++) {
-					executorService2.execute(new Dateprocess(playerlist,i*nu,(i+1)*nu));		
+					LoginExecutorService.execute(new Dateprocess(playerlist,i*nu,(i+1)*nu));
 					}
-					executorService2.execute(new Dateprocess(playerlist,20*nu,20*nu+remain));
+					LoginExecutorService.execute(new Dateprocess(playerlist,20*nu,20*nu+remain));
 				for(int i =0 ; i< playerlist.length;i++) {
 					if(playerlist[i].getSnake().getGameover() == true) {
 						playerlist[i].InitSnake();
@@ -266,7 +283,6 @@ public class ServerUIControl implements KeyListener, WindowListener {
 				sleepTime = 0;
 			try {
 				Thread.sleep(sleepTime);
-				
 			} catch (InterruptedException ex) {
 				Logger.getLogger(ServerUIControl.class.getName()).log(Level.SEVERE, null, ex);
 			}

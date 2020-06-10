@@ -61,6 +61,7 @@ public class ServerDB implements Callable<String> {
 			map.put("001","123456");
 			map.put("002","123456");
 		}
+    	//Update the db with new player accounts
     	db.commit();
     }
 
