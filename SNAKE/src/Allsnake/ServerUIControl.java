@@ -195,11 +195,11 @@ public class ServerUIControl implements KeyListener, WindowListener {
 		if (result!= "") {
 			System.out.println("success login");
 			//add player and snake
-			this.addplayer(new Player("001", gameSize));
+			this.addPlayer(new Player("001", gameSize));
 			addRealPlaylistOrder(playerlist.length-1);
 			snake = playerlist[playerlist.length-1].getSnake();
 			RandomBirth(snake);	
-			setRealPlayerkeypress();
+			setRealPlayerKeypress();
 			//Draw a massage box to show login successful
 			JOptionPane.showMessageDialog(null, "Success Login","", JOptionPane.INFORMATION_MESSAGE);
 		}else {
@@ -215,11 +215,10 @@ public class ServerUIControl implements KeyListener, WindowListener {
 	 * Add a robot to the game
 	 */
 	public synchronized void addRobot() {
-			
 		System.out.println("success login");
 		//add Robot player
 		for(int i=0;i<10;i++) {
-			addplayer(new Player("Robot", gameSize));
+			addPlayer(new Player("Robot", gameSize));
 			playerlist[playerlist.length-1].setIsRobot(true);
 			snake = playerlist[playerlist.length-1].getSnake();
 			RandomBirth(snake);
@@ -342,60 +341,71 @@ public class ServerUIControl implements KeyListener, WindowListener {
 						gridCase = grid[i][j];
 						switch (gridCase) {
 						case SNAKE:
-							
 							graph.setColor(Color.BLUE);
 							graph.fillOval(i * gridUnit+backgroundright, j * gridUnit+backgroundDown, gridUnit, gridUnit);
 							graph.setColor(Color.PINK);
 							if(realPlayListOrder!=null) {
 								if(realPlayListOrder.length>0) {
-
-										for (int z = 0; z< gameSize * gameSize; z++) {
-											if ((playerlist[realPlayListOrder[0]].getSnake().getSnakeInfo(z, 0) < 0) || (playerlist[realPlayListOrder[0]].getSnake().getSnakeInfo(z, 1) < 0)) {
-												break;
-											}
-											graph.fillOval(playerlist[realPlayListOrder[0]].getSnake().getSnakeInfo(z, 0)*gridUnit+backgroundright,playerlist[realPlayListOrder[0]].getSnake().getSnakeInfo(z, 1)*gridUnit+backgroundDown,gridUnit,gridUnit);
+									for (int z = 0; z< gameSize * gameSize; z++) {
+										if ((playerlist[realPlayListOrder[0]].getSnake().getSnakeInfo(z, 0) < 0) ||
+												(playerlist[realPlayListOrder[0]].getSnake().getSnakeInfo(z, 1) < 0)) {
+											break;
 										}
-									
+										graph.fillOval(playerlist[realPlayListOrder[0]].getSnake().getSnakeInfo(z, 0)*
+												gridUnit+backgroundright,playerlist[realPlayListOrder[0]].getSnake().getSnakeInfo(z, 1)
+												*gridUnit+backgroundDown,gridUnit,gridUnit);
+									}
 								}
 								graph.setColor(Color.ORANGE);
 								if (realPlayListOrder.length>1) {
 									for (int z = 0; z< gameSize * gameSize; z++) {
-										if ((playerlist[realPlayListOrder[1]].getSnake().getSnakeInfo(z, 0) < 0) || (playerlist[realPlayListOrder[1]].getSnake().getSnakeInfo(z, 1) < 0)) {
+										if ((playerlist[realPlayListOrder[1]].getSnake().getSnakeInfo(z, 0) < 0) ||
+												(playerlist[realPlayListOrder[1]].getSnake().getSnakeInfo(z, 1) < 0)) {
 											break;
 										}
-										graph.fillOval(playerlist[realPlayListOrder[1]].getSnake().getSnakeInfo(z, 0)*gridUnit+backgroundright,playerlist[realPlayListOrder[1]].getSnake().getSnakeInfo(z, 1)*gridUnit+backgroundDown,gridUnit,gridUnit);
+										graph.fillOval(playerlist[realPlayListOrder[1]].getSnake().getSnakeInfo(z, 0)*
+												gridUnit+backgroundright,playerlist[realPlayListOrder[1]].getSnake().getSnakeInfo(z, 1)*
+												gridUnit+backgroundDown,gridUnit,gridUnit);
 									}
 								}
 								graph.setColor(Color.DARK_GRAY);
 								if (realPlayListOrder.length>2) {
 									for (int z = 0; z< gameSize * gameSize; z++) {
-										if ((playerlist[realPlayListOrder[2]].getSnake().getSnakeInfo(z, 0) < 0) || (playerlist[realPlayListOrder[2]].getSnake().getSnakeInfo(z, 1) < 0)) {
+										if ((playerlist[realPlayListOrder[2]].getSnake().getSnakeInfo(z, 0) < 0) ||
+												(playerlist[realPlayListOrder[2]].getSnake().getSnakeInfo(z, 1) < 0)) {
 											break;
 										}
-										graph.fillOval(playerlist[realPlayListOrder[2]].getSnake().getSnakeInfo(z, 0)*gridUnit+backgroundright,playerlist[realPlayListOrder[2]].getSnake().getSnakeInfo(z, 1)*gridUnit+backgroundDown,gridUnit,gridUnit);
+										graph.fillOval(playerlist[realPlayListOrder[2]].getSnake().getSnakeInfo(z, 0)*
+												gridUnit+backgroundright,playerlist[realPlayListOrder[2]].getSnake().getSnakeInfo(z, 1)*
+												gridUnit+backgroundDown,gridUnit,gridUnit);
 									}
 								}
 								graph.setColor(Color.LIGHT_GRAY);
 								if (realPlayListOrder.length>3) {
 									for (int z = 0; z< gameSize * gameSize; z++) {
-										if ((playerlist[realPlayListOrder[3]].getSnake().getSnakeInfo(z, 0) < 0) || (playerlist[realPlayListOrder[3]].getSnake().getSnakeInfo(z, 1) < 0)) {
+										if ((playerlist[realPlayListOrder[3]].getSnake().getSnakeInfo(z, 0) < 0) ||
+												(playerlist[realPlayListOrder[3]].getSnake().getSnakeInfo(z, 1) < 0)) {
 											break;
 										}
-										graph.fillOval(playerlist[realPlayListOrder[3]].getSnake().getSnakeInfo(z, 0)*gridUnit+backgroundright,playerlist[realPlayListOrder[3]].getSnake().getSnakeInfo(z, 1)*gridUnit+backgroundDown,gridUnit,gridUnit);
+										graph.fillOval(playerlist[realPlayListOrder[3]].getSnake().getSnakeInfo(z, 0)*
+												gridUnit+backgroundright,playerlist[realPlayListOrder[3]].getSnake().getSnakeInfo(z, 1)*
+												gridUnit+backgroundDown,gridUnit,gridUnit);
 									}
 								}
 							}
 							break;
 						case FOOD_BONUS:
 							graph.setColor(Color.darkGray);
-							graph.fillOval(i * gridUnit+backgroundright + gridUnit / 4, j * gridUnit+backgroundDown + gridUnit / 4, gridUnit ,
+							graph.fillOval(i * gridUnit+backgroundright + gridUnit / 4, j *
+											gridUnit+backgroundDown + gridUnit / 4, gridUnit ,
 									gridUnit );
 							break;
 						case FOOD_MALUS:
 							graph.setColor(Color.RED);
 						case BIG_FOOD_BONUS:
 							graph.setColor(Color.GREEN);
-							graph.fillOval(i * gridUnit+backgroundright + gridUnit / 4, j * gridUnit+backgroundDown + gridUnit / 4, gridUnit *2,
+							graph.fillOval(i * gridUnit+backgroundright + gridUnit / 4, j *
+											gridUnit+backgroundDown + gridUnit / 4, gridUnit *2,
 									gridUnit *2);
 							break;
 						default:
@@ -406,21 +416,19 @@ public class ServerUIControl implements KeyListener, WindowListener {
 				graph.setFont(new Font(Font.SANS_SERIF, Font.BOLD, height / 40));
 
 				graph.setColor(Color.BLACK);
-				graph.drawString("TIME = " + getTime(), backgroundright+10, 20+backgroundDown); // Clock
-				graph.drawString("Login", backgroundright/2-20, 20+backgroundDown);
-				graph.drawString("ID :", 25, 20+backgroundDown+30);
-				graph.drawString("Password :", 25, 20+backgroundDown+100);
-				graph.drawString("Time", 25, backgroundDown+250);
-				graph.drawString("Scoreboard", backgroundright/2-60, 20+backgroundDown+ height/3+7);
-				int a=0;		
+				graph.drawString("TIME = " + getTime(), backgroundright + 10, 20 + backgroundDown); // Clock
+				graph.drawString("Login", backgroundright/2 - 20, 20 + backgroundDown);
+				graph.drawString("ID :", 25, 20 + backgroundDown + 30);
+				graph.drawString("Password :", 25, 20 + backgroundDown + 100);
+				graph.drawString("Time", 25, backgroundDown + 250);
+				graph.drawString("Scoreboard", backgroundright/2 - 60, 20 + backgroundDown + height/3 + 7);
+				int a=0;
+
 				if (game_over) {
 					graph.setColor(Color.RED);
 					graph.drawString("GAME OVER", height / 2 - 30, height / 2);
-				} else if (paused) {
-					graph.setColor(Color.RED);
-					graph.drawString("PAUSED", backgroundright+500, 20+backgroundDown);
-
 				}
+
 				for(int i=0 ;i<playerlist.length;i++) {
 					if(playerlist[i].getIsRobot()==false) {
 					graph.drawString(playerlist[i].getID(), 25, 20+backgroundDown+ height/3+7+(a+1)*30);
@@ -473,30 +481,26 @@ public class ServerUIControl implements KeyListener, WindowListener {
 		}
 	}
 
-	private void gameOver() {
-		game_over = true;
-	}
-	public void addplayer(Player a) {
+	public void addPlayer(Player a) {
 		
-		Player[] newplayerlistPlayers = new Player[playerlist.length+1];
+		Player[] newPlayerListPlayers = new Player[playerlist.length+1];
 		for(int i =0 ; i<playerlist.length;i++) {
-			newplayerlistPlayers[i] = playerlist[i];
+			newPlayerListPlayers[i] = playerlist[i];
 			
 		}
-		newplayerlistPlayers[playerlist.length] = a;
-		playerlist = newplayerlistPlayers;
+		newPlayerListPlayers[playerlist.length] = a;
+		playerlist = newPlayerListPlayers;
 	}
 
 	// IMPLEMENTED FUNCTIONS
 	public synchronized void  keyPressed(KeyEvent ke) {
 		int code = ke.getKeyCode();
 		if(snake!=null) {
-			//judge the inputkeypress and add direction to the buffer
+			//judge the input keypress and add direction to the buffer
 			for(int i =0;i<realPlayListOrder.length;i++) {
 				playerlist[realPlayListOrder[i]].judgeInput(code);
 			}
-			
-			
+
 		switch (code) {		
 		case KeyEvent.VK_ESCAPE:
 			System.exit(0);
@@ -507,39 +511,43 @@ public class ServerUIControl implements KeyListener, WindowListener {
 		default:
 			break;
 		}
+
 		}
 	}
-	
-	
-	//add new RealPlayerOrder to the Order list 
+
+	//add new RealPlayerOrder to the Order list
+
+	/**
+	 *
+	 * @param a
+	 */
 	public void addRealPlaylistOrder(int a) {
-		int[] neworderlist = new int[realPlayListOrder.length+1];
-		System.arraycopy(realPlayListOrder, 0, neworderlist, 0, realPlayListOrder.length);
-		neworderlist[neworderlist.length-1] = a;
-		realPlayListOrder = neworderlist;
+		int[] newOrderList = new int[realPlayListOrder.length+1];
+		System.arraycopy(realPlayListOrder, 0, newOrderList, 0, realPlayListOrder.length);
+		newOrderList[newOrderList.length-1] = a;
+		realPlayListOrder = newOrderList;
 		System.out.println(realPlayListOrder.length);
 	}
-	
-	
-	
-	
-	public void setRealPlayerkeypress() {
+
+	/**
+	 *
+	 */
+	public void setRealPlayerKeypress() {
 		switch(realPlayListOrder.length){
 			case 1:
-				playerlist[realPlayListOrder[0]].setkeypress(KeyEvent.VK_UP, KeyEvent.VK_DOWN, KeyEvent.VK_RIGHT, KeyEvent.VK_LEFT);
+				playerlist[realPlayListOrder[0]].setKeypress(KeyEvent.VK_UP, KeyEvent.VK_DOWN, KeyEvent.VK_RIGHT, KeyEvent.VK_LEFT);
 				break;
 			case 2:
-				playerlist[realPlayListOrder[1]].setkeypress(KeyEvent.VK_W, KeyEvent.VK_S, KeyEvent.VK_D, KeyEvent.VK_A);
+				playerlist[realPlayListOrder[1]].setKeypress(KeyEvent.VK_W, KeyEvent.VK_S, KeyEvent.VK_D, KeyEvent.VK_A);
 				break;
 			case 3:
-				playerlist[realPlayListOrder[2]].setkeypress(KeyEvent.VK_I, KeyEvent.VK_K, KeyEvent.VK_L, KeyEvent.VK_J);
+				playerlist[realPlayListOrder[2]].setKeypress(KeyEvent.VK_I, KeyEvent.VK_K, KeyEvent.VK_L, KeyEvent.VK_J);
 				break;
 			case 4:
-				playerlist[realPlayListOrder[3]].setkeypress(KeyEvent.VK_G, KeyEvent.VK_B, KeyEvent.VK_N, KeyEvent.VK_V);
+				playerlist[realPlayListOrder[3]].setKeypress(KeyEvent.VK_G, KeyEvent.VK_B, KeyEvent.VK_N, KeyEvent.VK_V);
 				break;
 			default:
 				break;
-				
 		}
 	}
 
@@ -555,7 +563,7 @@ public class ServerUIControl implements KeyListener, WindowListener {
 		System.exit(0);
 	}
 
-	// UNUSED IMPLEMENTED FUNCTIONS
+	// Necessary IMPLEMENTED FUNCTIONS
 	public void keyTyped(KeyEvent ke) {
 	}
 

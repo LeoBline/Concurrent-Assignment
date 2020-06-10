@@ -30,7 +30,7 @@ public Dateprocess(Player[] playlist,int starnumber,int endnumber) {
 		for(int i = star ; i < end; i++)
 		{
 			if(playerlist[i].getIsRobot()==false) {
-			playerlist[i].getSnake().setNext_direction(playerlist[i].Getbuffer().take(playerlist[i].getSnake().getDirection()));
+			playerlist[i].getSnake().setNext_direction(playerlist[i].getPlayerBuffer().take(playerlist[i].getSnake().getDirection()));
 			playerlist[i].getSnake().setDirection(playerlist[i].getSnake().getNext_direction());
 			playerlist[i].getSnake().moveSnake();
 			}else {

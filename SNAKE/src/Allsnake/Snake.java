@@ -2,8 +2,12 @@ package Allsnake;
 
 import java.util.Random;
 
+/**
+ * Snake class refer to a snake that player will play in the game
+ */
 public class Snake {
-	// direction numbers
+
+	// Directions
 	public final static int UP = 0;
 	public final static int DOWN = 1;
 	public final static int LEFT = 2;
@@ -18,17 +22,15 @@ public class Snake {
 	public int bonusTime = 0;
 	public int malusTime = 0;
 
-	//two singleton
 	Map map =  Map.getMap();
-//	ServerUIControl server = ServerUIControl.getSever();
 	
-	private int[][] snake = null;//xposition[i][0], Yposition[i][1]
-	private int direction = -1;//current direction
+	private int[][] snake = null;
+	private int direction = -1;
 	private int next_direction = -1;
 
-	private boolean game_over = false;//to show if the snake is dead
+	private boolean snakeDied = false;
 	private int score = 0;
-	private int Length = 0;//length of the snake
+	private int Length = 0;
 
 
 	public Snake(int[][] array) {
@@ -40,7 +42,6 @@ public class Snake {
 	 */
 	public void moveSnake() {
 		if(this.getSnakeInfo(0, 0)==-1) {
-//			System.out.println("error");
 			this.gameOver();
 			return;
 		}
@@ -165,7 +166,7 @@ public class Snake {
 	 * gameOver means this snake is dead
 	 */
 	public synchronized void gameOver() {
-		game_over = true;
+		snakeDied = true;
 		for(int i = 0 ; i<  gameSize * gameSize;i++) {
 			if(this.getSnakeInfo(i, 0)>-1) {
 				map.setMapInfo(this.getSnakeInfo(i, 0), this.getSnakeInfo(i, 1), EMPTY);
@@ -174,7 +175,6 @@ public class Snake {
 				this.setSnakeInfo(i, 0, -1);
 				this.setSnakeInfo(i, 1, -1);
 				map.setMapInfo(a, b, EMPTY);
-
 			}
 		}
 	}
@@ -184,7 +184,7 @@ public class Snake {
 	 * @return
 	 */
 	public synchronized boolean getGameover() {
-		return game_over;
+		return snakeDied;
 	}
 
 	public void placeBonus(int bonus_type) {
