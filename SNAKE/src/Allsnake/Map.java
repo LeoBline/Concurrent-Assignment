@@ -6,6 +6,7 @@ public class Map {
 	private static Map map = new Map();
 	private int[][] grid = null;//2D array represent the location on the map
 	private int gameSize = 100;
+
 /**
  * 
  */

@@ -21,19 +21,14 @@ import java.util.logging.Logger;
 * @author Peuch
 */
 public class ServerUIControl implements KeyListener, WindowListener {
-	// KEYS MAP
-//	private static ServerUIControl serverUIControl = new ServerUIControl();
-	public final static int UP = 0;
-	public final static int DOWN = 1;
-	public final static int LEFT = 2;
-	public final static int RIGHT = 3;
+
 	// GRID CONTENT
 	public final static int EMPTY = 0;
 	public final static int FOOD_BONUS = 1;
 	public final static int FOOD_MALUS = 2;
 	public final static int BIG_FOOD_BONUS = 3;
 	public final static int SNAKE = 4;
-	private int[][] grid;
+	private int[][] gridMap;
 	private Snake snake = null;
 
 	private int height = 1000;
@@ -78,9 +73,9 @@ public class ServerUIControl implements KeyListener, WindowListener {
 		frame = new Frame();
 		canvas = new Canvas();
 		map = new Map();
-		grid = Map.getMap().getgrid();
+		gridMap = Map.getMap().getgrid();
 		initUI();
-		renderGame();
+		//renderGame();
 		mainLoop();
 	}
 
@@ -88,12 +83,13 @@ public class ServerUIControl implements KeyListener, WindowListener {
 	 * Initialize basic setting and components in frame
 	 */
 	public void initUI() {
+		addButtons();
+		addTextFields();
 		minute = 5;
 		frame.setSize(width + 340, height+50 );
 		frame.setResizable(false);
 		frame.setLocationByPlatform(true);
 		canvas.setSize(width + 300, height + 300);
-//		Add label and text box and login button.
 		frame.add(canvas);
 		frame.addWindowListener(this);
 		frame.dispose();
@@ -102,12 +98,9 @@ public class ServerUIControl implements KeyListener, WindowListener {
 		frame.setVisible(true);
 		canvas.addKeyListener(this);
 		canvas.setIgnoreRepaint(true);
-		canvas.setBackground(Color.WHITE);
 		canvas.createBufferStrategy(2);
 		strategy = canvas.getBufferStrategy();
 		graph = strategy.getDrawGraphics();
-		addButtons();
-		addTextFields();
 		initGame();
 		renderGame();
 	}
@@ -246,17 +239,16 @@ public class ServerUIControl implements KeyListener, WindowListener {
 		for (int i = 0; i < gameSize * gameSize; i++) {
 			snake.setSnakeInfo(i, 0, -1);
 			snake.setSnakeInfo(i, 1, -1);
-
 		}
 		int random1 = (int) (Math.random()*gameSize);  
 		int random2= (int) (Math.random()*gameSize);  
 		//Determine if there is a snake at a randomly generated location
-		if(grid[random1][random2] != SNAKE) {
+		if(gridMap[random1][random2] != SNAKE) {
 		
 		snake.setSnakeInfo(0, 0, random1);
 		
         snake.setSnakeInfo(0, 1, random2);
-		grid[random1][random2] = SNAKE;
+		gridMap[random1][random2] = SNAKE;
 		}else {
 			RandomBirth(playerList[playerList.length-1].getSnake());
 		}
@@ -305,7 +297,7 @@ public class ServerUIControl implements KeyListener, WindowListener {
 		// Initialise tabs
 		for (int i = 0; i < gameSize; i++) {
 			for (int j = 0; j < gameSize; j++) {
-				grid[i][j] = EMPTY;
+				gridMap[i][j] = EMPTY;
 			}
 		}
 		for (int i =0 ;i<new Random().nextInt(4)+2;i++) {
@@ -315,26 +307,26 @@ public class ServerUIControl implements KeyListener, WindowListener {
 
 	private  void renderGame() {
 		int gridUnit = height / gameSize;
-		canvas.paint(graph);int cout=0;
+		canvas.paint(graph);
 		do {
 			do {
-				
 				graph = strategy.getDrawGraphics();
-				// Draw Background
-				graph.setColor(Color.black);
-//				Draw a border line
-				graph.drawRect(backgroundright-1, backgroundDown-1, width+1 ,height+1);
-				graph.drawRect(10, backgroundDown-1+ height/3+7, backgroundright-15 ,height-350);
 
-				graph.drawRect(10, backgroundDown-1, backgroundright-15 ,height/3);
+				// Draw Background
+				graph.setColor(Color.RED);
+
+				// Draw rectangles (game,score board,login) interface
+				graph.drawRect(backgroundright - 1, backgroundDown - 1, width + 1 ,height + 1);// Game rectangles
+				graph.drawRect(10, backgroundDown - 1+ height/3+7, backgroundright - 15 ,height - 350);// Draw score board rectangles
+				graph.drawRect(10, backgroundDown - 1, backgroundright - 15 ,height/3);//Draw login rectangles
 				graph.setColor(Color.WHITE);
-				graph.fillRect(0+backgroundright, backgroundDown, width, height);
+				graph.fillRect(backgroundright, backgroundDown, width, height);
 				// Draw snake, bonus ...
 				int gridCase = EMPTY;
 				for (int i = 0; i < gameSize; i++) {
 					for (int j = 0; j < gameSize; j++) {
-						if(grid[i][j]==SNAKE) {
-							grid[i][j]=EMPTY;
+						if(gridMap[i][j] == SNAKE) {
+							gridMap[i][j] = EMPTY;
 						}
 				}
 			}
@@ -344,13 +336,13 @@ public class ServerUIControl implements KeyListener, WindowListener {
 						if ((playerList[i].getSnake().getSnakeInfo(z, 0) < 0) || (playerList[i].getSnake().getSnakeInfo(z, 1) < 0)) {
 							break;
 						}
-						grid[playerList[i].getSnake().getSnakeInfo(z, 0)][playerList[i].getSnake().getSnakeInfo(z, 1)] = SNAKE;
+						gridMap[playerList[i].getSnake().getSnakeInfo(z, 0)][playerList[i].getSnake().getSnakeInfo(z, 1)] = SNAKE;
 					}
 				}
 				}
 				for (int i = 0; i < gameSize; i++) {
 					for (int j = 0; j < gameSize; j++) {
-						gridCase = grid[i][j];
+						gridCase = gridMap[i][j];
 						switch (gridCase) {
 						case SNAKE:
 							graph.setColor(Color.BLUE);
@@ -486,8 +478,8 @@ public class ServerUIControl implements KeyListener, WindowListener {
 	public void placeBonus(int bonus_type) {
 		int x = (int) (Math.random() * 1000) % gameSize;
 		int y = (int) (Math.random() * 1000) % gameSize;
-		if (grid[x][y] == EMPTY) {
-			grid[x][y] = bonus_type;
+		if (gridMap[x][y] == EMPTY) {
+			gridMap[x][y] = bonus_type;
 		} else {
 			placeBonus(bonus_type);
 		}
