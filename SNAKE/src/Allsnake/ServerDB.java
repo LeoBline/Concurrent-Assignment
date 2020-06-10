@@ -1,11 +1,9 @@
 package Allsnake;
-import org.mapdb.*;
 
-import com.sun.xml.internal.bind.v2.model.core.ID;
+import org.mapdb.DB;
+import org.mapdb.DBMaker;
 
-import java.io.File; 
-import java.io.Serializable; 
-import java.util.HashMap;
+import java.io.File;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentNavigableMap; 
 
@@ -21,12 +19,12 @@ public class ServerDB implements Callable<String> {
  
     public synchronized String Login(String id,String password) {
     	//every time login will open the file db when login succeess or file will close the db.
-    	      DB db = DBMaker.newFileDB(new File("PlayerInformation")) 
-                .closeOnJvmShutdown() 
-                .encryptionEnable("password") 
-                .make();         
-        ConcurrentNavigableMap<String, String> Playermap = db.getTreeMap("playerinformation");  
-    	
+
+		DB db = DBMaker.newFileDB(new File("PlayerInformation"))
+				.closeOnJvmShutdown()
+				.encryptionEnable("password")
+				.make();
+		ConcurrentNavigableMap<String, String> Playermap = db.getTreeMap("playerinformation");
     	
     	if(Playermap.containsKey(id)) {
     		if(Playermap.get(id).equals(password)) {

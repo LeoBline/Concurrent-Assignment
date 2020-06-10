@@ -1,7 +1,5 @@
 package Allsnake;
 
-import sun.security.action.GetBooleanAction;
-
 /**
  * The Player Class
  *

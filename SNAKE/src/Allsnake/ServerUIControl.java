@@ -3,41 +3,19 @@
  * 
  */
 package Allsnake;
-import java.awt.Canvas;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Frame;
-import java.awt.Graphics;
-import java.awt.TextField;
-import java.awt.Toolkit;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
 import java.awt.image.BufferStrategy;
 import java.text.SimpleDateFormat;
 import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JTextField;
-
-import com.sun.corba.se.impl.orbutil.closure.Future;
 //import com.sun.java.util.jar.pack.Instruction.Switch;
-import com.sun.prism.Image;
-
-import sun.security.util.Length;
-import sun.util.calendar.BaseCalendar.Date;
 
 /**
 * @author Peuch
@@ -119,9 +97,11 @@ public class ServerUIControl implements KeyListener, WindowListener {
 	public synchronized  void Login(String id,String password) {
 //Verify the password of the filled database account.
 		serverdb = new ServerDB(id,password);
+//		serverdb.Updata(serverdb.getMap(),serverdb.getDB());
 		java.util.concurrent.Future<String> future = executorService2.submit(serverdb);
 		try {
 			String result=future.get();
+			System.out.println(result);
 		if (result!= "") {
 			System.out.println("success login");
 			//add player and snake
