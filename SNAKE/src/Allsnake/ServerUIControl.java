@@ -80,16 +80,24 @@ public class ServerUIControl implements KeyListener, WindowListener {
 	}
 
 	/**
+	 * For the Convenience of test
+	 * @param test
+	 */
+	public ServerUIControl(String test){
+
+	}
+
+	/**
 	 * Initialize basic setting and components in frame
 	 */
 	public void initUI() {
 		addButtons();
 		addTextFields();
 		minute = 5;
-		frame.setSize(width + 340, height+50 );
+		frame.setSize(width + 340, height + 50 );
 		frame.setResizable(false);
 		frame.setLocationByPlatform(true);
-		canvas.setSize(width + 300, height + 300);
+		canvas.setSize(width + 340, height + 50);
 		frame.add(canvas);
 		frame.addWindowListener(this);
 		frame.dispose();
@@ -199,20 +207,20 @@ public class ServerUIControl implements KeyListener, WindowListener {
 			java.util.concurrent.Future<String> future = LoginExecutorService.submit(serverdb);
 			String result=future.get();
 			System.out.println(result);
-		if (result!= "") {
-			System.out.println("success login");
-			//add player and snake
-			this.addPlayer(new Player(result, gameSize));
-			addRealPlaylistOrder(playerList.length-1);
-			snake = playerList[playerList.length-1].getSnake();
-			RandomBirth(snake);	
-			setRealPlayerKeypress();
-			//Draw a massage box to show login successful
-			JOptionPane.showMessageDialog(null, "Success Login","", JOptionPane.INFORMATION_MESSAGE);
-		}else {
-			//Draw a massage box to show login failed
-			JOptionPane.showMessageDialog(null, "Fail Login","", JOptionPane.INFORMATION_MESSAGE);
-		}
+			if (result!= "") {
+				System.out.println("success login");
+				//add player and snake
+				this.addPlayer(new Player(result, gameSize));
+				addRealPlaylistOrder(playerList.length-1);
+				snake = playerList[playerList.length-1].getSnake();
+				RandomBirth(snake);
+				setRealPlayerKeypress();
+				//Draw a massage box to show login successful
+				JOptionPane.showMessageDialog(null, "Success Login","", JOptionPane.INFORMATION_MESSAGE);
+				}else {
+					//Draw a massage box to show login failed
+					JOptionPane.showMessageDialog(null, "Fail Login","", JOptionPane.INFORMATION_MESSAGE);
+				}
 		}catch (InterruptedException | ExecutionException e) {
 			System.out.println(e);
 		}
@@ -310,15 +318,12 @@ public class ServerUIControl implements KeyListener, WindowListener {
 	}
 
 	private  void renderGame() {
-		int gridUnit = height / gameSize;
 		canvas.paint(graph);
 		do {
 			do {
 				graph = strategy.getDrawGraphics();
-
 				// Draw Background
 				graph.setColor(Color.RED);
-
 				// Draw rectangles (game,score board,login) interface
 				graph.drawRect(backgroundright - 1, backgroundDown - 1, width + 1 ,height + 1);// Game rectangles
 				graph.drawRect(10, backgroundDown - 1+ height/3+7, backgroundright - 15 ,height - 350);// Draw score board rectangles
@@ -344,13 +349,17 @@ public class ServerUIControl implements KeyListener, WindowListener {
 					}
 				}
 				}
+				//
+				int gridUnit = height / gameSize;
+
+				//Retrieval of all nodes in grid
 				for (int i = 0; i < gameSize; i++) {
 					for (int j = 0; j < gameSize; j++) {
 						gridCase = gridMap[i][j];
 						switch (gridCase) {
 						case SNAKE:
-
-							graph.fillOval(i * gridUnit+backgroundright, j * gridUnit+backgroundDown, gridUnit, gridUnit);
+							graph.fillOval(i * gridUnit + backgroundright, j * gridUnit+backgroundDown, gridUnit, gridUnit);
+							//The first player
 							graph.setColor(Color.PINK);
 							if(realPlayListOrder!=null) {
 								if(realPlayListOrder.length>0) {
@@ -364,6 +373,7 @@ public class ServerUIControl implements KeyListener, WindowListener {
 												*gridUnit+backgroundDown,gridUnit,gridUnit);
 									}
 								}
+								//The second player
 								graph.setColor(Color.ORANGE);
 								if (realPlayListOrder.length>1) {
 									for (int z = 0; z< gameSize * gameSize; z++) {
@@ -376,7 +386,8 @@ public class ServerUIControl implements KeyListener, WindowListener {
 												gridUnit+backgroundDown,gridUnit,gridUnit);
 									}
 								}
-								graph.setColor(Color.DARK_GRAY);
+								//The third player
+								graph.setColor(Color.CYAN);
 								if (realPlayListOrder.length>2) {
 									for (int z = 0; z< gameSize * gameSize; z++) {
 										if ((playerList[realPlayListOrder[2]].getSnake().getSnakeInfo(z, 0) < 0) ||
@@ -388,7 +399,8 @@ public class ServerUIControl implements KeyListener, WindowListener {
 												gridUnit+backgroundDown,gridUnit,gridUnit);
 									}
 								}
-								graph.setColor(Color.LIGHT_GRAY);
+								//The fourth player
+								graph.setColor(Color.MAGENTA);
 								if (realPlayListOrder.length>3) {
 									for (int z = 0; z< gameSize * gameSize; z++) {
 										if ((playerList[realPlayListOrder[3]].getSnake().getSnakeInfo(z, 0) < 0) ||
@@ -478,7 +490,10 @@ public class ServerUIControl implements KeyListener, WindowListener {
 		}
 	}
 
-
+	/**
+	 * Place a type of bonus in map
+	 * @param bonus_type
+	 */
 	public void placeBonus(int bonus_type) {
 		int x = (int) (Math.random() * 1000) % gameSize;
 		int y = (int) (Math.random() * 1000) % gameSize;
@@ -489,6 +504,10 @@ public class ServerUIControl implements KeyListener, WindowListener {
 		}
 	}
 
+	/**
+	 * Add a new player into the playList
+	 * @param a
+	 */
 	public void addPlayer(Player a) {
 		
 		Player[] newPlayerListPlayers = new Player[playerList.length+1];
@@ -500,7 +519,10 @@ public class ServerUIControl implements KeyListener, WindowListener {
 		playerList = newPlayerListPlayers;
 	}
 
-	// IMPLEMENTED FUNCTIONS
+	/**
+	 * Pause the game by press 'space' on keyboard or exit the game by press 'esc'
+	 * @param ke
+	 */
 	public synchronized void  keyPressed(KeyEvent ke) {
 		int code = ke.getKeyCode();
 		if(snake!=null) {
@@ -508,7 +530,6 @@ public class ServerUIControl implements KeyListener, WindowListener {
 			for(int i =0;i<realPlayListOrder.length;i++) {
 				playerList[realPlayListOrder[i]].judgeInput(code);
 			}
-
 		switch (code) {		
 		case KeyEvent.VK_ESCAPE:
 			System.exit(0);
@@ -523,10 +544,8 @@ public class ServerUIControl implements KeyListener, WindowListener {
 		}
 	}
 
-	//add new RealPlayerOrder to the Order list
-
 	/**
-	 *
+	 * Add a player in realPlayerList
 	 * @param a
 	 */
 	public void addRealPlaylistOrder(int a) {
@@ -538,7 +557,7 @@ public class ServerUIControl implements KeyListener, WindowListener {
 	}
 
 	/**
-	 *
+	 *Give 4 players original key for their snake's movement
 	 */
 	public void setRealPlayerKeypress() {
 		switch(realPlayListOrder.length){
@@ -570,6 +589,9 @@ public class ServerUIControl implements KeyListener, WindowListener {
 	public void windowClosing(WindowEvent we) {
 		System.exit(0);
 	}
+
+	public void setGridMap(int[][] gridMap){ this.gridMap = gridMap; }
+
 
 	//IMPLEMENTED FUNCTIONS
 	public void keyTyped(KeyEvent ke) {

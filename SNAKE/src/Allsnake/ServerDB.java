@@ -63,7 +63,7 @@ public class ServerDB implements Callable<String> {
 		db.getTreeMap("playerinformation").put("002","123456");
 		db.getTreeMap("playerinformation").put("003","123456");
 		db.getTreeMap("playerinformation").put("004","123456");
-		//Put them into playerMap
+		//Put them into playerMap and commit the db
 		db.commit();
 		playerMap = db.getTreeMap("playerinformation");
     }

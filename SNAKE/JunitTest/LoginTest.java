@@ -52,7 +52,7 @@ public class LoginTest {
     }
 
     /**
-     * Give a random integer between specif range
+     * Give a random integer between specif range for concurrent test
      * @param min
      * @param max
      * @return
