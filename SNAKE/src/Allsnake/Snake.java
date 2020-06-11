@@ -128,7 +128,7 @@ public class Snake {
 			
 			
 		}
-		bonusTime = bonusTime -1;
+		setBonusTime(bonusTime-1);
 		if (getBonusTime() == 0) {
 			for (i = 0; i < gameSize; i++) {
 				for (int j = 0; j < gameSize; j++) {
@@ -137,7 +137,7 @@ public class Snake {
 				}
 			}
 		}
-		minusTime = minusTime -1;
+		setMinusTime(minusTime-1);
 		if (getMinusTime() == 0) {
 			for (i = 0; i < gameSize; i++) {
 				for (int j = 0; j < gameSize; j++) {
