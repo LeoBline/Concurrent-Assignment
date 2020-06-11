@@ -202,7 +202,7 @@ public class ServerUIControl implements KeyListener, WindowListener {
 		if (result!= "") {
 			System.out.println("success login");
 			//add player and snake
-			this.addPlayer(new Player("001", gameSize));
+			this.addPlayer(new Player(result, gameSize));
 			addRealPlaylistOrder(playerList.length-1);
 			snake = playerList[playerList.length-1].getSnake();
 			RandomBirth(snake);	
@@ -349,7 +349,7 @@ public class ServerUIControl implements KeyListener, WindowListener {
 						gridCase = gridMap[i][j];
 						switch (gridCase) {
 						case SNAKE:
-							graph.setColor(Color.BLUE);
+
 							graph.fillOval(i * gridUnit+backgroundright, j * gridUnit+backgroundDown, gridUnit, gridUnit);
 							graph.setColor(Color.PINK);
 							if(realPlayListOrder!=null) {
@@ -409,7 +409,7 @@ public class ServerUIControl implements KeyListener, WindowListener {
 									gridUnit );
 							break;
 						case FOOD_MALUS:
-							graph.setColor(Color.RED);
+							graph.setColor(Color.ORANGE);
 						case BIG_FOOD_BONUS:
 							graph.setColor(Color.GREEN);
 							graph.fillOval(i * gridUnit+backgroundright + gridUnit / 4, j *
