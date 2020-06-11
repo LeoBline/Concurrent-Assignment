@@ -10,28 +10,38 @@ public class Snake {
 	public final static int DOWN = 1;
 	public final static int LEFT = 2;
 	public final static int RIGHT = 3;
+	
+	//states of each unit on map
 	public final static int EMPTY = 0;
 	public final static int FOOD_BONUS = 1;
 	public final static int FOOD_MALUS = 2;
 	public final static int BIG_FOOD_BONUS = 3;
 	public final static int SNAKE = 4;
+	
+	//
 	private int gameSize = 80;
 	public int bonusTime = 0;
 	public int malusTime = 0;
 
-	//two singleton
+	// two singleton
 	Map map =  Map.getMap();
-//	ServerUIControl server = ServerUIControl.getSever();
 	
-	private int[][] snake = null;//xposition[i][0], Yposition[i][1]
-	private int direction = -1;//current direction
+	// represent the body position: Xposition[i][0], Yposition[i][1]
+	private int[][] snake = null;
+	
+	//current direction
+	private int direction = -1;
 	private int next_direction = -1;
 
-	private boolean game_over = false;//to show if the snake is dead
+	//to show if the snake is dead, true:snake is dead, false: snake is alive
+	private boolean game_over = false;
 	private int score = 0;
 	private int Length = 0;//length of the snake
 
-
+	/**
+	 * constructor
+	 * @param array snake body
+	 */
 	public Snake(int[][] array) {
 		snake = array;//init new snake body
 	}
@@ -40,10 +50,10 @@ public class Snake {
 	 * Each time snake move, this method will adjust attributes behind UI
 	 */
 	public synchronized void moveSnake() {
-		if(this.getSnakeInfo(0, 0)==-1) {
+		if(this.getSnakeInfo(0, 0)==-1) {//snake doesn't exist
 			return;
 		}
-		if (direction < 0) {
+		if (direction < 0) {//no direction
 			return;
 		}
 		int ymove = 0;
@@ -70,17 +80,19 @@ public class Snake {
 			ymove = 0;
 			break;
 		}
+		//get snake head's position in tempx and tempy
 		int tempx = this.getSnakeInfo(0, 0);
 		int tempy = this.getSnakeInfo(0, 1);
+		//get snake head's position after moving
 		int fut_x = this.getSnakeInfo(0, 0) + xmove;
 		int fut_y = this.getSnakeInfo(0, 1) + ymove;
-		if (fut_x < 0)
+		if (fut_x < 0)// snake head exceeds the left border of the map
 			fut_x = gameSize - 1;
-		if (fut_y < 0)
+		if (fut_y < 0)// snake head exceeds the top border of the map
 			fut_y = gameSize - 1;
-		if (fut_x >= gameSize)
+		if (fut_x >= gameSize)// snake head exceeds the right border of the map
 			fut_x = 0;
-		if (fut_y >= gameSize)
+		if (fut_y >= gameSize)// snake head exceeds the down border of the map
 			fut_y = 0;
 		if (map.getMapInfo(fut_x, fut_y)== FOOD_BONUS) {
 			Length++;
