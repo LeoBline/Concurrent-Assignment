@@ -94,6 +94,7 @@ public class Snake {
 			fut_x = 0;
 		if (fut_y >= gameSize)// snake head exceeds the down border of the map
 			fut_y = 0;
+		// if snake head is on the food, adjust the snake length and score
 		if (map.getMapInfo(fut_x, fut_y)== FOOD_BONUS) {
 			Length++;
 			score++;
@@ -111,9 +112,11 @@ public class Snake {
 
 			return;
 		}
+		//save snake head position in the snake array
 		this.setSnakeInfo(0, 0, fut_x);
 		this.setSnakeInfo(0, 1, fut_y);
-
+		
+		//set snake head's last position into empty, ready for snake body move on
 		map.setMapInfo(tempx, tempy, EMPTY);
 		int snakex, snakey, i;
 		for (i = 1; i < gameSize * gameSize; i++) {
