@@ -41,6 +41,8 @@ public class ServerUIControl implements KeyListener, WindowListener {
 	private Canvas canvas;
 	private Graphics graph = null;
 	private BufferStrategy strategy = null;
+
+
 	private boolean game_over = false;
 	private boolean paused = false;
 
@@ -51,15 +53,16 @@ public class ServerUIControl implements KeyListener, WindowListener {
 	private int backgroundright = 300;
 	private int backgroundDown = 10;
 
+
 	//Buttons
-	JButton loginButton = new JButton("Login");
-	JButton addRobotButton = new JButton("Add Robot");
-	JButton setTimeButton = new JButton("Set");
+	private JButton loginButton = new JButton("Login");
+	private JButton addRobotButton = new JButton("Add Robot");
+	private JButton setTimeButton = new JButton("Set");
 
 	//TextFields
-	JTextField idField = new JTextField();
-	JTextField passwordField = new JTextField();
-	JTextField TimeField = new JTextField();
+	private JTextField idField = new JTextField();
+	private JTextField passwordField = new JTextField();
+	private JTextField TimeField = new JTextField();
 
 	private Player[] playerList = new Player[0];
 
@@ -84,7 +87,11 @@ public class ServerUIControl implements KeyListener, WindowListener {
 	 * @param test
 	 */
 	public ServerUIControl(String test){
-
+		frame = new Frame();
+		canvas = new Canvas();
+		map = new Map();
+		gridMap = Map.getMap().getGrid();
+		initUI();
 	}
 
 	/**
@@ -93,6 +100,7 @@ public class ServerUIControl implements KeyListener, WindowListener {
 	public void initUI() {
 		addButtons();
 		addTextFields();
+		initGame();
 		minute = 5;
 		frame.setSize(width + 340, height + 50 );
 		frame.setResizable(false);
@@ -109,8 +117,6 @@ public class ServerUIControl implements KeyListener, WindowListener {
 		canvas.createBufferStrategy(2);
 		strategy = canvas.getBufferStrategy();
 		graph = strategy.getDrawGraphics();
-		initGame();
-		renderGame();
 	}
 
 	/**
@@ -127,15 +133,15 @@ public class ServerUIControl implements KeyListener, WindowListener {
 		frame.add(setTimeButton);
 		frame.add(addRobotButton);
 
-		//setTimeButton Listener
-		setTimeButton.addMouseListener(new MouseAdapter() {
+		setTimeButton.addActionListener(new ActionListener() {
 			@Override
-			public void mouseClicked(MouseEvent e) {
+			public void actionPerformed(ActionEvent e) {
+				System.out.println(2);
 				//Get the input from TextField
 				String time =TimeField.getText();
 				SimpleDateFormat format=new SimpleDateFormat("HH:mm");
 
-				//judge it is right format
+				//judge if it is right format
 				boolean dateflag=true;
 				try
 				{
@@ -151,7 +157,10 @@ public class ServerUIControl implements KeyListener, WindowListener {
 					setSecond(Integer.parseInt( time.split(":")[1] ));
 					JOptionPane.showMessageDialog(null, "Success set time","", JOptionPane.INFORMATION_MESSAGE);
 				}
-			}});
+			}
+		});
+		//setTimeButton Listener
+
 
 		//addRobot Button listener
 		addRobotButton.addMouseListener(new MouseAdapter() {
@@ -305,6 +314,9 @@ public class ServerUIControl implements KeyListener, WindowListener {
 		}
 	}
 
+	/**
+	 * Clear the grid and place some bonus
+	 */
 	private void initGame() {
 		// Initialise tabs
 		for (int i = 0; i < gameSize; i++) {
@@ -590,8 +602,40 @@ public class ServerUIControl implements KeyListener, WindowListener {
 		System.exit(0);
 	}
 
-	public void setGridMap(int[][] gridMap){ this.gridMap = gridMap; }
+	public void setGridMap(int[][] gridMap){
+		this.gridMap = gridMap;
+	}
+	public JButton getLoginButton() {
+		return loginButton;
+	}
 
+	public JButton getAddRobotButton() {
+		return addRobotButton;
+	}
+
+	public JButton getSetTimeButton() {
+		return setTimeButton;
+	}
+
+	public JTextField getIdField() {
+		return idField;
+	}
+
+	public JTextField getPasswordField() {
+		return passwordField;
+	}
+
+	public JTextField getTimeField() {
+		return TimeField;
+	}
+
+	public boolean isGame_over() {
+		return game_over;
+	}
+
+	public boolean isPaused() {
+		return paused;
+	}
 
 	//IMPLEMENTED FUNCTIONS
 	public void keyTyped(KeyEvent ke) {

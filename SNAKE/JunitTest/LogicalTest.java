@@ -3,9 +3,23 @@ import Allsnake.ServerUIControl;
 import org.junit.Test;
 import org.junit.Assert;
 
+import javax.swing.*;
+import javax.swing.text.Document;
+import java.awt.*;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+
 public class LogicalTest {
     Map testMap = new Map();
     ServerUIControl testServerUI = new ServerUIControl("Test");
+    //Create to robot to act as a real player
+    Robot robot = new Robot();
+
+    public LogicalTest() throws AWTException {
+    }
+
     /**
      * Test if the eatFood method do change the grid information to 0 and return the false when empty
      */
@@ -47,8 +61,18 @@ public class LogicalTest {
                 }
             }
         }
-
         Assert.assertTrue(existFlag);
+    }
+
+    /**
+     *Press space should stop the game and esc should exit the game
+     */
+    @Test
+    public void exitAndPauseTest(){
+        System.out.println(testServerUI.isPaused());
+        robot.mouseMove(25,20);
+        robot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
+        System.out.println(testServerUI.isPaused());
     }
 
 }

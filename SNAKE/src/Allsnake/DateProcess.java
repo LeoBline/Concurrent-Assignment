@@ -22,6 +22,7 @@ public DateProcess(Player[] playlist, int startNumber, int endNumber) {
 				playerlist[i].getSnake().setNext_direction(playerlist[i].getPlayerBuffer().take(playerlist[i].getSnake().getDirection()));
 				}
 				else {
+					//Random move the robot
 					playerlist[i].getSnake().setNext_direction(playerlist[i].getSnake().RandomDirection());
 				}
 				playerlist[i].getSnake().setDirection(playerlist[i].getSnake().getNext_direction());
