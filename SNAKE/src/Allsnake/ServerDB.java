@@ -25,12 +25,13 @@ public class ServerDB implements Callable<String> {
 	public ServerDB(String id,String password) {
 		this.id=id;
 		this.password = password;
+		update();
 	}
 
 
 	public String call() throws InterruptedException {
 		// TODO Auto-generated method stub
-		return Login(id, password);
+		return checkAccount(id, password);
 	}
 
 	/**
@@ -39,17 +40,16 @@ public class ServerDB implements Callable<String> {
 	 * @param password
 	 * @return If login successfully return id, else return "".
 	 */
-    public synchronized String Login(String id,String password) {
-    	if(playerMap.containsKey(id)) {
-    		if(playerMap.get(id).equals(password)) {
-    			db.close();
-    			return id;
-    		}else {
-    			db.close();
-    			return ""; }
-    	}else {
-    		db.close();
-    		return ""; }
+    public synchronized String checkAccount(String id, String password) {
+		if(playerMap.containsKey(id)){
+			if(playerMap.get(id).equals(password)){
+				return id;
+			}else {
+				return "";
+			}
+		}else {
+			return "";
+		}
     }
 
 	/**
@@ -57,13 +57,16 @@ public class ServerDB implements Callable<String> {
 	 * @param map
 	 * @param db
 	 */
-	public void update(ConcurrentNavigableMap<String, String> map, DB db) {
-    	if (!map.containsKey("001")) {
-			map.put("001","123456");
-			map.put("002","123456");
-		}
-    	//Update the db with new player accounts
-    	db.commit();
+	public void update() {
+		//Add four original player
+		db.getTreeMap("playerinformation").put("001","123456");
+		db.getTreeMap("playerinformation").put("002","123456");
+		db.getTreeMap("playerinformation").put("003","123456");
+		db.getTreeMap("playerinformation").put("004","123456");
+
+		//Put them into playerMap
+		db.commit();
+		playerMap = db.getTreeMap("playerinformation");
     }
 
 //Getters

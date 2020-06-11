@@ -25,10 +25,13 @@
           <root url="jar://$MODULE_DIR$/src/mapdb-1.0.6.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES />
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/src/mapdb-3.0.8.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="jdk" jdkName="1.8" jdkType="JavaSDK" />
     <orderEntry type="library" name="junit:junit:4.12" level="project" />
+    <orderEntry type="library" name="mapdb-3.0.8" level="project" />
   </component>
 </module>

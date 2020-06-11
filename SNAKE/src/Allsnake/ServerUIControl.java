@@ -76,7 +76,6 @@ public class ServerUIControl implements KeyListener, WindowListener {
 		map = new Map();
 		gridMap = Map.getMap().getGrid();
 		initUI();
-		//renderGame();
 		mainLoop();
 	}
 
@@ -164,7 +163,6 @@ public class ServerUIControl implements KeyListener, WindowListener {
 				} catch (InterruptedException interruptedException) {
 					interruptedException.printStackTrace();
 				}
-				System.out.println("Player : "+idField.getText()+"login successful");
 			}
 		});
 	}
@@ -189,15 +187,15 @@ public class ServerUIControl implements KeyListener, WindowListener {
 	}
 
 	/**
-	 * Verify whether id and password located a account in DB.
+	 * Verify whether id and password located a account in DB and create the snake.
 	 * @param id
 	 * @param password
 	 */
 	public synchronized void playerLogin(String id, String password) throws InterruptedException {
 		try {
+			//init server db
 			serverdb = new ServerDB(id,password);
 			//Add all the players account to table
-			serverdb.update(serverdb.getMap(),serverdb.getDB());
 			java.util.concurrent.Future<String> future = LoginExecutorService.submit(serverdb);
 			String result=future.get();
 			System.out.println(result);
@@ -573,7 +571,7 @@ public class ServerUIControl implements KeyListener, WindowListener {
 		System.exit(0);
 	}
 
-	// Necessary IMPLEMENTED FUNCTIONS
+	//IMPLEMENTED FUNCTIONS
 	public void keyTyped(KeyEvent ke) {
 	}
 

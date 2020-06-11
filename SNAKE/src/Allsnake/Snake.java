@@ -35,49 +35,48 @@ public class Snake {
 
 
 	public Snake(int[][] array) {
-		snake = array;//init new snake body
+		snake = array;
 	}
 	
 	/**
-	 * Each time snake move, this method will adjust attributes behind UI
+	 *
 	 */
 	public void moveSnake() {
-		if(this.getSnakeInfo(0, 0)==-1) {
-			this.gameOver();
+		if(getSnakeInfo(0, 0) == -1) {
+			gameOver();
 			return;
 		}
 		if (direction < 0) {
-
 			return;
 		}
-		int ymove = 0;
-		int xmove = 0;
+		int yMove;
+		int xMove;
 		switch (direction) {
-		case UP:
-			xmove = 0;
-			ymove = -1;
-			break;
-		case DOWN:
-			xmove = 0;
-			ymove = 1;
-			break;
-		case RIGHT:
-			xmove = 1;
-			ymove = 0;
-			break;
-		case LEFT:
-			xmove = -1;
-			ymove = 0;
-			break;
-		default:
-			xmove = 0;
-			ymove = 0;
-			break;
+			case UP:
+				xMove = 0;
+				yMove = -1;
+				break;
+			case DOWN:
+				xMove = 0;
+				yMove = 1;
+				break;
+			case RIGHT:
+				xMove = 1;
+				yMove = 0;
+				break;
+			case LEFT:
+				xMove = -1;
+				yMove = 0;
+				break;
+			default:
+				xMove = 0;
+				yMove = 0;
+				break;
 		}
-		int tempx = this.getSnakeInfo(0, 0);
-		int tempy = this.getSnakeInfo(0, 1);
-		int fut_x = this.getSnakeInfo(0, 0) + xmove;
-		int fut_y = this.getSnakeInfo(0, 1) + ymove;
+		int tempX = this.getSnakeInfo(0, 0);
+		int tempY = this.getSnakeInfo(0, 1);
+		int fut_x = this.getSnakeInfo(0, 0) + xMove;
+		int fut_y = this.getSnakeInfo(0, 1) + yMove;
 		if (fut_x < 0)
 			fut_x = gameSize - 1;
 		if (fut_y < 0)
@@ -117,9 +116,10 @@ public class Snake {
 		this.setSnakeInfo(0, 0, fut_x);
 		this.setSnakeInfo(0, 1, fut_y);
 
-		map.setMapInfo(tempx, tempy, EMPTY);
+		map.setMapInfo(tempX, tempY, EMPTY);
 
-		updateSnake(tempx, tempy);
+		updateSnake(tempX, tempY);
+
 		int i;
 		for ( i = 0; i < gameSize*gameSize; i++) {
 			if ((this.getSnakeInfo(i, 0) < 0) || (this.getSnakeInfo(i, 1) < 0)) {
@@ -138,7 +138,6 @@ public class Snake {
 			}
 		}
 		minusTime = minusTime -1;
-//		System.out.println(malusTime);
 		if (getMinusTime() == 0) {
 			for (i = 0; i < gameSize; i++) {
 				for (int j = 0; j < gameSize; j++) {
@@ -148,8 +147,8 @@ public class Snake {
 			}
 			}
 		if (getLength() > 0) {
-			this.setSnakeInfo(i, 0, tempx);
-			this.setSnakeInfo(i, 1, tempx);
+			this.setSnakeInfo(i, 0, tempX);
+			this.setSnakeInfo(i, 1, tempX);
 			map.setMapInfo(this.getSnakeInfo(i, 0), this.getSnakeInfo(i, 1), SNAKE);
 			if (getScore() % 10 == 0) {
 				placeBonus(BIG_FOOD_BONUS);
@@ -179,7 +178,9 @@ public class Snake {
 			}
 		}
 	}
-	
+
+
+
 	/**
 	 * Return the statement of this snake, if the snake dead or alive
 	 * @return
@@ -189,6 +190,7 @@ public class Snake {
 	}
 
 	public void placeBonus(int bonus_type) {
+		//Create random location
 		int x = (int) (Math.random() * 1000) % gameSize;
 		int y = (int) (Math.random() * 1000) % gameSize;
 		if (map.getMapInfo(x, y) == EMPTY) {
@@ -198,6 +200,7 @@ public class Snake {
 		}
 	}
 	public void placeMinus(int malus_type) {
+		//Create random location
 		int x = (int) (Math.random() * 1000) % gameSize;
 		int y = (int) (Math.random() * 1000) % gameSize;
 		if (map.getMapInfo(x, y) == EMPTY) {
@@ -207,9 +210,8 @@ public class Snake {
 		}
 	}
 	/**
-	 * get random direction for snake to move.
-	 * this method return a random direction
-	 * @return direction
+	 * get random direction for robot to move
+	 * @return random direction
 	 */
 	public synchronized int RandomDirection() {
 		Random r=new Random();
@@ -240,40 +242,27 @@ public class Snake {
 			
 		}
 	}
-	
+
+	//Getters and setters
 	public synchronized void setSnakeInfo(int index1, int index2, int num) {
 		snake[index1][index2] = num;
 	}
-	/**
-	 * return the location of one part on snake
-	 * @param index1
-	 * @param index2
-	 * @return one part of snake
-	 */
-	public synchronized int getSnakeInfo(int index1, int index2) {
-		return snake[index1][index2];
-	}
-		
+	public synchronized int getSnakeInfo(int index1, int index2) { return snake[index1][index2]; }
 	public synchronized int getDirection() {
 		return direction;
 	}
-
 	public synchronized void setDirection(int direction) {
 		this.direction = direction;
 	}
-	
 	public synchronized int getNext_direction() {
 		return next_direction;
 	}
-
 	public synchronized void setNext_direction(int next_direction) {
 		this.next_direction = next_direction;
 	}
-
 	public synchronized int getScore() {
 		return score;
 	}
-
 	public synchronized int getLength() {
 		return Length;
 	}
@@ -283,30 +272,15 @@ public class Snake {
 	public synchronized void setScore(int score) {
 		this.score = score;
 	}
-	/**
-	 * @return the bonusTime
-	 */
 	public synchronized int getBonusTime() {
 		return bonusTime;
 	}
-
-	/**
-	 * @param bonusTime the bonusTime to set
-	 */
 	public synchronized void setBonusTime(int bonusTime) {
 		this.bonusTime = bonusTime;
 	}
-
-	/**
-	 * @return the minusTime
-	 */
 	public synchronized int getMinusTime() {
 		return minusTime;
 	}
-
-	/**
-	 * @param minusTime the minusTime to set
-	 */
 	public synchronized void setMinusTime(int minusTime) {
 		this.minusTime = minusTime;
 	}

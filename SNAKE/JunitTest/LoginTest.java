@@ -1,10 +1,13 @@
 import Allsnake.ServerDB;
 import org.junit.Test;
 import org.junit.Assert;
+import org.mapdb.BTreeMap;
 import org.mapdb.DB;
 import org.mapdb.DBMaker;
-
 import java.io.File;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentNavigableMap;
 
 /**
@@ -16,8 +19,12 @@ public class LoginTest {
             .closeOnJvmShutdown()
             .encryptionEnable("password")
             .make();
+
+
     //Put the account information to the playerMap
     ConcurrentNavigableMap<String, String> playerMap = db.getTreeMap("playerinformation");
+
+
 
     /**
      * Test whether the "001" successful add into testServerDB;
@@ -25,12 +32,13 @@ public class LoginTest {
      */
     @Test
     public void updatePlayerMapTest() throws InterruptedException {
-        testServerDB.update(playerMap,db);
+
         Assert.assertEquals("001",testServerDB.call());;
     }
 
     @Test
     public void concurrentLoginTest(){
-
+        System.out.println(playerMap.keySet());
+        Assert.assertEquals(1,1);
     }
 }
