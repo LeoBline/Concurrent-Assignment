@@ -30,12 +30,21 @@ public class Player {
 		mySnake = new Snake(a);
 	}
 
+	/**
+	 * Init the snake give the Snake original length and create the buffer
+	 */
     public synchronized void InitSnake(){
     	mySnake = new Snake(new int[game_size * game_size][2]);
     	playerBuffer = new Buffer();
     }
 
-
+	/**
+	 * Set the key that control the snake
+	 * @param up
+	 * @param down
+	 * @param right
+	 * @param left
+	 */
     public void setKeypress(int up, int down, int right, int left) {
     	OperationButtons[0]=up;
     	OperationButtons[1]=down;
@@ -43,6 +52,7 @@ public class Player {
     	OperationButtons[3]=left;
     }
 	//Getter and setter
+
 	public int getScore() {
 		myScore = mySnake.getScore();
 		return myScore;
@@ -73,6 +83,10 @@ public class Player {
 		return mySnake;
 	}
 
+	/**
+	 * Add the task that contain the movement of snake to buffer
+	 * @param a
+	 */
     public void judgeInput(int a) {
     	if(a==getUpButtons()) {
     		if(getSnake().getDirection()!=DOWN && getSnake().getDirection()!=UP) {
