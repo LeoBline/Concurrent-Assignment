@@ -212,6 +212,10 @@ public class Snake {
 		return snakeDied;
 	}
 
+	/**
+	 * Place a random bonus on map
+	 * @param bonus_type
+	 */
 	public void placeBonus(int bonus_type) {
 		//Create random location
 		int x = (int) (Math.random() * 1000) % gameSize;
@@ -222,6 +226,11 @@ public class Snake {
 			placeBonus(bonus_type);
 		}
 	}
+
+	/**
+	 * Place a random minus on map
+	 * @param malus_type
+	 */
 	public void placeMinus(int malus_type) {
 		//Create random location
 		int x = (int) (Math.random() * 1000) % gameSize;
@@ -232,6 +241,7 @@ public class Snake {
 			placeMinus(malus_type);
 		}
 	}
+
 	/**
 	 * get random direction for robot to move
 	 * @return random direction
@@ -242,6 +252,11 @@ public class Snake {
 		return i;
 	}
 
+	/**
+	 * Update the Snake's length and shape
+	 * @param tempx
+	 * @param tempy
+	 */
 	public synchronized void updateSnake(int tempx, int tempy) {
 		int snakex, snakey, i;
 		for (i = 1; i < gameSize * gameSize; i++) {

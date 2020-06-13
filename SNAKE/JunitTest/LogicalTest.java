@@ -64,15 +64,5 @@ public class LogicalTest {
         Assert.assertTrue(existFlag);
     }
 
-    /**
-     *Press space should stop the game and esc should exit the game
-     */
-    @Test
-    public void exitAndPauseTest(){
-        System.out.println(testServerUI.isPaused());
-        robot.mouseMove(25,20);
-        robot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
-        System.out.println(testServerUI.isPaused());
-    }
 
 }
