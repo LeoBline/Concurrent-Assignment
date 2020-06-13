@@ -370,6 +370,7 @@ public class ServerUIControl implements KeyListener, WindowListener {
 						gridCase = gridMap[i][j];
 						switch (gridCase) {
 						case SNAKE:
+							graph.setColor(Color.BLUE);
 							graph.fillOval(i * gridUnit + backgroundright, j * gridUnit+backgroundDown, gridUnit, gridUnit);
 							//The first player
 							graph.setColor(Color.PINK);
