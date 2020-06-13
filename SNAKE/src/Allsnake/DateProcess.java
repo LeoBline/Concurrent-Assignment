@@ -18,13 +18,17 @@ public DateProcess(Player[] playlist, int startNumber, int endNumber) {
 		if(playerlist!=null) {
 		for(int i = star ; i < end; i++)
 			{
-				if(playerlist[i].getIsRobot()==false) {
+				if(playerlist[i].getIsRobot()==true) {
+					//add Random move the robot buffer
+					playerlist[i].getPlayerBuffer().append(playerlist[i].getSnake().RandomDirection());
+				
+				}
+				
+					
+					
+
+				
 				playerlist[i].getSnake().setNext_direction(playerlist[i].getPlayerBuffer().take(playerlist[i].getSnake().getDirection()));
-				}
-				else {
-					//Random move the robot
-					playerlist[i].getSnake().setNext_direction(playerlist[i].getSnake().RandomDirection());
-				}
 				playerlist[i].getSnake().setDirection(playerlist[i].getSnake().getNext_direction());
 				playerlist[i].getSnake().moveSnake();
 			}
