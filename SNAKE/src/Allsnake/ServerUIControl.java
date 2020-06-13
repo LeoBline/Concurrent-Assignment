@@ -329,6 +329,9 @@ public class ServerUIControl implements KeyListener, WindowListener {
 		}
 	}
 
+	/**
+	 * Set the background interface of Snake
+	 */
 	private  void renderGame() {
 		canvas.paint(graph);
 		do {
@@ -446,8 +449,8 @@ public class ServerUIControl implements KeyListener, WindowListener {
 						}
 					}
 				}
+				//Set background graph style
 				graph.setFont(new Font(Font.SANS_SERIF, Font.BOLD, height / 40));
-
 				graph.setColor(Color.BLACK);
 				graph.drawString("TIME = " + getTime(), backgroundright + 10, 20 + backgroundDown); // Clock
 				graph.drawString("Login", backgroundright/2 - 20, 20 + backgroundDown);
@@ -456,7 +459,7 @@ public class ServerUIControl implements KeyListener, WindowListener {
 				graph.drawString("Time", 25, backgroundDown + 250);
 				graph.drawString("Scoreboard", backgroundright/2 - 60, 20 + backgroundDown + height/3 + 7);
 				int a=0;
-
+				//Game over style
 				if (game_over) {
 					graph.setColor(Color.RED);
 					graph.drawString("GAME OVER", height / 2 - 30, height / 2);
@@ -482,6 +485,10 @@ public class ServerUIControl implements KeyListener, WindowListener {
 
 	}
 
+	/**
+	 * Caculate player play time
+	 * @return temps
+	 */
 	private String getTime() {
 		String temps = new String(minute + ":" + second);
 		if(playerList.length >0) {
