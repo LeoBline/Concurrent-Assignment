@@ -67,7 +67,8 @@ public class ServerUIControl implements KeyListener, WindowListener {
 	private Player[] playerList = new Player[0];
 
 	private int[] realPlayListOrder = new int[0];
-
+	//A flag to show whether this is a test progress
+	private boolean testFlag = false;
 	//The serverDb that store all the player's account
 	ServerDB serverdb;
 	//Create a pool to handle the concurrent login task
@@ -87,6 +88,7 @@ public class ServerUIControl implements KeyListener, WindowListener {
 	 * @param test
 	 */
 	public ServerUIControl(String test){
+		testFlag = true;
 		frame = new Frame();
 		canvas = new Canvas();
 		map = new Map();
@@ -225,8 +227,10 @@ public class ServerUIControl implements KeyListener, WindowListener {
 				RandomBirth(snake);
 				setRealPlayerKeypress();
 				//Draw a massage box to show login successful
-				JOptionPane.showMessageDialog(null, "Success Login","", JOptionPane.INFORMATION_MESSAGE);
-				}else {
+				if(!testFlag){
+					JOptionPane.showMessageDialog(null, "Success Login","", JOptionPane.INFORMATION_MESSAGE);
+				}
+			}else {
 					//Draw a massage box to show login failed
 					JOptionPane.showMessageDialog(null, "Fail Login","", JOptionPane.INFORMATION_MESSAGE);
 				}

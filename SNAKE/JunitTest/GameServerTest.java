@@ -7,12 +7,12 @@ import Allsnake.ServerUIControl;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 
-public class gameServerTest {
+public class GameServerTest {
 ServerUIControl testServer = new ServerUIControl("test");
 
     /**
      * Integration Testing
-     * Append player keypress event to buffer and see whether the snake move correct on the grid
+     * Append player keyPress event to buffer and see whether the snake move correct on the grid
      * @throws InterruptedException
      * @throws AWTException
      */
@@ -33,9 +33,7 @@ ServerUIControl testServer = new ServerUIControl("test");
         Assert.assertEquals(0,testServer.getPlayerList()[0].getSnake().getDirection());
         //To determine whether the snake y position change or not
         Assert.assertEquals(snakeY-1,testServer.getPlayerList()[0].getSnake().getSnakeInfo(0,1));
-//         testServer = new ServerUIControl("test");
         //change all grid note to bonus
-
         Thread.sleep(10);
 
         //Place 3 1 point bonuses in front of the first snake
