@@ -11,7 +11,7 @@ import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 
-public class LogicalTest {
+public class  LogicalTest {
     Map testMap = new Map();
     ServerUIControl testServerUI = new ServerUIControl("Test");
     //Create to robot to act as a real player

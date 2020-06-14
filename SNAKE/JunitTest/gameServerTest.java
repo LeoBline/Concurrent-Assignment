@@ -35,24 +35,33 @@ ServerUIControl testServer = new ServerUIControl("test");
         Assert.assertEquals(0,testSnake.getDirection());
         //To determine whether the snake y position change or not
         Assert.assertEquals(snakeY-1,testSnake.getSnakeInfo(0,1));
+//         testServer = new ServerUIControl("test");
         //change all grid note to bonus
-        for (int x = 0; x < testMap.getGameSize(); x++) {
-            for (int y = 0; y < testMap.getGameSize(); y++) {
-                testMap.setMapInfo(x, y, 1);
-            }
-        }
-        testServer.setGridMap(testMap.getGrid());
-        testServer.getPlayerList()[0].judgeInput(KeyEvent.VK_UP);
-        testServer.updateSnake();
-        testServer.getPlayerList()[0].judgeInput(KeyEvent.VK_UP);
-        testServer.updateSnake();
-        testServer.getPlayerList()[0].judgeInput(KeyEvent.VK_UP);
-        testServer.updateSnake();
-        testServer.getPlayerList()[0].judgeInput(KeyEvent.VK_UP);
-        testServer.updateSnake();
-        System.out.println(testServer.getPlayerList()[0].getSnake().getRealLength());
 
-        Assert.assertEquals(4,testServer.getPlayerList()[0].getSnake().getLength());
+        testMap.setMapInfo(testSnake.getSnakeInfo(0,0), testSnake.getSnakeInfo(0,1)-1, 1);
+        Thread.sleep(100);
+        System.out.println(" the food is"+testMap.getMapInfo(testSnake.getSnakeInfo(0,0), testSnake.getSnakeInfo(0,1)-1));
+        System.out.println("food: "+testSnake.getSnakeInfo(0,0)+" "+(snakeY-2));
+        System.out.println("Snake: "+testSnake.getSnakeInfo(0,0)+" "+testSnake.getSnakeInfo(0,1));
+
+        testServer.updateSnake();
+        Thread.sleep(100);
+        System.out.println("Snake: "+testSnake.getSnakeInfo(0,0)+" "+testSnake.getSnakeInfo(0,1));
+
+//        testServer.getPlayerList()[0].judgeInput(KeyEvent.VK_UP);
+        testServer.updateSnake();
+        System.out.println(" the food is"+testMap.getMapInfo(testSnake.getSnakeInfo(0,0), testSnake.getSnakeInfo(0,1)-1));
+        System.out.println("Snake: "+testSnake.getSnakeInfo(0,0)+" "+testSnake.getSnakeInfo(0,1));
+        Thread.sleep(100);
+//        testServer.getPlayerList()[0].judgeInput(KeyEvent.VK_UP);
+        testServer.updateSnake();
+        Thread.sleep(100);
+//        testServer.getPlayerList()[0].judgeInput(KeyEvent.VK_UP);
+        testServer.updateSnake();
+        Thread.sleep(100);
+        System.out.println(testServer.getPlayerList()[0].getSnake().setSnakearray()[1][1]);
+
+        Assert.assertEquals(4,testServer.getPlayerList()[0].getSnake().getRealLength());
 //
 
 //

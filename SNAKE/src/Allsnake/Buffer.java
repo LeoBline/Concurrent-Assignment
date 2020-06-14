@@ -20,6 +20,7 @@ public class Buffer {
 			return a;
 		}
 		else {
+			//if input==0 than it will return i.the i is the old direction
 			return i;
 		}
 	}

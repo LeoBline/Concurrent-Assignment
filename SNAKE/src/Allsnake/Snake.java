@@ -105,9 +105,14 @@ public class Snake {
 		if (fut_y >= gameSize)// snake head exceeds the down border of the map
 			fut_y = 0;
 		// if snake head is on the food, adjust the snake length and score
+//		System.out.println("next point is "+fut_x+" "+fut_y+" "+map.getMapInfo(fut_x, fut_y));
+//		System.out.println(map.getMapInfo(fut_x, fut_y)==FOOD_BONUS);
 		if (map.getMapInfo(fut_x, fut_y)== FOOD_BONUS) {
 			//if two snake eat same food it will stop one
+			System.out.println("Eat");
+
 			if(map.eatFood(fut_x,fut_y)==true) {
+				System.out.println("Eat");
 				setLength(Length+1);
 				setScore(score+1);
 			placeBonus(FOOD_BONUS);
@@ -294,6 +299,9 @@ public class Snake {
 	}
 
 	//Getters and setters
+	public synchronized int[][] setSnakearray() {
+		return this.snake;
+	}
 	public synchronized void setSnakeInfo(int index1, int index2, int num) {
 		snake[index1][index2] = num;
 	}
