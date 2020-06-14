@@ -9,7 +9,8 @@ ServerUIControl test = new ServerUIControl("test");
     public void test100Robot(){
 
     //add 100 rebot
-    for(int i =0 ;i<100;i++){
+    for(int i =0 ;i<10;i++){
+        //every time it will add 10 robot
         test.addRobot();
     }
     Assert.assertEquals(100,test.getPlayerList().length);

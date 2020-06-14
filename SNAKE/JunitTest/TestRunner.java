@@ -6,7 +6,8 @@ import org.junit.runners.Suite;
         BufferTest.class,
         GameServerTest.class,
         LogicalTest.class,
-        LoginTest.class
+        LoginTest.class,
+        Add100RobotTest.class
 })
 
 public class TestRunner {
