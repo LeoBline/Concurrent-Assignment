@@ -8,6 +8,7 @@ ServerUIControl test = new ServerUIControl("test");
 @Test
     public void test100Robot(){
 
+    //add 100 rebot
     for(int i =0 ;i<100;i++){
         test.addRobot();
     }
