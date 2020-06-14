@@ -111,7 +111,7 @@ public class Snake {
 //			System.out.println("Eat");
 
 			if(map.eatFood(fut_x,fut_y)==true) {
-				System.out.println("Eat");
+//				System.out.println("Eat");
 				setLength(Length+1);
 				setScore(score+1);
 			placeBonus(FOOD_BONUS);
