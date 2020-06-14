@@ -11,23 +11,27 @@ public class Buffer {
 		MovementList = new int[100];
 		Inptr = 0;
 	}
-	//we use ' ' present null.
+
+	//take keypress from buffer
 	public synchronized int take(int i) {
 		if(Inptr != 0) {
-			int a =  MovementList[Inptr];
-			MovementList[Inptr] = ' ';
+			int a =  MovementList[0];
 			Inptr = Inptr - 1;
+			for(int z=0;z<Inptr;z++) {
+				MovementList[z]=MovementList[z+1];
+			}
 			return a;
 		}
 		else {
-			//if input==0 than it will return i.the i is the old direction
 			return i;
 		}
 	}
+	//append keypress to buffer
 	public synchronized void append(int a) {
 		if(Inptr < 40) {
-			Inptr = Inptr + 1;
+
 			MovementList[Inptr] = a;
+			Inptr = Inptr + 1;
 		}
 	}
 

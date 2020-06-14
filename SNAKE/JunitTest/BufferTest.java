@@ -21,7 +21,7 @@ public class BufferTest {
         testBuffer.append(2);
         testBuffer.append(3);
         //the buffer append 2,3 .so if we take it will return 3;
-        Assert.assertEquals(3, testBuffer.take(999));
+        Assert.assertEquals(2, testBuffer.take(999));
     }
 
 
