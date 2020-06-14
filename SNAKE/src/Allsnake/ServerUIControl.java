@@ -138,7 +138,7 @@ public class ServerUIControl implements KeyListener, WindowListener {
 		setTimeButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				System.out.println(2);
+//				System.out.println(2);
 				//Get the input from TextField
 				String time =TimeField.getText();
 				SimpleDateFormat format=new SimpleDateFormat("HH:mm");
@@ -217,9 +217,9 @@ public class ServerUIControl implements KeyListener, WindowListener {
 			//Add all the players account to table
 			java.util.concurrent.Future<String> future = LoginExecutorService.submit(serverdb);
 			String result=future.get();
-			System.out.println(result);
+//			System.out.println(result);
 			if (result!= "") {
-				System.out.println("success login");
+//				System.out.println("success login");
 				//add player and snake
 				this.addPlayer(new Player(result, gameSize));
 				addRealPlaylistOrder(playerList.length-1);
@@ -243,7 +243,7 @@ public class ServerUIControl implements KeyListener, WindowListener {
 	 * Add a robot to the game
 	 */
 	public synchronized void addRobot() {
-		System.out.println("success login");
+//		System.out.println("success login");
 		//add Robot player
 		for(int i=0;i<10;i++) {
 			addPlayer(new Player("Robot", gameSize));
@@ -557,7 +557,7 @@ public class ServerUIControl implements KeyListener, WindowListener {
 	 */
 	public synchronized void  keyPressed(KeyEvent ke) {
 		int code = ke.getKeyCode();
-		System.out.println("Keypress "+code);
+//		System.out.println("Keypress "+code);
 
 		if(snake!=null) {
 			//judge the input keypress and add direction to the buffer
@@ -587,7 +587,7 @@ public class ServerUIControl implements KeyListener, WindowListener {
 		System.arraycopy(realPlayListOrder, 0, newOrderList, 0, realPlayListOrder.length);
 		newOrderList[newOrderList.length-1] = a;
 		realPlayListOrder = newOrderList;
-		System.out.println(realPlayListOrder.length);
+//		System.out.println(realPlayListOrder.length);
 	}
 
 	/**
