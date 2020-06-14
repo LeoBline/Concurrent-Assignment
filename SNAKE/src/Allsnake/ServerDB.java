@@ -54,8 +54,6 @@ public class ServerDB implements Callable<String> {
 
 	/**
 	 * Add some accounts into the map for login
-	 * @param map
-	 * @param db
 	 */
 	public void update() {
 		//Add four original player

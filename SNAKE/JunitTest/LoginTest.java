@@ -34,7 +34,6 @@ public class LoginTest {
     @Test
     public void updatePlayerMapTest() throws InterruptedException {
         testServerDB.update();
-
         //Should be 4 player in player map
         Assert.assertEquals(4,testServerDB.getMap().size());
         //Should return "001" when testServerDB calls

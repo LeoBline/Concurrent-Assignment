@@ -206,7 +206,6 @@ public class Snake {
 	}
 
 
-
 	/**
 	 * Return the statement of this snake, if the snake dead or alive
 	 * @return

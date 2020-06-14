@@ -14,8 +14,6 @@ import java.io.ObjectInputStream;
 public class  LogicalTest {
     Map testMap = new Map();
     ServerUIControl testServerUI = new ServerUIControl("Test");
-    //Create to robot to act as a real player
-    Robot robot = new Robot();
 
     public LogicalTest() throws AWTException {
     }
