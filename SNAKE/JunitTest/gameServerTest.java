@@ -28,6 +28,7 @@ ServerUIControl testServer = new ServerUIControl("test");
         //Add a snake's movement to buffer
         testServer.getPlayerList()[0].judgeInput(KeyEvent.VK_UP);
         int snakeY = testSnake.getSnakeInfo(0,1);
+        System.out.println(" "+testServer.getMap().getMapInfo(testSnake.getSnakeInfo(0,0), testSnake.getSnakeInfo(0,1)-1));
         testServer.updateSnake();
         //wait the thread pool finish job;
         Thread.sleep(100);
@@ -38,20 +39,20 @@ ServerUIControl testServer = new ServerUIControl("test");
 //         testServer = new ServerUIControl("test");
         //change all grid note to bonus
 
-        testMap.setMapInfo(testSnake.getSnakeInfo(0,0), testSnake.getSnakeInfo(0,1)-1, 1);
         Thread.sleep(100);
-        System.out.println(" the food is"+testMap.getMapInfo(testSnake.getSnakeInfo(0,0), testSnake.getSnakeInfo(0,1)-1));
-        System.out.println("food: "+testSnake.getSnakeInfo(0,0)+" "+(snakeY-2));
-        System.out.println("Snake: "+testSnake.getSnakeInfo(0,0)+" "+testSnake.getSnakeInfo(0,1));
+//        System.out.println(" the food is"+testMap.getMapInfo(testSnake.getSnakeInfo(0,0), testSnake.getSnakeInfo(0,1)-1));
+//        System.out.println("food: "+testSnake.getSnakeInfo(0,0)+" "+(snakeY-2));
+//        System.out.println("Snake: "+testSnake.getSnakeInfo(0,0)+" "+testSnake.getSnakeInfo(0,1));
+
+        testServer.getPlayerList()[0].getSnake().placeBonus(testServer.getPlayerList()[0].getSnake().getSnakeInfo(0,0),testServer.getPlayerList()[0].getSnake().getSnakeInfo(0,1)-1);
+        testServer.getPlayerList()[0].getSnake().placeBonus(testServer.getPlayerList()[0].getSnake().getSnakeInfo(0,0),testServer.getPlayerList()[0].getSnake().getSnakeInfo(0,1)-2);
+        testServer.getPlayerList()[0].getSnake().placeBonus(testServer.getPlayerList()[0].getSnake().getSnakeInfo(0,0),testServer.getPlayerList()[0].getSnake().getSnakeInfo(0,1)-3);
 
         testServer.updateSnake();
         Thread.sleep(100);
-        System.out.println("Snake: "+testSnake.getSnakeInfo(0,0)+" "+testSnake.getSnakeInfo(0,1));
 
 //        testServer.getPlayerList()[0].judgeInput(KeyEvent.VK_UP);
         testServer.updateSnake();
-        System.out.println(" the food is"+testMap.getMapInfo(testSnake.getSnakeInfo(0,0), testSnake.getSnakeInfo(0,1)-1));
-        System.out.println("Snake: "+testSnake.getSnakeInfo(0,0)+" "+testSnake.getSnakeInfo(0,1));
         Thread.sleep(100);
 //        testServer.getPlayerList()[0].judgeInput(KeyEvent.VK_UP);
         testServer.updateSnake();
