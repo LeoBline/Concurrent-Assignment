@@ -91,7 +91,7 @@ public class ServerUIControl implements KeyListener, WindowListener {
 		canvas = new Canvas();
 		map = new Map();
 		gridMap = Map.getMap().getGrid();
-		initUI();
+//		initUI();
 	}
 
 	/**
@@ -286,18 +286,7 @@ public class ServerUIControl implements KeyListener, WindowListener {
 				if(second ==0 &&minute == 0) {
 		            game_over = true;
 	        }
-					int nu = playerList.length/20;
-					int remain = playerList.length%20;
-					for(int i=0 ;i<20;i++) {
-					LoginExecutorService.execute(new DateProcess(playerList,i*nu,(i+1)*nu));
-					}
-					LoginExecutorService.execute(new DateProcess(playerList,20*nu,20*nu+remain));
-				for(int i = 0; i< playerList.length; i++) {
-					if(playerList[i].getSnake().getGameover()) {
-						playerList[i].InitSnake();
-						RandomBirth(playerList[i].getSnake());
-					}
-				}
+				updateSnake();
 			}
 
 			renderGame();
@@ -313,6 +302,22 @@ public class ServerUIControl implements KeyListener, WindowListener {
 			
 		}
 	}
+	//use thread pool to update the snake data and after done .check the snake isalive
+	public void updateSnake(){
+		int nu = playerList.length/20;
+		int remain = playerList.length%20;
+		for(int i=0 ;i<20;i++) {
+			LoginExecutorService.execute(new DateProcess(playerList,i*nu,(i+1)*nu));
+		}
+		LoginExecutorService.execute(new DateProcess(playerList,20*nu,20*nu+remain));
+		for(int i = 0; i< playerList.length; i++) {
+			if(playerList[i].getSnake().getGameover()) {
+				playerList[i].InitSnake();
+				RandomBirth(playerList[i].getSnake());
+			}
+		}
+	}
+
 
 	/**
 	 * Clear the grid and place some bonus
@@ -545,6 +550,8 @@ public class ServerUIControl implements KeyListener, WindowListener {
 	 */
 	public synchronized void  keyPressed(KeyEvent ke) {
 		int code = ke.getKeyCode();
+		System.out.println("Keypress "+code);
+
 		if(snake!=null) {
 			//judge the input keypress and add direction to the buffer
 			for(int i =0;i<realPlayListOrder.length;i++) {
@@ -596,6 +603,10 @@ public class ServerUIControl implements KeyListener, WindowListener {
 			default:
 				break;
 		}
+	}
+
+	public Player[] getPlayerList() {
+		return playerList;
 	}
 
 	public void setSecond(int second) {
