@@ -327,7 +327,7 @@ public class ServerUIControl implements KeyListener, WindowListener {
 
 
 	/**
-	 * Clear the grid and place some bonus
+	 * when the game first time running, clear the map and place some bonus. 
 	 */
 	private void initGame() {
 		// Initialise tabs
@@ -342,7 +342,7 @@ public class ServerUIControl implements KeyListener, WindowListener {
 	}
 
 	/**
-	 * Set the background interface of Snake
+	 * Set the interface of Snake
 	 */
 	private  void renderGame() {
 		canvas.paint(graph);
@@ -579,7 +579,7 @@ public class ServerUIControl implements KeyListener, WindowListener {
 	}
 
 	/**
-	 * Add a player in realPlayerList
+	 * Add real player's index in playerList into realPlayerList
 	 * @param a
 	 */
 	public void addRealPlaylistOrder(int a) {
