@@ -56,7 +56,7 @@ public class Snake {
 	/**
 	 *How snake move on Grid
 	 */
-	public void moveSnake() {
+	public  void moveSnake() {
 		if(getSnakeInfo(0, 0) == -1) {//whether snake is dead
 			gameOver();
 			return;
@@ -144,6 +144,7 @@ public class Snake {
 		//set snake head's last position into empty, ready for snake body move on
 		map.setMapInfo(tempX, tempY, EMPTY);
 
+		// update Snake data
 		updateSnake(tempX, tempY);
 
 		int i;
@@ -172,6 +173,7 @@ public class Snake {
 				}
 			}
 			}
+		//if "length" >0 than it can add the snake's length
 		if (getLength() > 0) {
 			this.setSnakeInfo(i, 0, tempX);
 			this.setSnakeInfo(i, 1, tempX);
@@ -195,6 +197,7 @@ public class Snake {
 		snakeDied = true;
 		for(int i = 0 ; i<  gameSize * gameSize;i++) {
 			if(this.getSnakeInfo(i, 0)>-1) {
+				//clean the map
 				map.setMapInfo(this.getSnakeInfo(i, 0), this.getSnakeInfo(i, 1), EMPTY);
 				int a =this.getSnakeInfo(i, 0);;
 				int b = this.getSnakeInfo(i, 1);
@@ -262,7 +265,7 @@ public class Snake {
 	}
 
 	/**
-	 * Update the Snake's length and shape
+	 * Update the Snake's length and shape,
 	 * @param tempx
 	 * @param tempy
 	 */
