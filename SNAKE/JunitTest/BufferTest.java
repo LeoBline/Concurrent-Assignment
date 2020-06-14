@@ -10,6 +10,7 @@ public class BufferTest {
     public void AppendTakeBufferTest() throws InterruptedException{
         //the buffer is empty so if take(2) it will return 2;
         Assert.assertEquals(2,testbuffer.take(2));
+
         testbuffer.append(1);
         //the buffer's input is 1 so if take(2) if will return the 1;
         Assert.assertEquals(1,testbuffer.take(2));
