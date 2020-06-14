@@ -18,9 +18,6 @@ import java.util.concurrent.ConcurrentNavigableMap;
 public class LoginTest {
 
     ServerDB testServerDB = new ServerDB("001","123456");
-//    ServerDB testServerDB1 = new ServerDB("002","123456");
-//    ServerDB testServerDB2= new ServerDB("003","123456");
-//    ServerDB testServerDB3 = new ServerDB("004","123456");
     DB db = DBMaker.newFileDB(new File("PlayerInformation"))
             .closeOnJvmShutdown()
             .encryptionEnable("password")
@@ -49,25 +46,12 @@ public class LoginTest {
      */
     @Test
     public void concurrentLoginTest() throws InterruptedException {
-
         ServerUIControl testServerUi= new ServerUIControl("test");
         testServerUi.playerLogin("001","123456");
         testServerUi.playerLogin("002","123456");
         testServerUi.playerLogin("003","123456");
         testServerUi.playerLogin("004","123456");
         Assert.assertEquals(4,testServerUi.getPlayerList().length);
-
-    }
-
-    /**
-     * Give a random integer between specif range for concurrent test
-     * @param min
-     * @param max
-     * @return
-     */
-    private static int randomWithRange(int min, int max) {
-        int range = (max - min) + 1;
-        return (int) (Math.random() * range) + min;
     }
 
 }

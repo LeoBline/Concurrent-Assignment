@@ -46,9 +46,8 @@ ServerUIControl testServer = new ServerUIControl("test");
         testServer.getPlayerList()[0].getSnake().placeBonus(testServer.getPlayerList()[0].getSnake().getSnakeInfo(0,0),
                 testServer.getPlayerList()[0].getSnake().getSnakeInfo(0,1)-3);
 
-        testServer.updateSnake();
-        Thread.sleep(10);
 
+        //Three steps forward.
         testServer.getPlayerList()[0].judgeInput(KeyEvent.VK_UP);
         testServer.updateSnake();
         Thread.sleep(10);
@@ -64,7 +63,7 @@ ServerUIControl testServer = new ServerUIControl("test");
 
         //Login second player
         testServer.playerLogin("002","123456");
-        testServer.getPlayerList()[1].judgeInput(KeyEvent.VK_UP);
+        testServer.getPlayerList()[1].judgeInput(KeyEvent.VK_W);
 
         //See whether the player's action added into buffer
         Assert.assertEquals(0,testServer.getPlayerList()[1].getPlayerBuffer().take(10));
@@ -75,17 +74,16 @@ ServerUIControl testServer = new ServerUIControl("test");
         testServer.getPlayerList()[1].getSnake().placeBonus(testServer.getPlayerList()[1].getSnake().getSnakeInfo(0,0),
                 testServer.getPlayerList()[1].getSnake().getSnakeInfo(0,1)-2);
 
-
-        testServer.getPlayerList()[1].judgeInput(KeyEvent.VK_UP);
+        //Two steps forward.
+        testServer.getPlayerList()[1].judgeInput(KeyEvent.VK_W);
         testServer.updateSnake();
         Thread.sleep(10);
-        testServer.getPlayerList()[1].judgeInput(KeyEvent.VK_UP);
+        testServer.getPlayerList()[1].judgeInput(KeyEvent.VK_W);
         testServer.updateSnake();
         Thread.sleep(10);
 
-        //Whether snake get points
+        //Whether snake get the points
         Assert.assertEquals(3,testServer.getPlayerList()[1].getSnake().getRealLength());
-
 
 
         //Simulate a snake walking in a circle,which will cause the dead of the snake
