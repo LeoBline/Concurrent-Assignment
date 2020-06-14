@@ -46,6 +46,7 @@ public class LoginTest {
     @Test
     public void concurrentLoginTest() throws InterruptedException {
         ServerUIControl testServerUi= new ServerUIControl("test");
+        //Thread pool was  used in the playerlogin method so it just need to run it 4 times;
         testServerUi.playerLogin("001","123456");
         testServerUi.playerLogin("002","123456");
         testServerUi.playerLogin("003","123456");
