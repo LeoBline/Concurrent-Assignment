@@ -245,12 +245,12 @@ public class ServerUIControl implements KeyListener, WindowListener {
 	public synchronized void addRobot() {
 //		System.out.println("success login");
 		//add Robot player
-		for(int i=0;i<10;i++) {
+//		for(int i=0;i<10;i++) {
 			addPlayer(new Player("Robot", gameSize));
 			playerList[playerList.length-1].setIsRobot(true);
 			snake = playerList[playerList.length-1].getSnake();
 			RandomBirth(snake);
-		}
+//		}
 	}
 
 
