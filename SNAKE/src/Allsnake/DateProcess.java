@@ -42,7 +42,6 @@ private int end = 0;
 				playerlist[i].getSnake().moveSnake();
 			}
 		}
-
 	}
 
 }

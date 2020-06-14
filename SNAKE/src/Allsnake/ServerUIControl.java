@@ -302,7 +302,10 @@ public class ServerUIControl implements KeyListener, WindowListener {
 			
 		}
 	}
-	//use thread pool to update the snake data and after done .check the snake isalive
+
+	/**
+	 * Update snake's position on the map
+	 */
 	public void updateSnake(){
 		int nu = playerList.length/20;
 		int remain = playerList.length%20;
@@ -656,6 +659,8 @@ public class ServerUIControl implements KeyListener, WindowListener {
 		return paused;
 	}
 
+	public Map getMap(){return map;}
+
 	//IMPLEMENTED FUNCTIONS
 	public void keyTyped(KeyEvent ke) {
 	}
@@ -680,6 +685,7 @@ public class ServerUIControl implements KeyListener, WindowListener {
 
 	public void windowDeactivated(WindowEvent we) {
 	}
+
 
 }
 

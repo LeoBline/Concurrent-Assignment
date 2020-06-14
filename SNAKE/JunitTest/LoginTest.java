@@ -30,7 +30,6 @@ public class LoginTest {
     ConcurrentNavigableMap<String, String> playerMap = db.getTreeMap("playerinformation");
 
 
-
     /**
      * Test whether the "001" successful add into testServerDB;
      * @throws Exception
@@ -57,7 +56,6 @@ public class LoginTest {
         testServerUi.playerLogin("003","123456");
         testServerUi.playerLogin("004","123456");
         Assert.assertEquals(4,testServerUi.getPlayerList().length);
-
 
     }
 

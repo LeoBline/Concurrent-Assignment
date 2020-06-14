@@ -6,6 +6,10 @@ import org.junit.Assert;
 public class BufferTest {
     Buffer testbuffer = new Buffer();
 
+    /**
+     * This test the basic function of our buffer
+     * @throws InterruptedException
+     */
     @Test
     public void AppendTakeBufferTest() throws InterruptedException{
         //the buffer is empty so if take(2) it will return 2;
@@ -19,4 +23,6 @@ public class BufferTest {
         //the buffer append 2,3 .so if we take it will return 3;
         Assert.assertEquals(3,testbuffer.take(999));
     }
+
+
 }

@@ -54,11 +54,10 @@ public class Snake {
 	}
 	
 	/**
-	 *
+	 *How snake move on Grid
 	 */
-
 	public void moveSnake() {
-		if(getSnakeInfo(0, 0) == -1) {//snake is dead
+		if(getSnakeInfo(0, 0) == -1) {//whether snake is dead
 			gameOver();
 			return;
 		}
@@ -186,7 +185,7 @@ public class Snake {
 	}
 	
 	/**
-	 * gameOver means this snake is dead
+	 * gameOver means this snake is dead,this will initialize the snake's infor
 	 */
 	public synchronized void gameOver() {
 		snakeDied = true;
@@ -275,10 +274,23 @@ public class Snake {
 			if ((this.getSnakeInfo(i, 0) < 0) || (this.getSnakeInfo(i, 1) < 0)) {
 				break;
 			}
-			
 			map.setMapInfo(this.getSnakeInfo(i, 0), this.getSnakeInfo(i, 1), SNAKE);
 			
 		}
+	}
+
+	/**
+	 * return the real length of Snake,because the length is just temp variable
+	 * @return
+	 */
+	public int getRealLength(){
+		int length = 0;
+		for(int i = 0; i < snake.length; i++){
+			if(snake[i][1] != -1){
+				length += 1;
+			}
+		}
+		return length;
 	}
 
 	//Getters and setters
