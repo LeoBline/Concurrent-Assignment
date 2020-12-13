@@ -1,0 +1,5 @@
+1.Snake always flow a blue dot which shouldn't be blue but pink or it original color.(fixed)
+2.Add robot button and login button is not always been trigger when click.
+3.Won't always get point when eat big balls.
+4.Same player can be login multiple times.
+5.Every time Snake eats food there always be a flash snake at right corner.
